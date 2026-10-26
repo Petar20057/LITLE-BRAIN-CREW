@@ -13,7 +13,7 @@ export default function FunnelLayout({ children }: LayoutProps<"/">) {
           <img className="logo-img" src="/assets/brand/lbc-logo-horizontal.svg" alt="" width={133} height={48} />
         </a>
       </header>
-      {PREVIEW && <p className="fx-preview">Preview: no real payment is taken. Stripe and PayPal get connected next.</p>}
+      {PREVIEW && <p className="fx-preview">Preview: no real payment is taken. Creem checkout gets connected next.</p>}
       <main className="fx-wrap">{children}</main>
     </div>
   );

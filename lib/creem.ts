@@ -1,0 +1,83 @@
+import "server-only";
+
+import { createHmac, timingSafeEqual } from "node:crypto";
+import { ITEMS, type Item } from "./funnel";
+
+// Creem: payments (merchant of record) and the affiliate program. Server only: the API key never reaches the browser.
+// Every key is EMPTY until Creem is connected, and then nothing here runs (the routes answer 503).
+// Test store by default: the live API is used only when CREEM_LIVE is exactly "true" (money policy: going live is Luka's call).
+
+const API_KEY = process.env.CREEM_API_KEY ?? "";
+const WEBHOOK_SECRET = process.env.CREEM_WEBHOOK_SECRET ?? "";
+export const CREEM_LIVE = process.env.CREEM_LIVE === "true";
+const BASE = CREEM_LIVE ? "https://api.creem.io" : "https://test-api.creem.io";
+
+export const creemConfigured = Boolean(API_KEY);
+export const webhookConfigured = Boolean(WEBHOOK_SECRET);
+
+// Creem product id for everything we sell, keyed by the item ids in lib/funnel.ts. Creem has no order bump, so an
+// order with a bump is its own combined product ("guide+bedtime-kit" = Toolkit + Bedtime Kit, $16).
+// Fill these from the Creem dashboard; the test and live stores have different ids. Empty = not for sale yet.
+// "Support the crew" (any amount) is missing on purpose until Creem confirms pay-what-you-want.
+const PRODUCTS: Record<string, { test: string; live: string }> = {
+  guide: { test: "", live: "" },
+  "guide+bedtime-kit": { test: "", live: "" },
+  program: { test: "", live: "" },
+  "program+cards": { test: "", live: "" },
+  upgrade: { test: "", live: "" },
+  "screen-off-week": { test: "", live: "" },
+  "club-monthly": { test: "", live: "" },
+  "club-yearly": { test: "", live: "" },
+};
+
+const ALL_ITEMS: Item[] = Object.values(ITEMS);
+
+/** The key PRODUCTS uses for an order: item ids joined with "+", in the order they were added. */
+export const orderKey = (itemIds: string[]) => itemIds.join("+");
+
+/** Items we sell, looked up by id. Prices always come from here, never from the browser. */
+export function itemsFor(itemIds: string[]): Item[] | null {
+  const items = itemIds.map((id) => ALL_ITEMS.find((i) => i.id === id));
+  return items.every(Boolean) ? (items as Item[]) : null;
+}
+
+export function productIdFor(key: string): string {
+  const p = PRODUCTS[key];
+  return (p && (CREEM_LIVE ? p.live : p.test)) || "";
+}
+
+/** Which of our items a Creem product id is (for webhooks), or undefined for a product we don't know. */
+export function keyForProduct(productId: string): string | undefined {
+  return Object.keys(PRODUCTS).find((k) => productIdFor(k) === productId);
+}
+
+export async function createCheckout(input: {
+  productId: string;
+  email: string;
+  successUrl: string;
+  metadata: Record<string, string>;
+}): Promise<string> {
+  const res = await fetch(`${BASE}/v1/checkouts`, {
+    method: "POST",
+    headers: { "x-api-key": API_KEY, "Content-Type": "application/json" },
+    body: JSON.stringify({
+      product_id: input.productId,
+      customer: { email: input.email },
+      success_url: input.successUrl,
+      metadata: input.metadata,
+    }),
+    cache: "no-store",
+  });
+  if (!res.ok) throw new Error(`Creem checkout failed: ${res.status} ${await res.text()}`);
+  const data = (await res.json()) as { checkout_url?: string };
+  if (!data.checkout_url) throw new Error("Creem checkout failed: no checkout_url");
+  return data.checkout_url;
+}
+
+/** creem-signature is the hex HMAC-SHA256 of the raw body, keyed with the webhook secret. */
+export function verifyWebhook(rawBody: string, signature: string | null): boolean {
+  if (!WEBHOOK_SECRET || !signature) return false;
+  const expected = Buffer.from(createHmac("sha256", WEBHOOK_SECRET).update(rawBody).digest("hex"));
+  const given = Buffer.from(signature);
+  return given.length === expected.length && timingSafeEqual(given, expected);
+}

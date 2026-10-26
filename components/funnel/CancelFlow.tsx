@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { AFFILIATE, ITEMS, commission, usd } from "@/lib/funnel";
 import { useQueryParam } from "@/lib/order";
 import CrewArt from "./CrewArt";
 
@@ -19,6 +20,9 @@ const REASONS: [Reason, string][] = [
 
 type Step = "why" | "offer" | "saved" | "cancelled";
 
+const MONTHLY = ITEMS.clubMonthly.price;
+const HALF = MONTHLY / 2;
+
 export default function CancelFlow() {
   const pauseLink = useQueryParam("pause") === "1";
   const [reasonPick, setReason] = useState<Reason | null>(null);
@@ -28,7 +32,8 @@ export default function CancelFlow() {
   const [saved, setSaved] = useState("");
   const [note, setNote] = useState("");
 
-  // Preview: these would call the billing API (Stripe: pause_collection, coupon, price change, cancel_at_period_end).
+  // Preview: these would call Creem (cancel at period end, upgrade). Creem's docs don't show pausing or a
+  // time-limited discount on a live subscription yet: confirm with Creem before the pause and half-price offers go live.
   const keep = (what: string) => { setSaved(what); setStep("saved"); };
   const cancel = () => setStep("cancelled");
 
@@ -98,8 +103,9 @@ function SaveOffer({ reason, onKeep }: { reason: Reason; onKeep: (what: string) 
       return (
         <div className="save-offer">
           <h3>Stay for half price</h3>
-          <p>$4.50 a month for the next 3 months, then back to $9. Everything stays the same.</p>
-          <button className="btn btn-main" type="button" onClick={() => onKeep("You’re on $4.50 a month for the next 3 months.")}>Keep it for $4.50 a month</button>
+          <p>{usd(HALF)} a month for the next 3 months, then back to {usd(MONTHLY)}. Everything stays the same.</p>
+          <p className="fine">Or share the crew: as a member you can join our affiliate program and earn {Math.round(AFFILIATE.rate * 100)}% of what parents on your link pay, like {usd(commission(MONTHLY))} from a new member’s month. <a className="link" href="/account/affiliate">Join the program</a></p>
+          <button className="btn btn-main" type="button" onClick={() => onKeep(`You’re on ${usd(HALF)} a month for the next 3 months.`)}>Keep it for {usd(HALF)} a month</button>
         </div>
       );
     case "time":
@@ -117,9 +123,13 @@ function SaveOffer({ reason, onKeep }: { reason: Reason; onKeep: (what: string) 
     case "done":
       return (
         <div className="save-offer">
-          <h3>Keep a small nudge for $4</h3>
-          <p>Switch to Crew Club Lite: one family challenge and one bedtime story a month, so the habits don’t slide back.</p>
-          <button className="btn btn-main" type="button" onClick={() => onKeep("You’re now on Crew Club Lite, $4 a month.")}>Switch to Lite for $4 a month</button>
+          <h3>Got what you needed? Pause instead.</h3>
+          <p>No charge while you’re paused, and everything waits for you: new crew members, your streak, your saved cartoons.</p>
+          <div className="pause-opts">
+            {[1, 2, 3].map((m) => (
+              <button key={m} className="btn" type="button" onClick={() => onKeep(`Your membership is paused for ${m} month${m > 1 ? "s" : ""}. No charge until then.`)}>Pause {m} month{m > 1 ? "s" : ""}</button>
+            ))}
+          </div>
         </div>
       );
     case "age":

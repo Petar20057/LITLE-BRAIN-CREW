@@ -59,32 +59,29 @@ export type Database = {
         Row: {
           age_groups: Database["public"]["Enums"]["age_group"][];
           created_at: string;
+          creem_customer_id: string | null;
           display_name: string | null;
           email: string;
           id: string;
-          paypal_payer_id: string | null;
-          stripe_customer_id: string | null;
           updated_at: string;
         };
         ComputedFields: never;
         Insert: {
           age_groups?: Database["public"]["Enums"]["age_group"][];
           created_at?: string;
+          creem_customer_id?: string | null;
           display_name?: string | null;
           email: string;
           id: string;
-          paypal_payer_id?: string | null;
-          stripe_customer_id?: string | null;
           updated_at?: string;
         };
         Update: {
           age_groups?: Database["public"]["Enums"]["age_group"][];
           created_at?: string;
+          creem_customer_id?: string | null;
           display_name?: string | null;
           email?: string;
           id?: string;
-          paypal_payer_id?: string | null;
-          stripe_customer_id?: string | null;
           updated_at?: string;
         };
         Relationships: [];
@@ -177,22 +174,22 @@ export type Database = {
         | "wrong_age"
         | "something_broken"
         | "other";
-      club_plan: "club_monthly" | "club_yearly" | "club_lite";
-      payment_provider: "stripe" | "paypal";
+      club_plan: "club_monthly" | "club_yearly";
+      payment_provider: "creem";
       save_offer:
         | "half_price_3_months"
         | "pause"
-        | "switch_to_lite"
+        | "pause_instead_of_done"
         | "change_age_free_month"
         | "fix_free_month";
       subscription_status:
-        | "incomplete"
-        | "incomplete_expired"
         | "trialing"
         | "active"
         | "past_due"
-        | "paused"
         | "unpaid"
+        | "paused"
+        | "scheduled_cancel"
+        | "expired"
         | "canceled";
     };
     CompositeTypes: {
@@ -318,23 +315,23 @@ export const Constants = {
         "something_broken",
         "other",
       ],
-      club_plan: ["club_monthly", "club_yearly", "club_lite"],
-      payment_provider: ["stripe", "paypal"],
+      club_plan: ["club_monthly", "club_yearly"],
+      payment_provider: ["creem"],
       save_offer: [
         "half_price_3_months",
         "pause",
-        "switch_to_lite",
+        "pause_instead_of_done",
         "change_age_free_month",
         "fix_free_month",
       ],
       subscription_status: [
-        "incomplete",
-        "incomplete_expired",
         "trialing",
         "active",
         "past_due",
-        "paused",
         "unpaid",
+        "paused",
+        "scheduled_cancel",
+        "expired",
         "canceled",
       ],
     },

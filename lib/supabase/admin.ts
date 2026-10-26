@@ -5,7 +5,7 @@ import type { Database } from "./database.types";
 import { requireSupabaseEnv } from "./env";
 
 // Supabase with the secret key: bypasses row level security. Only for trusted server code that
-// acts for the business, not for a parent: Stripe/PayPal webhooks writing subscriptions, creating
+// acts for the business, not for a parent: Creem webhooks writing subscriptions, creating
 // a member after checkout, signed links to the PDFs in private storage. Never import it into a page
 // that renders user input without checking who is asking first.
 export function createAdminClient() {

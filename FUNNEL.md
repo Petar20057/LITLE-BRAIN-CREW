@@ -1,6 +1,10 @@
 # Little Brain Crew — funnel, ponude i churn
 
 > **2026-10-26: brend je preimenovan iz VIBE LIFE CODE u Little Brain Crew**, a ebook „The Crew Code“ je sada **The Kid Brain Toolkit**. Stariji odeljci ispod još pominju stara imena; važeće stanje je u odeljku 10.
+>
+> **2026-10-26 (kasnije): Crew Club je $19/mes ili $199/god i to je jedina članarina.** Club Lite ($4) i trial ($1/14 dana) su ukinuti. Novi afilijejt program samo za članove: odeljak 11.
+>
+> **2026-10-26 (Luka): plaćanja i afilijejt idu preko Creem-a** (merchant of record). Stripe, PayPal i naš `/r/` link su uklonjeni. Plaćanje: odeljak 7, afilijejt: odeljak 11.
 
 Ovaj dokument objašnjava **zašto** sajt izgleda i prodaje ovako. Copy na sajtu je na engleskom (tržište je US, cene u $), objašnjenja su na srpskom za tim.
 
@@ -63,7 +67,7 @@ Kako je primenjeno na 30-Day Reset (`/pricing`):
 
 Ostali Hormozi elementi:
 - **Value stack** gde je svaka stavka spojena sa problemom koji uklanja („So you’re not reading parenting books at midnight“).
-- **Bez garancije** (odluka 2026-10-26). Pošto je proizvod digitalan i odmah dostupan, svuda jasno piše da je prodaja konačna („all sales are final“). Ako link ili fajl ne radi, popravljamo. Stripe i PayPal traže da politika refundacije bude vidljiva, pa je to u FAQ-u i na checkout-u.
+- **Bez garancije** (odluka 2026-10-26). Pošto je proizvod digitalan i odmah dostupan, svuda jasno piše da je prodaja konačna („all sales are final“). Ako link ili fajl ne radi, popravljamo. Politika refundacije mora biti vidljiva, pa je u FAQ-u i na checkout-u. Creem je merchant of record i ima svoja pravila za refundacije: proveriti da se slažu sa „all sales final“ pre puštanja naplate.
 - **Za koga jeste / nije** smanjuje pogrešne kupce i reklamacije.
 - **Cena po danu** ($1.30) kao sidro, umesto izmišljenih „vrednost $X“ brojki.
 - **Downsell na istoj stranici:** „Not ready for 30 days? Start with the $9 guide.“
@@ -74,22 +78,24 @@ Ostali Hormozi elementi:
 
 ```
 Početna / pricing / Dopa članak
-   ├─► The Crew Code $9 + bump Bedtime & Screen-Off Kit $7 ─► Upsell: upgrade na program $30 ──► Downsell: Screen-Off Week $12 ─► Crew Club $1/14 dana ─► Club Lite $4/mes ─► Thank you
-   │                                                         (tvojih $9 se računa)              (7 dana sa Dopom, računa se       (pa $9/mes)          (manje, jeftinije)
+   ├─► The Crew Code $9 + bump Bedtime & Screen-Off Kit $7 ─► Upsell: upgrade na program $30 ──► Downsell: Screen-Off Week $12 ─► Crew Club $19/mes ─► Thank you
+   │                                                         (tvojih $9 se računa)              (7 dana sa Dopom, računa se
    │                                                                                             u Reset kasnije)
-   ├─► 30-Day Reset $39 + bump karte $7 ───────────────────────────────────────────► Crew Club $1 ─► Club Lite ─► Thank you
-   └─► Crew Club mesečno $9 / godišnje $79 ──────────────────────────────────────────────────────────────────────► Thank you
-/gift ──► ebook ili program kao poklon (bez upsella) ────────────────────────────────────────────────────────────► Thank you
-footer ─► Support the crew ($3/$5/$10/$20/drugo) ────────────────────────────────────────────────────────────────► Thank you
+   ├─► 30-Day Reset $39 + bump karte $7 ───────────────────────────────────────────► Crew Club $19/mes ─► Thank you
+   └─► Crew Club mesečno $19 / godišnje $199 ─────────────────────────────────────────────────────────► Thank you
+/gift ──► ebook ili program kao poklon (bez upsella) ─────────────────────────────────────────────────► Thank you
+footer ─► Support the crew ($3/$5/$10/$20/drugo) ─────────────────────────────────────────────────────► Thank you
+Creem referral link člana ──► početna (Creem cookie 60 dana, Creem checkout pripisuje prodaju; odeljak 11)
 ```
 
 | Stranica | Ruta |
 |---|---|
 | Checkout | `/checkout/guide`, `/checkout/program`, `/checkout/club?plan=monthly|yearly` (+ `?crew=dopa` za lično poglavlje, `?gift=1` sa poklona) |
-| Upsell / downsell | `/offer/upgrade`, `/offer/screen-off-week`, `/offer/club`, `/offer/club-lite` |
+| Upsell / downsell | `/offer/upgrade`, `/offer/screen-off-week`, `/offer/club` (`/offer/club-lite` preusmerava na `/thank-you`) |
 | Kraj | `/thank-you` |
 | Podrška | `/support` |
-| Članstvo | `/account`, `/account/cancel` |
+| Članstvo | `/account`, `/account/cancel`, `/account/affiliate` |
+| Afilijejt | `/affiliate` (javno objašnjenje); link i statistika su u Creem affiliate dashboard-u |
 
 **Pravila za ponude posle plaćanja:**
 - Gore se vidi „Order ✓“, da roditelj zna da je već platio i da ništa nije pošlo naopako.
@@ -105,27 +111,26 @@ footer ─► Support the crew ($3/$5/$10/$20/drugo) ─────────
 
 | Tehnika | Gde |
 |---|---|
-| **Godišnji plan** sa uštedom 27% ($79 umesto $108); na `/account` je ponuda „Save $29 a year“ | `/pricing`, checkout, `/account` |
+| **Godišnji plan** sa uštedom $29 ($199 umesto $228, oko 13%); na `/account` je ponuda „Save $29 a year“ | `/pricing`, checkout, `/account` |
 | **Pauza umesto otkazivanja** (1, 2 ili 3 meseca, bez naplate) | `/account` → „Pause for a while“, i u cancel flow-u |
 | **Cancel flow sa razlogom** → jedna ponuda koja odgovara razlogu | `/account/cancel` |
-| · „Preskupo“ → pola cene 3 meseca ($4.50) | |
+| · „Preskupo“ → pola cene 3 meseca ($9.50), plus „5 članova na tvom linku pokriva tvojih $19“ | |
 | · „Nemam vremena“ → pauza | |
-| · „Dobili smo šta treba“ → prelazak na Lite ($4) | |
+| · „Dobili smo šta treba“ → pauza 1–3 meseca (Lite više ne postoji) | |
 | · „Ne odgovara uzrastu“ → promena uzrasne grupe + mesec gratis | |
 | · „Nešto ne radi“ → popravka + mesec gratis | |
-| **Downgrade umesto odlaska** (Club Lite $4) | upsell funnel i cancel flow |
+| **Afilijejt kao razlog da se ostane:** provizija teče samo dok je član aktivan | `/account`, `/account/affiliate`, cancel flow |
 | **Win-back:** posle otkazivanja ostaje sačuvan napredak, dugme „Restart my membership“, jedno pitanje za feedback | kraj cancel flow-a |
 | **Navika i napredak:** „This week“ crtać i streak na nalogu | `/account` |
-| **Trial bez iznenađenja:** „we email you 3 days before the trial ends“ | ponuda za Club |
 
 ### Zakon i poverenje (obavezno)
 - Dugme **„Cancel now“ je vidljivo na svakom koraku**; ponuda za spas nikad ne blokira otkazivanje. Zakoni o auto-obnavljanju (npr. Kalifornija) traže lako online otkazivanje.
 - Pre svake obnove i pre kraja triala šalje se email.
 - Na checkout-u za članstvo postoji **obavezan checkbox** da korisnik razume da se članstvo obnavlja.
 
-### Uraditi kad se poveže Stripe (nije još urađeno)
-1. **Dunning:** Stripe Smart Retries + emailovi za neuspelo plaćanje (dan 0, 3, 7) + link za promenu kartice. Ovo je obično najveći izvor „nevoljnog“ churna.
-2. **Upozorenje pre isteka kartice** (Stripe to šalje automatski kad se uključi).
+### Uraditi kad se poveže Creem (nije još urađeno)
+1. **Dunning:** Creem sam ponavlja neuspelu naplatu (`subscription.past_due` → `active` ili `canceled`). Na `past_due` / `unpaid` šaljemo naš email sa linkom za Creem customer portal (promena kartice). Ovo je obično najveći izvor „nevoljnog“ churna.
+2. **Pauza i pola cene u cancel flow-u:** Creem dokumentacija ne pokazuje pauzu ni privremeni popust na postojećoj pretplati. Pitati Creem podršku; ako ne postoji, te dve save ponude menjamo (npr. besplatan mesec preko kupona pri ponovnom pristupanju).
 3. **Onboarding do prvog rezultata za 48 h:** email 1 „uradi ovo večeras“, email 2 „kako je prošlo?“.
 4. **Zakazani sadržaj:** svake nedelje novi crtać, svakog meseca izazov, plus najava „sledeće nedelje stiže…“, da uvek postoji razlog da se ostane.
 5. **Merenje:** churn po mesecu i po razlogu iz cancel flow-a; koja save ponuda najčešće uspeva.
@@ -136,7 +141,7 @@ footer ─► Support the crew ($3/$5/$10/$20/drugo) ─────────
 
 VIBE LIFE CODE je firma, ne registrovana neprofitna organizacija, pa dugme **ne sme da se zove „Donate“**: PayPal Donate je samo za humanitarne organizacije, a reč „donacija“ ljudi shvataju kao poreski odbitak. Zato:
 - Footer na svakoj stranici ima „♥ Support the crew“ → `/support`, a link postoji i na thank-you strani.
-- Iznosi $3 / $5 / $10 / $20 / drugo, plaćanje karticom ili PayPal-om.
+- Iznosi $3 / $5 / $10 / $20 / drugo, plaćanje preko Creem-a. Proveriti da li Creem podržava proizvod sa iznosom po izboru kupca; ako ne, prave se fiksni proizvodi za svaki iznos.
 - Jasna rečenica na stranici: plaćanje firmi, nije donacija, nije poreski odbitak, ne dobija se proizvod.
 
 ---
@@ -155,16 +160,35 @@ VIBE LIFE CODE je firma, ne registrovana neprofitna organizacija, pa dugme **ne 
 **Još treba napraviti:**
 - **Video i audio:** 6 crtaća iz ebooka, 7 crtaća Screen-Off Week i audio priča za laku noć. Skripte su u `products/pdf/production/`, a video ide postojećim pipeline-om (ElevenLabs + animacija).
 - **30-Day Reset $39:** 30 crtaća sa dečjim verzijama, jedna navika dnevno sa tačnim rečima, fridge tracker, teen bonus sa Teom. Screen-Off Week može da bude njegova nedelja sa Dopom.
-- **Crew Club ($9/mes) i Club Lite ($4/mes):** nedeljni crtać, mesečni izazov, priče za laku noć, privatna grupa. Ne naplaćivati dok sadržaj ne postoji.
+- **Crew Club ($19/mes, $199/god):** nedeljni crtać, mesečni izazov, priče za laku noć, privatna grupa. Ne naplaćivati dok sadržaj ne postoji.
 - **Crew Habit Cards** (bump $7 uz program): 30 kartica.
 
 ## 7. Povezivanje plaćanja (sledeći korak)
 
 Sve je u preview modu (`PREVIEW = true` u `lib/funnel.ts`): dugmad prolaze kroz funnel bez naplate, a žuta traka to piše na svakoj checkout strani. Za pravu naplatu treba zameniti `charge()` u [`lib/payments.ts`](lib/payments.ts):
 
-- **Kartica:** Stripe Checkout Session (ili Payment Element) sa `setup_future_usage`, da upsell bude **one-click** (naplata sačuvane kartice bez ponovnog unosa).
-- **PayPal:** PayPal JS SDK; za one-click upsell treba PayPal vault, inače se na svakoj ponudi ponovo potvrđuje.
-- **Članstvo:** Stripe Subscriptions (trial 14 dana za $1, pauza = `pause_collection`, pola cene = kupon, otkaz = `cancel_at_period_end`).
+**Odluka 2026-10-26 (Luka): sve plaćanje ide preko Creem-a** (creem.io, merchant of record: Creem je prodavac na računu, obračunava porez i izdaje račune). PayPal dugmad su uklonjena jer Creem dokumentacija ne navodi PayPal; kupac plaća karticom, Apple Pay ili Google Pay.
+
+- **Checkout:** server poziva Creem „create checkout“ (`product_id`, email kupca, `metadata` sa našim ID-jem porudžbine) i šalje kupca na `checkout_url`. Pristup se daje iz webhookova `checkout.completed` i `subscription.paid`, nikad iz redirecta.
+- **Proizvodi u Creem-u:** Toolkit $9, Reset $39, upgrade $30, Screen-Off Week $12, Club $19/mes i $199/god, plus kombinovani proizvodi za bump (Toolkit + Bedtime Kit $16, Reset + karte $46), jer Creem nema order bump.
+- **Upsellovi:** Creem dokumentacija ne pokazuje one-click naplatu sačuvane kartice. Svako „Yes“ na ponudi otvara novi Creem checkout sa unapred upisanim emailom. Očekivati nešto manju konverziju upsella nego sa one-click; ako Creem podrška potvrdi one-click, vraćamo ga.
+- **Članstvo:** Creem subscriptions; otkaz na kraju perioda (`subscription.scheduled_cancel`), customer portal link za karticu. Statusi u bazi prate Creem (`supabase/migrations/20261026120000_crew_club.sql`).
+
+**Napravljeno (2026-10-26), ugašeno dok se ne unesu ključevi:**
+- [`lib/creem.ts`](lib/creem.ts): Creem API (checkout, provera webhook potpisa), mapa naših proizvoda na Creem `product_id` (test i live). Bez `CREEM_LIVE=true` uvek gađa **test** Creem.
+- `POST /api/checkout` ([`app/api/checkout/route.ts`](app/api/checkout/route.ts)): browser šalje samo ID-jeve stavki; cenu i Creem proizvod bira server. Za članstvo traži potvrdu obnove i čuva vreme u metadata (`renewal_consent_at`).
+- `POST /api/creem/webhook` ([`app/api/creem/webhook/route.ts`](app/api/creem/webhook/route.ts)): proverava `creem-signature`, upisuje i ažurira Crew Club pretplate u Supabase. Novom kupcu pravi Supabase nalog po emailu. Jednokratne kupovine se za sada samo loguju.
+- `charge()` u [`lib/payments.ts`](lib/payments.ts): u preview-u kao do sad; uživo zove `/api/checkout` i šalje kupca na Creem.
+
+**Koraci za uključivanje (prvo test, pa tek onda pravi novac — to je Lukina odluka):**
+1. U Creem **test** prodavnici napravi proizvode: Toolkit $9, Toolkit + Bedtime Kit $16, Reset $39, Reset + karte $46, upgrade $30, Screen-Off Week $12, Club $19/mes, Club $199/god. Upiši njihove ID-jeve u `PRODUCTS` u `lib/creem.ts` (polje `test`).
+2. U `.env.local` / Vercel upiši `CREEM_API_KEY` (test ključ) i `CREEM_WEBHOOK_SECRET`; `CREEM_LIVE` ostavi prazno.
+3. U Creem dashboard-u dodaj webhook `https://<sajt>/api/creem/webhook`.
+4. Primeni migraciju `supabase/migrations/20261026120000_crew_club.sql` u Supabase.
+5. U `lib/funnel.ts` stavi `PREVIEW = false`, pa prođi ceo funnel sa Creem test karticom.
+6. Tek posle odgovora Creem podrške i Lukinog OK: live proizvodi (polje `live`), live ključ i `CREEM_LIVE=true`.
+
+**Još nije napravljeno:** slanje fajlova emailom posle jednokratne kupovine, prijava člana na `/account` (magic link) i povezivanje `/account` / cancel flow-a sa pravim podacima, „Support the crew“ (čeka odgovor o iznosu po izboru).
 - **Supabase:** narudžbine, članovi, email liste sa `/free` i razlozi otkazivanja.
 
 ---
@@ -246,10 +270,37 @@ Nijedan lik nije osećanje, zbog rizika sličnosti sa filmom *Inside Out*.
 |---|---|
 | **The Kid Brain Toolkit, $9** | 12 likova, 12 najtežih trenutaka, 6 zlikovaca, šta je normalno u kom uzrastu, izvori; bonusi (kartice, meltdown plan, poster, crtaći) |
 | **The 30-Day Reset, $39** (protokol) | 1. nedelja san (Mela, Corti protiv Glo i Bedi); 2. nedelja ekrani i fokus (Dopa, Nora protiv Lupi i Pingi); 3. nedelja ispadi i glad (Migo, Fronti, Greli, Gabi); 4. nedelja kretanje i bliskost (Endo, Toci, Sero, ti); teen track sa Teom; Toolkit uključen |
-| **The Crew Club, $9/mes ili $79/god** (zajednica) | novi lik svakog meseca (sa mape od 156), mesečna Q&A epizoda, privatna zajednica roditelja, vodiči po uzrastu, mesečni izazov i priče |
+| **The Crew Club, $19/mes ili $199/god** (zajednica) | novi lik svakog meseca (sa mape od 156), mesečna Q&A epizoda, privatna zajednica roditelja, vodiči po uzrastu, mesečni izazov i priče |
 
 **Šta još fali:**
 - **Sadržaj Toolkita: urađeno 2026-10-26.** `products/pdf/The Kid Brain Toolkit.pdf`, 34 strane: dva pravila (Plasti, Duo), 12 likova, 12 trenutaka (isti kao decoder na početnoj), 6 zlikovaca, 6 uzrasta i izvori (samo iz `products/content/_sources.md`, numerisani u tekstu). Stari „The Crew Code“ PDF je obrisan.
 - **30-Day Reset po novim nedeljama** i sadržaj Crew Club-a.
 - **Provera žiga** za „Little Brain Crew“ i za nadimke likova.
 - **Pedijatar savetnik** za mesečnu proveru scenarija.
+
+---
+
+## 11. Afilijejt program (samo članovi Crew Club-a)
+
+Odluke 2026-10-26 (Luka): članovi kluba zarađuju **20%** od prodaje preko svog linka, **samo u novcu**, a program ide preko **Creem-ovog ugrađenog afilijejt programa** (Affiliate Hub). Luka je prihvatio Creem-ova pravila umesto naših ranijih ($25, 30 dana).
+
+**Kako radi:**
+- Program je **zatvoren**: u Creem-u isključiti „Public Program“, uključiti „Requires Approval“. Član na `/account/affiliate` prihvati pravila i zatraži pozivnicu; mi proverimo članstvo i pošaljemo Creem invite iz Affiliate Hub-a (ručno, Creem nema API za to).
+- **Članstvo je uslov samo za ulazak.** Creem ne može da ukloni ni zaustavi pojedinačnog afilijejta, pa član koji kasnije otkaže ostaje u programu i dalje zarađuje. Tako i piše na sajtu.
+- Link, klikovi, zarada i isplate su u **Creem affiliate dashboard-u**. Creem postavlja cookie i njegov checkout pripisuje prodaju; mi ništa ne pratimo (naš `/r/` link i `lbc_ref` cookie su uklonjeni).
+- Brojevi (`AFFILIATE` u [`lib/funnel.ts`](lib/funnel.ts), isto u Creem podešavanjima, `design/affiliate.html` i Terms u `content/learn/site-pages.ts`; menjaj sve zajedno):
+  - 20% provizije, računa se posle **2% koje Creem uzima** na svaku afilijejt prodaju
+  - cookie **60 dana** (podešava se u Creem-u)
+  - **7–12 dana** čekanja, isplate **1. i 15.** u mesecu, minimum **$50**
+  - isplata na banku (Creem naplaćuje $7 ili 1%, šta je veće) ili USDC (2%), posle jednokratne Creem provere identiteta
+  - „Support the crew“ se ne računa
+
+**Računica (posle 2%):** mesečni član $3.72, godišnji $39.00, Reset $7.64, Toolkit $1.76.
+
+**Napravljeno (preview):** `/affiliate` (javno), `/account/affiliate` (pravila → „Send me my invite“ → potvrda, 3 gotova opisa sa oznakom), kartica na `/account`, link u footeru, odeljak u Terms, Creem referral cookie u Privacy, rečenica u cancel flow-u („price“ razlog).
+
+**Pitati Creem podršku pre puštanja:**
+1. Da li se provizija računa i na **obnove** pretplate (svaki mesec / godinu)? Do odgovora na `/affiliate` stoji žuto „renewals: confirming with Creem“, a copy ne obećava mesečnu zaradu. Ako je odgovor da, vraća se računica „6 članova pokriva tvojih $19“ u cancel flow.
+2. Može li se proizvod (Support the crew) **isključiti** iz programa?
+3. Da li Creem izdaje afilijejtima poreske formulare (1099 za US) ili to radimo mi?
+4. Pravni tekst uslova (žuti `draft` na stranicama).

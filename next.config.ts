@@ -5,9 +5,13 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   turbopack: { root: import.meta.dirname },
-  // The free quiz was removed; old links and ads land on the plans.
+  // The free quiz was removed; old links and ads land on the plans. Crew Club Lite was removed too:
+  // its old offer page goes straight to the order.
   async redirects() {
-    return [{ source: "/quiz", destination: "/#plans", permanent: false }];
+    return [
+      { source: "/quiz", destination: "/#plans", permanent: false },
+      { source: "/offer/club-lite", destination: "/thank-you", permanent: false },
+    ];
   },
 };
 

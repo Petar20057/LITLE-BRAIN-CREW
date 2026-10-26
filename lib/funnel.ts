@@ -1,12 +1,13 @@
 // Everything you sell, and the order people see it in. Change prices and offer copy here.
 //
-//   home / pricing / Dopa article ──► /checkout/guide ──► /offer/upgrade ──yes──► /offer/club ──yes──► /thank-you
-//                                                              └─no──► /offer/screen-off-week ──► /offer/club ──no──► /offer/club-lite ──► /thank-you
+//   home / pricing / Dopa article ──► /checkout/guide ──► /offer/upgrade ──yes──► /offer/club ──► /thank-you
+//                                                              └─no──► /offer/screen-off-week ──► /offer/club
 //   home / pricing ──► /checkout/program ──────────────────────────────► /offer/club (same as above)
-//   home / pricing ──► /checkout/club ────────────────────────────────────────────────────────────────► /thank-you
-//   gift page ───► /checkout/<guide|program>?gift=1 ────────────────────────────────────────► /thank-you
+//   home / pricing ──► /checkout/club ────────────────────────────────────────────────► /thank-you
+//   gift page ───► /checkout/<guide|program>?gift=1 ────────────────────────────────────► /thank-you
+//   member's Creem referral link ──► home (Creem's cookie credits the member at its checkout, see AFFILIATE)
 
-// True until Stripe and PayPal are connected (lib/payments.ts): buttons walk the funnel without charging.
+// True until Creem is connected (lib/payments.ts): buttons walk the funnel without charging.
 export const PREVIEW = true;
 
 export type CrewKey = "dopa" | "sero" | "endo" | "toci" | "corti" | "teo" | "nora" | "gabi" | "mela" | "greli" | "migo" | "fronti" | "plasti" | "duo";
@@ -21,7 +22,7 @@ export type Item = {
   price: number;
   /** Recurring items renew until cancelled. */
   every?: "month" | "year";
-  /** Shown under the line item, e.g. what happens after a trial. */
+  /** Shown under the line item, e.g. that a downsell counts toward a bigger product later. */
   note?: string;
 };
 
@@ -32,10 +33,9 @@ export const ITEMS = {
   cardsProgram: { id: "cards", name: "Printable Crew Habit Cards", price: 7 },
   upgrade: { id: "upgrade", name: "Upgrade to The 30-Day Reset", price: 30 },
   screenOffWeek: { id: "screen-off-week", name: "Screen-Off Week · 7 days", price: 12, note: "counts toward the 30-Day Reset if you upgrade later" },
-  clubMonthly: { id: "club-monthly", name: "The Crew Club · monthly", price: 9, every: "month" },
-  clubYearly: { id: "club-yearly", name: "The Crew Club · yearly", price: 79, every: "year" },
-  clubTrial: { id: "club-trial", name: "The Crew Club · 14-day trial", price: 1, note: "then $9 a month until you cancel" },
-  clubLite: { id: "club-lite", name: "Crew Club Lite", price: 4, every: "month" },
+  // The Club is the only membership: $19 a month or $199 a year. No trial, no lighter tier.
+  clubMonthly: { id: "club-monthly", name: "The Crew Club · monthly", price: 19, every: "month" },
+  clubYearly: { id: "club-yearly", name: "The Crew Club · yearly", price: 199, every: "year" },
 } satisfies Record<string, Item>;
 
 /* ---------- checkout pages ---------- */
@@ -144,7 +144,7 @@ export const OFFERS: Record<string, Offer> = {
     item: ITEMS.upgrade,
     price: "$30",
     was: "$39",
-    per: "one payment · added to the order you just paid",
+    per: "one payment · quick checkout, your email is already filled in",
     yes: "Yes, upgrade me for $30",
     no: "No thanks, just the Toolkit",
     next: { yes: "/offer/club", no: "/offer/screen-off-week" },
@@ -174,31 +174,36 @@ export const OFFERS: Record<string, Offer> = {
     sub: "Habits stick when something new keeps showing up. In the Crew Club, a new crew member joins every month, the crew answers your questions in a monthly Q&A episode, and you’re in a private community of parents doing the same thing.",
     art: "duo",
     stack: ["A new crew member every month, from our map of 156", "A monthly Q&A episode: your questions, answered", "A private community of parents", "Ages & stages guides as your kid grows"],
-    item: ITEMS.clubTrial,
-    price: "$1 for 14 days",
-    per: "then $9 a month · we email you 3 days before the trial ends · cancel in 2 clicks",
-    yes: "Yes, try it for $1",
-    no: "No thanks",
-    next: { yes: "/thank-you", no: "/offer/club-lite" },
-    consent: "I understand that after 14 days the Crew Club renews at $9 a month until I cancel, and that I can cancel anytime in my account.",
-  },
-  "club-lite": {
-    slug: "club-lite",
-    step: "One more thing",
-    hand: "no problem",
-    title: "Just want the monthly challenge?",
-    sub: "Crew Club Lite: one printable family challenge and one bedtime story a month. A small nudge that keeps the habits going after day 30.",
-    art: "sero",
-    stack: ["One printable family challenge a month", "One bedtime story with the crew a month", "Upgrade to the full Club or cancel anytime"],
-    item: ITEMS.clubLite,
-    price: "$4 a month",
-    per: "cancel anytime, in 2 clicks",
-    yes: "Yes, add Lite for $4 a month",
+    item: ITEMS.clubMonthly,
+    price: "$19 a month",
+    per: "renews monthly until you cancel · pause or cancel in 2 clicks",
+    yes: "Yes, join for $19 a month",
     no: "No thanks, take me to my order",
     next: { yes: "/thank-you", no: "/thank-you" },
-    consent: "I understand that Crew Club Lite renews at $4 a month until I cancel, and that I can cancel anytime in my account.",
+    consent: "I understand that the Crew Club renews at $19 a month until I cancel, and that I can pause or cancel anytime in my account.",
   },
 };
+
+/* ---------- affiliate program (Crew Club members only) ---------- */
+
+// Runs on Creem's built-in affiliate program (Affiliate Hub). These numbers mirror its settings: change them there too,
+// and in design/affiliate.html and the Terms (content/learn/site-pages.ts), which spell them out.
+// - Invite-only with manual approval, so only Crew Club members get in. Once in, a member keeps earning after they
+//   cancel: Creem can't stop or remove a single affiliate.
+// - Creem keeps an extra 2% of every affiliate sale; the commission is figured on what's left.
+// - Creem sets the referral cookie and its checkout reads it, so nothing on our side tracks or pays anything.
+// - "Support the crew" payments don't count: they aren't a sale.
+export const AFFILIATE = {
+  rate: 0.2,
+  creemFee: 0.02,
+  cookieDays: 60,
+  /** Days a commission waits before it can be paid (set by Creem). */
+  holdDays: "7–12",
+  minPayout: 50,
+  payoutDays: "the 1st and 15th",
+};
+
+export const commission = (price: number) => Math.round(price * (1 - AFFILIATE.creemFee) * AFFILIATE.rate * 100) / 100;
 
 /* ---------- money helpers ---------- */
 

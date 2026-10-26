@@ -21,8 +21,7 @@ export default function OneTimeOffer({ slug }: { slug: string }) {
     if (o.consent && !consent) return setError("Please tick the box to confirm how it renews.");
     setBusy(true);
     try {
-      await charge("card", [o.item], order.email);
-      addItem(o.item);
+      await charge([o.item], order.email, { next: o.next.yes, consent: o.consent ? consent : undefined, commit: () => addItem(o.item) });
       router.push(o.next.yes);
     } catch (err) {
       setError(err instanceof Error ? err.message : "That didn’t go through. Please try again.");

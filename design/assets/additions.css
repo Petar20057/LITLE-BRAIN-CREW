@@ -115,9 +115,6 @@
 .total{display:flex;justify-content:space-between;font:800 22px var(--head);padding:14px 0 4px}
 .pay{display:grid;gap:10px;margin-top:var(--s2)}
 .pay .btn{width:100%;justify-content:center}
-.btn-paypal{background:#FFC439;color:#111;border-color:#111}
-.btn-paypal:hover{filter:brightness(.97)}
-.pay-or{text-align:center;font-size:13px;font-weight:700;color:var(--ink-soft)}
 .fx-trust{list-style:none;display:grid;gap:6px;margin-top:var(--s2);font-size:14px;color:var(--ink-soft)}
 .fx-trust li{display:flex;gap:8px;align-items:center}
 .fx-trust li::before{content:"✓";font-weight:800;color:var(--ok)}

@@ -44,15 +44,16 @@ SEO content, rendered as server components with the same global CSS classes as t
 
 | Route | What |
 |---|---|
-| `/checkout/guide`, `/checkout/program`, `/checkout/club` | Order page with order bump, email, card or PayPal |
-| `/offer/upgrade`, `/offer/split`, `/offer/club`, `/offer/club-lite` | One-click upsells and downsells after payment |
+| `/checkout/guide`, `/checkout/program`, `/checkout/club` | Order page with order bump and email, then Creem checkout (card, Apple Pay, Google Pay) |
+| `/offer/upgrade`, `/offer/screen-off-week`, `/offer/club` | One-click upsells and downsells after payment |
+| `/account/affiliate`, `/affiliate` | Members-only affiliate program (20%) on Creem: rules, invite request, share kit |
 | `/thank-you` | Order summary and next steps |
 | `/support` | “Support the crew”, pay what you want (not a donation) |
 | `/account`, `/account/cancel` | Crew Club account and the cancel flow (pause, downgrade, save offers) |
 
 - Prices, products and the order of offers: `lib/funnel.ts`.
 - Order state across the steps: `lib/order.ts` (sessionStorage for now).
-- Payments: `lib/payments.ts`. **Preview mode:** nothing is charged until Stripe and PayPal are connected there (see FUNNEL.md §7).
+- Payments: `lib/payments.ts`. **Preview mode:** nothing is charged until Creem is connected there (see FUNNEL.md §7).
 
 ## Known gaps
 
@@ -66,4 +67,4 @@ Copy `.env.example` to `.env.local`. `NEXT_PUBLIC_SITE_URL` is the public origin
 
 ## Planned stack
 
-GitHub → Vercel (Root Directory `web` if the repo is the parent folder), Supabase for orders, members and form submissions, Stripe and PayPal for payments.
+GitHub → Vercel (Root Directory `web` if the repo is the parent folder), Supabase for orders, members and form submissions, Creem (merchant of record) for payments and the affiliate program.

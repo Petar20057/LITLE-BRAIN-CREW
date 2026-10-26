@@ -178,7 +178,7 @@ export const SITE_PAGES: SitePage[] = [
       {
         h2: "Payments",
         paras: [
-          "Payments are in preview today: the buttons walk through the checkout steps, and nothing is charged. Card and PayPal payments will be handled by Stripe and PayPal (planned). We won’t see or store your card number. We will receive your email, what you bought and the payment status, so we can send your files and manage memberships.",
+          "Payments are in preview today: the buttons walk through the checkout steps, and nothing is charged. Payments will be handled by Creem, our payment partner and the merchant of record, which processes your card, Apple Pay or Google Pay under its own privacy policy. We won’t see or store your card number. We will receive your email, what you bought and the payment status, so we can send your files and manage memberships.",
           "If we later add other tools, such as an email service to deliver your purchase, we will name them here.",
         ],
       },
@@ -191,7 +191,7 @@ export const SITE_PAGES: SitePage[] = [
       {
         h2: "Cookies, ads and tracking",
         paras: [
-          "We don’t use advertising cookies, tracking pixels or analytics tools today. The only cookie we plan is the sign-in cookie for Crew Club accounts, described above. Like any website, our hosting provider may keep standard server logs, such as IP address and pages requested, to keep the site running and secure. If we add analytics later, we will describe them here first.",
+          "We don’t use advertising cookies, tracking pixels or analytics tools today. We use two cookies of our own. The sign-in cookie for Crew Club accounts is described above. When you open a Crew Club member’s share link, Creem, our payment partner, sets a referral cookie for 60 days, so that if you buy, that member gets their share. It is used only for that, never for advertising. Like any website, our hosting provider may keep standard server logs, such as IP address and pages requested, to keep the site running and secure. If we add analytics later, we will describe them here first.",
           "We don’t sell your personal information.",
         ],
       },
@@ -254,14 +254,21 @@ export const SITE_PAGES: SitePage[] = [
       {
         h2: "Crew Club membership",
         paras: [
-          "The Crew Club is a membership that renews on a monthly or yearly basis, at the price shown at checkout, until you cancel. A short trial, if offered, converts to the regular price when it ends. We will email you before a trial ends and before every yearly renewal.",
+          "The Crew Club is a membership that renews on a monthly or yearly basis, at the price shown at checkout, until you cancel. We will email you before every yearly renewal.",
           "You can pause or cancel any time in your account, in two clicks. Cancelling stops future charges. Charges already made are not refunded, in line with our final-sales policy.",
+        ],
+      },
+      {
+        h2: "Affiliate program for Crew Club members",
+        paras: [
+          "Our affiliate program is run on Creem, our payment partner and the merchant of record, and is open by invitation to Crew Club members only. Members who join earn 20% of every payment made by people who buy through their link, figured after the 2% fee Creem keeps on affiliate sales. The link is remembered for 60 days. Payments to support the crew are not included. A member who later cancels their Club stays in the program.",
+          "Commissions wait 7 to 12 days, then Creem pays them on the 1st and 15th of the month once the balance reaches $50, by bank transfer or USDC, after an identity check. Creem charges its own payout fee. Members must say they earn a commission wherever they share the link, share only their own honest experience, make no medical claims or promises, and must not buy through their own link, use coupon sites, run ads on our name, send spam or aim posts at children. Creem’s affiliate terms also apply. Nothing is paid out while payments are in preview.",
         ],
       },
       {
         h2: "How payments work",
         paras: [
-          "Payments are in preview today and nothing is charged. When they go live, card and PayPal payments will be handled by Stripe and PayPal (planned). By paying, you also agree to the terms of the payment provider you use.",
+          "Payments are in preview today and nothing is charged. When they go live, Creem will be the merchant of record for your order: Creem is the seller on your receipt and handles the payment (card, Apple Pay or Google Pay), sales tax and invoices. By paying, you also agree to Creem’s terms.",
         ],
       },
       {

@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
 import { CREW_NAMES, ITEMS, PRODUCTS, per, total, usd, type CrewKey, type Item, type Product } from "@/lib/funnel";
 import { saveOrder, useQueryParam, useStored } from "@/lib/order";
-import { charge, type Method } from "@/lib/payments";
+import { charge } from "@/lib/payments";
 import CrewArt from "./CrewArt";
 import Steps from "./Steps";
 
@@ -19,30 +19,31 @@ export default function Checkout({ slug }: { slug: Product["slug"] }) {
   const planParam = useQueryParam("plan");
   const [planPick, setPlan] = useState<"monthly" | "yearly" | null>(null);
   const plan = planPick ?? (planParam === "yearly" ? "yearly" : "monthly");
+  const yearlySave = ITEMS.clubMonthly.price * 12 - ITEMS.clubYearly.price;
 
   const [bump, setBump] = useState(false);
   const [email, setEmail] = useState("");
   const [consent, setConsent] = useState(false);
-  const [busy, setBusy] = useState<Method | null>(null);
+  const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
   const main: Item = slug === "club" ? (plan === "yearly" ? ITEMS.clubYearly : ITEMS.clubMonthly) : slug === "guide" ? ITEMS.guide : ITEMS.program;
   const items = [main, ...(bump && p.bump ? [p.bump.item] : [])];
   const recurring = items.some((i) => i.every);
 
-  async function pay(method: Method, e?: FormEvent) {
-    e?.preventDefault();
+  async function pay(e: FormEvent) {
+    e.preventDefault();
     if (!/^\S+@\S+\.\S+$/.test(email)) return setError("Please enter the email where we should send your link.");
     if (recurring && !consent) return setError("Please tick the box to confirm how the membership renews.");
     setError("");
-    setBusy(method);
+    setBusy(true);
     try {
-      await charge(method, items, email);
-      saveOrder({ email, items, crew, gift });
-      router.push(gift ? "/thank-you" : p.next);
+      const next = gift ? "/thank-you" : p.next;
+      await charge(items, email, { next, consent: recurring ? consent : undefined, crew, commit: () => saveOrder({ email, items, crew, gift }) });
+      router.push(next);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Payment didn’t go through. Please try again.");
-      setBusy(null);
+      setBusy(false);
     }
   }
 
@@ -50,7 +51,7 @@ export default function Checkout({ slug }: { slug: Product["slug"] }) {
     <>
       <Steps current="Order" />
       <div className="fx-grid">
-        <form className="fx-card" onSubmit={(e) => pay("card", e)} noValidate>
+        <form className="fx-card" onSubmit={pay} noValidate>
           <h1>{gift ? `A gift for ${gift.to || "a friend"}` : "Your order"}</h1>
           <p className="fx-sub">{p.sub}</p>
 
@@ -64,8 +65,8 @@ export default function Checkout({ slug }: { slug: Product["slug"] }) {
 
           {slug === "club" && (
             <div className="bill" role="group" aria-label="Billing" style={{ marginBottom: 12 }}>
-              <button type="button" aria-pressed={plan === "monthly"} onClick={() => setPlan("monthly")}>Monthly · $9</button>
-              <button type="button" aria-pressed={plan === "yearly"} onClick={() => setPlan("yearly")}>Yearly · $79 (save 27%)</button>
+              <button type="button" aria-pressed={plan === "monthly"} onClick={() => setPlan("monthly")}>Monthly · {usd(ITEMS.clubMonthly.price)}</button>
+              <button type="button" aria-pressed={plan === "yearly"} onClick={() => setPlan("yearly")}>Yearly · {usd(ITEMS.clubYearly.price)} (save {usd(yearlySave)})</button>
             </div>
           )}
 
@@ -102,14 +103,12 @@ export default function Checkout({ slug }: { slug: Product["slug"] }) {
           )}
 
           <div className="pay">
-            <button className="btn btn-main btn-lg" type="submit" disabled={busy !== null}>{busy === "card" ? "One moment…" : `Pay ${usd(total(items))} with card`}</button>
-            <span className="pay-or">or</span>
-            <button className="btn btn-paypal" type="button" disabled={busy !== null} onClick={() => pay("paypal")}>{busy === "paypal" ? "One moment…" : "Pay with PayPal"}</button>
+            <button className="btn btn-main btn-lg" type="submit" disabled={busy}>{busy ? "One moment…" : `Continue to payment · ${usd(total(items))}`}</button>
           </div>
           {error && <p className="fx-err" role="alert">{error}</p>}
 
           <ul className="fx-trust">
-            <li>Safe payment by Stripe or PayPal. We never see your card.</li>
+            <li>Secure checkout by Creem, our payment partner: card, Apple Pay or Google Pay. We never see your card.</li>
             <li>{recurring ? "Pause or cancel yourself, anytime" : "One payment, yours to keep"}</li>
             {!recurring && <li>Digital product, instant access. All sales are final.</li>}
           </ul>

@@ -3,26 +3,27 @@
 -- Who writes what:
 --   members        one row per parent, created automatically when an auth user is created
 --                  (checkout signs the parent up by email). The parent may edit name and age groups.
---   subscriptions  written only by trusted server code (Stripe/PayPal webhooks, lib/supabase/admin.ts).
+--   subscriptions  written only by trusted server code (Creem webhooks, lib/supabase/admin.ts).
 --                  The provider is the source of truth; this table mirrors it so pages can check access.
 --   cancel_feedback  one row per cancel-flow answer (/account/cancel): reason, save offer, outcome.
 --                  Lets us measure churn by reason and which save offer works (FUNNEL.md, section 4).
 --
--- Plans and prices mirror lib/funnel.ts (club-monthly $9, club-yearly $79, club-lite $4, trial $1/14 days).
+-- Plans and prices mirror lib/funnel.ts (club-monthly $19, club-yearly $199). The Club is the only membership: no trial, no Lite.
 
 -- ---------- types ----------
 
 create type public.age_group as enum ('whyzi', 'skuli', 'ruli', 'tweeni', 'sprouti', 'seki');
-create type public.club_plan as enum ('club_monthly', 'club_yearly', 'club_lite');
-create type public.payment_provider as enum ('stripe', 'paypal');
--- Same states as Stripe subscriptions, plus 'paused' (pause_collection / PayPal suspend).
+create type public.club_plan as enum ('club_monthly', 'club_yearly');
+-- Payments go through Creem (merchant of record). Kept as an enum so a second provider can be added later.
+create type public.payment_provider as enum ('creem');
+-- Same states as Creem subscriptions (webhooks subscription.*). 'scheduled_cancel' still has access until the period ends.
 create type public.subscription_status as enum (
-  'incomplete', 'incomplete_expired', 'trialing', 'active', 'past_due', 'paused', 'unpaid', 'canceled'
+  'trialing', 'active', 'past_due', 'unpaid', 'paused', 'scheduled_cancel', 'expired', 'canceled'
 );
 create type public.cancel_reason as enum (
   'too_expensive', 'no_time', 'got_what_we_needed', 'wrong_age', 'something_broken', 'other'
 );
-create type public.save_offer as enum ('half_price_3_months', 'pause', 'switch_to_lite', 'change_age_free_month', 'fix_free_month');
+create type public.save_offer as enum ('half_price_3_months', 'pause', 'pause_instead_of_done', 'change_age_free_month', 'fix_free_month');
 
 -- ---------- shared ----------
 
@@ -42,8 +43,7 @@ create table public.members (
   display_name text check (char_length(display_name) <= 80),
   -- A family can have kids in more than one age group (Whyzi 3–6 … Seki 14–17).
   age_groups public.age_group[] not null default '{}',
-  stripe_customer_id text unique,
-  paypal_payer_id text unique,
+  creem_customer_id text unique,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
@@ -106,7 +106,7 @@ create table public.subscriptions (
 
 -- One live Club subscription per parent; switching plans updates the row instead of adding one.
 create unique index subscriptions_one_live_per_member on public.subscriptions (member_id)
-  where status in ('trialing', 'active', 'past_due', 'paused');
+  where status in ('trialing', 'active', 'past_due', 'unpaid', 'paused', 'scheduled_cancel');
 
 create index subscriptions_member_id on public.subscriptions (member_id);
 
@@ -131,14 +131,13 @@ create index cancel_feedback_member_id on public.cancel_feedback (member_id);
 -- ---------- access check ----------
 
 -- Does the signed-in parent have Club access right now? For gating Club pages and storage.
--- Lite counts as access; pages that are full-Club-only should also check the plan.
 -- Only ever about the caller, so nobody can probe whether someone else is a member.
 create function public.has_club_access() returns boolean
 language sql stable security definer set search_path = '' as $$
   select exists (
     select 1 from public.subscriptions s
     where s.member_id = (select auth.uid())
-      and (s.status in ('trialing', 'active') or (s.status = 'past_due' and s.current_period_end > now()))
+      and (s.status in ('trialing', 'active', 'scheduled_cancel') or (s.status = 'past_due' and s.current_period_end > now()))
   );
 $$;
 
