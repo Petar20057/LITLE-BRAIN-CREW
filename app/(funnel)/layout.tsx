@@ -8,7 +8,10 @@ export default function FunnelLayout({ children }: LayoutProps<"/">) {
   return (
     <div className="fx">
       <header className="fx-top">
-        <a href="/" className="logo" aria-label="Little Brain Crew home"><i aria-hidden="true">♥</i>LITTLE BRAIN CREW</a>
+        <a href="/" className="logo" aria-label="Little Brain Crew home">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img className="logo-img" src="/assets/brand/lbc-logo-horizontal.svg" alt="" width={133} height={48} />
+        </a>
       </header>
       {PREVIEW && <p className="fx-preview">Preview: no real payment is taken. Stripe and PayPal get connected next.</p>}
       <main className="fx-wrap">{children}</main>

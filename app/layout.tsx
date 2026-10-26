@@ -5,7 +5,10 @@ import "../public/assets/additions.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  icons: { icon: { url: "/favicon.svg", type: "image/svg+xml" } },
+  icons: {
+    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
+    apple: [{ url: "/assets/brand/lbc-app-icon-180.png", sizes: "180x180" }],
+  },
 };
 
 export const viewport: Viewport = {
