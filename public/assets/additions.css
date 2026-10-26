@@ -388,3 +388,44 @@ html.dad .top .logo .on-dark,html.dad .ad-top .logo .on-dark{display:block}
 .q-stats .learn-table td{white-space:nowrap}
 .quiz .opt:disabled:hover{box-shadow:0 0 0 2px var(--hair) inset}
 @media(max-width:560px){.q-lesson .res-top{grid-template-columns:80px 1fr;text-align:left;gap:14px;padding:16px}.q-lesson .res-top svg{width:80px;height:80px;margin:0}.q-lesson .res-top .q-title{font-size:22px}}
+
+/* ---------- admin panel (/admin) ---------- */
+.adm .fx-wrap{max-width:1200px}
+.adm-page h1{font-size:clamp(28px,4vw,40px);margin:var(--s2) 0 var(--s2)}
+.adm-head{display:flex;flex-direction:column;gap:12px;border-bottom:2px dashed var(--hair);padding-bottom:12px}
+.adm-tabs{display:flex;flex-wrap:wrap;gap:8px}
+.adm-tabs a{padding:8px 16px;border:2px solid var(--ink);border-radius:var(--r-pill);background:#fff;color:var(--ink);font-weight:700;text-decoration:none;font-size:15px}
+.adm-tabs a.on{background:var(--ink);color:#fff}
+.adm-bar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;font-size:15px;color:var(--ink-soft)}
+.adm-range a{margin:0 4px;color:var(--trust);text-underline-offset:3px}
+.adm-range a.on{color:var(--ink);font-weight:800;text-decoration:none}
+.adm-who{display:flex;gap:10px;align-items:center;margin-left:auto}
+.adm-link{background:none;border:0;color:var(--trust);text-decoration:underline;text-underline-offset:3px;font:inherit;cursor:pointer;padding:0}
+.adm-error{background:var(--corti-t);border:2px solid var(--alert);border-radius:var(--r-s);padding:10px 14px;margin-bottom:12px;font-weight:700}
+.adm-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:var(--s3)}
+.adm-tile{background:#fff;border:2px solid var(--ink);border-radius:var(--r-m);box-shadow:var(--sh-1);padding:14px 16px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.adm-tile span{font-size:14px;font-weight:700;color:var(--ink-soft)}
+.adm-tile b{font:800 clamp(26px,3vw,34px)/1.15 var(--head);color:var(--ink);font-variant-numeric:tabular-nums}
+.adm-tile small{font-size:13px;color:var(--ink-soft)}
+.adm-chart{background:#fff;border:2px solid var(--ink);border-radius:var(--r-m);box-shadow:var(--sh-1);padding:14px 16px 10px;margin:0 0 var(--s3)}
+.adm-chart figcaption{font:800 19px/1.3 var(--head);margin-bottom:10px}
+.adm-chart figcaption small{font:500 14px var(--body);color:var(--ink-soft)}
+.adm-chart svg{display:block;width:100%;height:200px}
+.adm-axis{stroke:var(--hair);stroke-width:2;vector-effect:non-scaling-stroke}
+.adm-hit{fill:transparent}
+.adm-barfill{fill:var(--trust)}
+.adm-barg:hover .adm-barfill{fill:var(--cta)}
+.adm-barg:hover .adm-hit{fill:var(--hair);opacity:.5}
+.adm-chart-x{display:flex;justify-content:space-between;font-size:13px;color:var(--ink-soft);margin-top:4px}
+.adm-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:0 16px}
+.adm-grid .table-wrap{margin:0 0 16px}
+.adm-top .learn-table{font-size:15px}
+.adm-top .learn-table td{white-space:nowrap;width:1%;text-align:right;font-variant-numeric:tabular-nums}
+.adm-top .learn-table thead th:not(:first-child){text-align:right;white-space:nowrap}
+.adm-top tbody th{position:relative;z-index:0;word-break:break-word;font-weight:600}
+.adm-top tbody th::before{content:"";position:absolute;z-index:-1;left:0;top:6px;bottom:6px;width:var(--w,0);background:var(--teo-t);border-radius:0 6px 6px 0}
+.adm-actions{margin:0 0 var(--s3)}
+.adm-list{font-size:14px}
+.adm-list td,.adm-list th{word-break:break-word}
+.adm-list td:first-child{white-space:nowrap}
+@media(max-width:560px){.adm-grid{grid-template-columns:1fr}.adm-who{margin-left:0}}

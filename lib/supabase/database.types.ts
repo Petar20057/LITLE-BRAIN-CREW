@@ -86,6 +86,49 @@ export type Database = {
         };
         Relationships: [];
       };
+      page_views: {
+        Row: {
+          country: string | null;
+          created_at: string;
+          device: string | null;
+          id: number;
+          path: string;
+          referrer: string | null;
+          session_id: string;
+          utm_campaign: string | null;
+          utm_medium: string | null;
+          utm_source: string | null;
+          visitor_id: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          country?: string | null;
+          created_at?: string;
+          device?: string | null;
+          id?: never;
+          path: string;
+          referrer?: string | null;
+          session_id: string;
+          utm_campaign?: string | null;
+          utm_medium?: string | null;
+          utm_source?: string | null;
+          visitor_id: string;
+        };
+        Update: {
+          country?: string | null;
+          created_at?: string;
+          device?: string | null;
+          id?: never;
+          path?: string;
+          referrer?: string | null;
+          session_id?: string;
+          utm_campaign?: string | null;
+          utm_medium?: string | null;
+          utm_source?: string | null;
+          visitor_id?: string;
+        };
+        Relationships: [];
+      };
       quiz_events: {
         Row: {
           created_at: string;
@@ -234,6 +277,43 @@ export type Database = {
         };
         Relationships: [];
       };
+      signups: {
+        Row: {
+          created_at: string;
+          details: Json | null;
+          email: string;
+          form: string;
+          id: string;
+          page: string | null;
+          unsubscribed_at: string | null;
+          utm_source: string | null;
+          visitor_id: string | null;
+        };
+        ComputedFields: never;
+        Insert: {
+          created_at?: string;
+          details?: Json | null;
+          email: string;
+          form: string;
+          id?: string;
+          page?: string | null;
+          unsubscribed_at?: string | null;
+          utm_source?: string | null;
+          visitor_id?: string | null;
+        };
+        Update: {
+          created_at?: string;
+          details?: Json | null;
+          email?: string;
+          form?: string;
+          id?: string;
+          page?: string | null;
+          unsubscribed_at?: string | null;
+          utm_source?: string | null;
+          visitor_id?: string | null;
+        };
+        Relationships: [];
+      };
       subscriptions: {
         Row: {
           billing_interval: string;
@@ -312,6 +392,7 @@ export type Database = {
     };
     Functions: {
       has_club_access: { Args: Record<PropertyKey, never>; Returns: boolean };
+      newsletter_subscribers: { Args: { forms: string[] }; Returns: number };
       quiz_answers: {
         Args: { since: string };
         Returns: {
@@ -339,6 +420,51 @@ export type Database = {
           source: string;
           started: number;
           variant: string;
+        }[];
+      };
+      signups_daily: {
+        Args: { since: string };
+        Returns: {
+          day: string;
+          form: string;
+          signups: number;
+        }[];
+      };
+      signups_summary: {
+        Args: { since: string };
+        Returns: {
+          form: string;
+          in_period: number;
+          subscribed: number;
+          total: number;
+        }[];
+      };
+      traffic_daily: {
+        Args: { since: string };
+        Returns: {
+          day: string;
+          sessions: number;
+          views: number;
+          visitors: number;
+        }[];
+      };
+      traffic_top: {
+        Args: { since: string };
+        Returns: {
+          kind: string;
+          label: string;
+          views: number;
+          visitors: number;
+        }[];
+      };
+      traffic_totals: {
+        Args: { since: string };
+        Returns: {
+          bounced: number;
+          returning_visitors: number;
+          sessions: number;
+          views: number;
+          visitors: number;
         }[];
       };
     };

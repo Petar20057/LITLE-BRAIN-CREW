@@ -133,7 +133,7 @@ export const SITE_PAGES: SitePage[] = [
       {
         h2: "The short version",
         paras: [
-          "Little Brain Crew is for parents and other adults. We don’t collect children’s names, photos or other personal details. We use no advertising trackers and no third-party analytics tools. The parent quiz at /code keeps its own simple count of which screens were seen and answered (see below). We collect an email address and a few details only when you fill in a form or buy something, and we use them for the reason you gave us.",
+          "Little Brain Crew is for parents and other adults. We don’t collect children’s names, photos or other personal details. We use no advertising trackers and no third-party analytics tools. We keep our own simple count of page visits, without cookies (see below), and the parent quiz at /code counts which screens were seen and answered. We collect an email address and a few details only when you fill in a form or buy something, and we use them for the reason you gave us.",
           "Parts of this page describe features that are not switched on yet. We mark those as planned, and we will update this page when they go live.",
         ],
       },
@@ -153,8 +153,15 @@ export const SITE_PAGES: SitePage[] = [
       {
         h2: "How form entries reach us",
         paras: [
-          "Form entries are meant to be delivered to us by email through Web3Forms, a third-party form service. Along with what you type, the service receives the name of the form and the page you were on. This connection is planned and is not switched on yet, so forms do not send anything today.",
+          "Form entries are stored in our database at Supabase, together with the name of the form, the page you were on, the campaign tag of the link that brought you (if any) and the random visit id described below. Gift card details are not stored there: they stay in your browser until checkout.",
+          "Form entries may also be delivered to us by email through Web3Forms, a third-party form service, which then receives what you typed, the name of the form and the page you were on. This connection is planned and is not switched on yet.",
           "We use your information to answer you, send what you asked for, and, if you signed up for updates, send occasional emails. Every marketing email will have an unsubscribe link (planned).",
+        ],
+      },
+      {
+        h2: "How we count visits",
+        paras: [
+          "To know which pages help parents and where visitors come from, our own script records each page you open: the page address, the site that linked to you (only its name, such as instagram.com), the campaign tags in the link, whether you are on a phone, tablet or computer, and the country your connection comes from. It sets no cookies and stores no IP address. Instead it keeps two random ids in your browser: one in local storage (key “lbc-vid”) that tells us a visitor came back, and one in session storage (keys “lbc-sid” and “lbc-origin”) that groups the pages of one visit and disappears when you close the tab. Clearing your browser data removes them. Bots and our own team pages are not counted.",
         ],
       },
       {

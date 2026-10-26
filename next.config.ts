@@ -11,6 +11,8 @@ const nextConfig: NextConfig = {
     return [
       { source: "/quiz", destination: "/#plans", permanent: false },
       { source: "/offer/club-lite", destination: "/thank-you", permanent: false },
+      // The quiz numbers moved into the admin panel.
+      { source: "/stats/quiz", destination: "/admin/quiz", permanent: false },
     ];
   },
 };

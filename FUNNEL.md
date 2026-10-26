@@ -318,12 +318,12 @@ Odluke 2026-10-26 (Luka): članovi kluba zarađuju **20%** od prodaje preko svog
 - Baza: `supabase/migrations/20261026150000_quiz.sql` (`quiz_sessions`, `quiz_events`, `quiz_leads` + funkcije za statistiku). Pregledač ne može da čita ni piše ništa.
 - Kupovina: `?qs=<sesija>` ide iz rezultata u checkout → Creem `metadata.quiz_session` → webhook upisuje `purchased_at`.
 
-**Kako se čita levak:** `/stats/quiz` (lozinka = `STATS_TOKEN` u env-u; prazno = stranica ne postoji). Prikazuje:
+**Kako se čita levak:** `/admin/quiz` u admin panelu (sekcija 13; stari `/stats/quiz` preusmerava tamo, `STATS_TOKEN` više ne treba). Prikazuje:
 1. konverziju po varijanti (start → email → rezultat → klik na checkout → kupovina),
 2. koliko ljudi je videlo svaki ekran, sa % od starta i medijanom vremena po ekranu (gde najviše odustaju),
 3. odgovore (uzrast, trenuci, mitovi, Duo, štikliran nedeljni savet).
 
-Filteri: 7/30/90 dana i izvor (`utm_source`).
+Filteri: 7/30/90/365 dana i izvor (`utm_source`).
 
 **A/B test:** varijante su u `content/quiz.ts` (`VARIANTS`). Posetilac dobije nasumičnu varijantu za celu sesiju, a može se i zadati preko `?v=b`. Za sada se testira samo naslov intro ekrana. Varijantu koja gubi treba skloniti tek kad obe imaju bar nekoliko stotina startova.
 
@@ -336,3 +336,22 @@ Za druge kampanje promeni `utm_campaign` ili `k`, pa se vide odvojeno. „Commen
 - Drift u bazi je rešen 2026-10-26: živa baza je imala staru Stripe/PayPal verziju `20261026120000_crew_club.sql`, a `20261026160000_crew_club_creem.sql` je prebacuje na Creem. `npm run db:types` sada opet generiše ceo fajl sa tipovima.
 - SES ključevi (bez njih se email sa rezultatom ne šalje, samo se loguje).
 - Nedeljni saveti za one koji su štiklirali: sekvenca mejlova i unsubscribe ruta još ne postoje.
+
+## 13. Admin panel `/admin` (2026-10-26)
+
+**Ulaz:** `www.littlebraincrew.com/admin/login`, email + lozinka. Admin je Supabase auth korisnik sa `app_metadata.role = "admin"` (to može da postavi samo tajni ključ). Nalog se pravi ili lozinka menja sa `node scripts/create-admin.mjs <email>` (generiše novu lozinku i ispiše je jednom). Roditelji sa Club nalogom nemaju tu ulogu i ne mogu da uđu. Stranica nema meni i ima `noindex`.
+
+**Tabovi** (svaki ima filter 7/30/90/365 dana):
+1. **Traffic** (`/admin`): posetioci, posete, pregledi stranica, bounce, povratnici, newsletter pretplatnici, posete kviza; posetioci po danu; top stranice, ulazne stranice, sajtovi koji šalju posete, UTM izvor i kampanja, uređaj, država.
+2. **Newsletter & forms** (`/admin/newsletter`): jedinstveni pretplatnici, nove prijave po danu i po formi, poslednjih 100 prijava sa detaljima, **CSV sa svim mejlovima** (`/admin/newsletter/export`).
+3. **Quiz /code** (`/admin/quiz`): isto što je bilo na `/stats/quiz` (sekcija 12).
+4. **Crew Club** (`/admin/members`): plaćeni članovi, MRR, nove i otkazane pretplate, statusi, planovi, razlozi otkazivanja i save ponude. Prazno dok Creem nije živ.
+
+**Kako se broji:**
+- Posete: `components/Track.tsx` (u root layout-u) šalje `sendBeacon` na `/api/track` za svaku stranicu. Bez kolačića: nasumični `lbc-vid` (localStorage) = posetilac, `lbc-sid` (sessionStorage) = poseta. Ne čuvamo IP ni user agent; država iz Vercel header-a. Botovi i `/admin`, `/stats`, `/dev`, `/api` se ne broje. Brojanje kreće od puštanja panela.
+- Forme: `post()` u `design/assets/site.js` šalje svaku email formu na `/api/signup` → tabela `signups` (jedan red po emailu po formi). **Do sada se forme nisu nigde čuvale** (Web3Forms ključ je prazan). Gift forma se ne čuva (to je checkout, a sadrži tuđi email).
+- Newsletter = `free-screen-list`, `sticker-pack`, `screen-off-challenge` + kviz roditelji koji su štiklirali nedeljni savet (`lib/analytics.ts`, `NEWSLETTER_FORMS`). Waitlist, founding i škole se broje po formi, ali nisu newsletter.
+- Baza: `supabase/migrations/20261026170000_admin_analytics.sql` (`page_views`, `signups` + funkcije `traffic_*`, `signups_*`, `newsletter_subscribers`). Pregledač nema pristup tabelama.
+- Privacy stranica opisuje brojanje poseta i čuvanje formi.
+
+**Šta još fali:** unsubscribe ruta i slanje newslettera (za sada CSV), prodaje Toolkit-a i Reset-a su u Creem dashboard-u dok se ne upišu u bazu.

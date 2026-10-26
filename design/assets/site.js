@@ -149,8 +149,17 @@ if (gi('ages-row')) gi('ages-row').innerHTML = AGES.map(([k, n, age, normal, foc
 
 /* ---------- forms ---------- */
 function post(f) {
-  if (!W3F_KEY) return;
   const fd = new FormData(f);
+  // Every email form lands in our database (app/api/signup), shown on /admin. The gift form is a checkout: never store the friend's email.
+  if (f.dataset.form && f.dataset.form !== 'gift') {
+    const details = {};
+    fd.forEach((v, k) => { if (k !== 'email' && typeof v === 'string' && v) details[k] = k in details ? [].concat(details[k], v) : v; });
+    let visitor = null, utm = null;
+    try { visitor = localStorage.getItem('lbc-vid'); utm = JSON.parse(sessionStorage.getItem('lbc-origin') || 'null')?.utm_source || null; } catch (err) { /* storage blocked: still store the email */ }
+    fetch('/api/signup', { method: 'POST', headers: { 'content-type': 'application/json' }, keepalive: true,
+      body: JSON.stringify({ form: f.dataset.form, email: fd.get('email'), page: location.pathname, details, visitor, utm_source: utm }) }).catch(() => {});
+  }
+  if (!W3F_KEY) return;
   fd.append('access_key', W3F_KEY);
   fd.append('subject', 'Little Brain Crew · ' + (f.dataset.form || 'signup'));
   fd.append('page', location.pathname);

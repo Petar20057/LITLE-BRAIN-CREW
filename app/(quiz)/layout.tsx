@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-// The /code quiz (sent in Instagram DMs) and its stats page: no menu and not in search, like the funnel,
+// The /code quiz (sent in Instagram DMs): no menu and not in search, like the funnel,
 // but without the payments preview note, which has nothing to do with the quiz.
 export const metadata: Metadata = { robots: { index: false, follow: false } };
 
