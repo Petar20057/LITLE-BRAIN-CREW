@@ -9,6 +9,10 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       { url: "/favicon.svg", type: "image/svg+xml" },
+      // Google Search shows a favicon only if one is a multiple of 48px square.
+      { url: "/assets/brand/favicon-192.png", type: "image/png", sizes: "192x192" },
+      { url: "/assets/brand/favicon-96.png", type: "image/png", sizes: "96x96" },
+      { url: "/assets/brand/favicon-48.png", type: "image/png", sizes: "48x48" },
       { url: "/assets/brand/favicon-32.png", type: "image/png", sizes: "32x32" },
       { url: "/assets/brand/favicon-16.png", type: "image/png", sizes: "16x16" },
     ],
