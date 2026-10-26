@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Give the crew as a gift · Little Brain Crew</title>
+<meta name="description" content="Send the Kid Brain Toolkit or the 30-Day Reset to a parent who’s running on empty. They get a card by email on the day you pick.">
+<meta property="og:type" content="website">
+<meta property="og:image:alt" content="The crew: six cartoon characters for the brain chemicals behind a kid’s mood, sleep and focus.">
+</head>
+<body>
+<!-- include:partials/header.html -->
+
+<main id="main">
+<!-- 15 · GIFT -->
+<section class="sec lazy-sec s-plain" id="gift" data-c="var(--toci)">
+  <div class="wrap gift-grid">
+    <div>
+      <span class="kick">for grandparents, godparents and friends</span>
+      <h2>Give the crew.</h2>
+      <p class="lede">Know a parent who is running on empty? Send them the Kid Brain Toolkit or the 30-Day Reset as a gift. They get a card by email on the day you pick.</p>
+      <form class="inline-form" data-form="gift" id="gift-form">
+        <select name="gift_item" id="g-item" aria-label="Gift"><option value="program" selected>The 30-Day Reset · $39</option><option value="guide">The Kid Brain Toolkit · $9</option></select>
+        <div class="row2"><input name="from" id="g-from" placeholder="Your name" aria-label="Your name" required maxlength="40"><input name="to" id="g-to" placeholder="Their name" aria-label="Their name" required maxlength="40"></div>
+        <input type="email" name="to_email" placeholder="Their email" aria-label="Their email" required>
+        <textarea name="message" id="g-msg" rows="2" maxlength="140" placeholder="A short message (optional)" aria-label="Message"></textarea>
+        <label class="gdate">Send it on <input type="date" name="send_on" id="g-date" required></label>
+        <button class="btn btn-main" type="submit">Go to gift checkout</button>
+      </form>
+    </div>
+    <div class="gcard" aria-live="polite">
+      <div class="gcard-top" id="g-chars"></div>
+      <small>A GIFT FOR</small>
+      <div class="to" id="g-to-out">Your friend</div>
+      <div class="msg" id="g-msg-out"></div>
+      <span class="gwhat" id="g-item-out"></span>
+      <div class="from">from <span id="g-from-out">you</span></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- include:partials/footer.html -->
+
+<script src="assets/crew-art.js" defer></script>
+<script src="assets/site.js" defer></script>
+</body>
+</html>

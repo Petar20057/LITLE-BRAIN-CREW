@@ -1,0 +1,169 @@
+/* Little Brain Crew · additions on top of the design's site.css (funnel copy, checkout, offers, membership, support).
+   Uses the same tokens as site.css. */
+
+/* ---------- shared: check-mark list ---------- */
+.stack{list-style:none;display:grid;gap:8px}
+.stack li{padding-left:30px;position:relative}
+.stack li::before{content:"✓";position:absolute;left:0;top:0;width:22px;height:22px;border-radius:50%;background:var(--endo);display:grid;place-items:center;font:800 13px/22px var(--body);text-align:center}
+
+/* ---------- home: pain points decoded ---------- */
+.decoder{list-style:none;display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:var(--s4)}
+.decoder li{display:grid;grid-template-columns:64px 1fr;gap:14px;align-items:center;background:#fff;border-radius:var(--r-m);padding:12px 18px 12px 12px;box-shadow:var(--sh-1);border-left:6px solid var(--c)}
+.decoder svg{width:64px;height:64px}
+.decoder b{display:block;font:800 18px/1.3 var(--head)}
+.decoder span{color:var(--ink-soft);font-size:15px}
+@media(max-width:760px){.decoder{grid-template-columns:1fr}}
+
+/* ---------- home: how it works ---------- */
+.how3{list-style:none;counter-reset:h;display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s3)}
+.how3 li{counter-increment:h;background:var(--paper);border-radius:var(--r-l);padding:var(--s4) var(--s3) var(--s3);position:relative;box-shadow:var(--sh-1)}
+.how3 li::before{content:counter(h);position:absolute;top:-18px;left:var(--s3);width:40px;height:40px;border-radius:50%;background:var(--c);font:800 20px/40px var(--head);text-align:center}
+.how3 b{display:block;font:800 24px/1.2 var(--head);margin-bottom:6px}
+.how3 span{color:var(--ink-soft)}
+@media(max-width:860px){.how3{grid-template-columns:1fr;gap:var(--s4)}}
+
+/* ---------- home: two rules (Plasti, Duo) ---------- */
+.rules{display:grid;grid-template-columns:1fr 1fr;gap:var(--s3)}
+.rule{display:grid;grid-template-columns:110px 1fr;gap:var(--s3);align-items:center;background:var(--paper);border-radius:var(--r-l);padding:var(--s4);box-shadow:var(--sh-1);border-top:8px solid var(--c)}
+.rule svg{width:110px;height:110px}
+.rule h3{font-size:clamp(22px,2.6vw,27px);margin:4px 0 8px}
+.rule p{color:var(--ink-soft)}
+.r-num{font-weight:800;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft)}
+@media(max-width:860px){.rules{grid-template-columns:1fr}.rule{grid-template-columns:80px 1fr;padding:var(--s3)}.rule svg{width:80px;height:80px}}
+
+/* ---------- home: villains ---------- */
+.villains{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s2)}
+.villain{display:grid;grid-template-columns:84px 1fr;gap:14px;align-items:start;background:#fff;border-radius:var(--r-m);padding:var(--s3) var(--s2);box-shadow:var(--sh-1);border:2px dashed var(--ink);cursor:default}
+.villain svg{width:84px;height:84px}
+.villain h3{font-size:24px;margin:2px 0 6px}
+.villain p{font-size:15px;color:var(--ink-soft);margin-bottom:6px}
+.v-tag{font-weight:800;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--cta)}
+.villain .v-beat{color:var(--ink);background:var(--endo-t);border-radius:10px;padding:6px 10px}
+.villain .v-who{font-size:13px;font-weight:700;margin:0}
+@media(max-width:980px){.villains{grid-template-columns:1fr 1fr}}
+@media(max-width:620px){.villains{grid-template-columns:1fr}}
+
+/* ---------- home: ages & stages ---------- */
+.ages{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+.age{background:var(--paper);border-radius:var(--r-m);padding:var(--s2);box-shadow:var(--sh-1);display:flex;flex-direction:column;gap:6px}
+.age svg{width:72px;height:72px;margin:0 auto}
+.age h3{font-size:21px;text-align:center;margin:0}
+.a-age{align-self:center;font-weight:800;font-size:13px;background:var(--ink);color:#fff;border-radius:var(--r-pill);padding:2px 10px}
+.age p{font-size:14px;color:var(--ink-soft);margin:0}
+.age .a-focus{color:var(--ink);margin-top:auto}
+@media(max-width:1100px){.ages{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:620px){.ages{grid-template-columns:1fr 1fr}}
+
+/* crew roster: "NEW" badge for crew members who just joined */
+.teen.new{background:var(--cta)}
+
+/* ---------- home: more from the crew ---------- */
+.more-row{list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:var(--s2)}
+.more-row a{display:flex;flex-direction:column;gap:6px;height:100%;background:#fff;border-radius:var(--r-m);padding:var(--s3);box-shadow:var(--sh-1);text-decoration:none;color:var(--ink);transition:transform .15s}
+.more-row a:hover{transform:translateY(-3px)}
+.more-row b{font:800 19px/1.25 var(--head)}
+.more-row span{color:var(--ink-soft);font-size:15px}
+
+/* ---------- pricing page ---------- */
+.offer-hero h1{font-size:clamp(40px,6.4vw,76px);margin:var(--s1) 0 var(--s2)}
+.offer-buy{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:var(--s4)}
+.offer-buy .big{font:800 clamp(52px,7vw,72px)/1 var(--head);letter-spacing:-.03em}
+.offer-buy .per{font-weight:700;color:var(--ink-soft)}
+.value-stack{list-style:none;display:grid;gap:12px}
+.value-stack li{background:#fff;border-radius:var(--r-m);padding:18px 20px 18px 62px;position:relative;box-shadow:var(--sh-1)}
+.value-stack li::before{content:"✓";position:absolute;left:18px;top:18px;width:30px;height:30px;border-radius:50%;background:var(--endo);font:800 16px/30px var(--body);text-align:center}
+.value-stack b{display:block;font:800 19px/1.3 var(--head)}
+.value-stack span{color:var(--ink-soft)}
+.fit{display:grid;grid-template-columns:1fr 1fr;gap:var(--s3)}
+.fit .surface{background:#fff;border-radius:var(--r-l);padding:var(--s4);box-shadow:var(--sh-1)}
+.fit h3{font-size:26px;margin-bottom:var(--s2)}
+.fit ul{list-style:none;display:grid;gap:10px}
+.fit li{padding-left:30px;position:relative}
+.fit-yes li::before{content:"✓";position:absolute;left:0;font-weight:800;color:var(--ok)}
+.fit-no li::before{content:"✕";position:absolute;left:0;font-weight:800;color:var(--cta)}
+#club .plans{grid-template-columns:minmax(0,440px);justify-content:center}
+@media(max-width:760px){.fit{grid-template-columns:1fr}}
+
+/* ---------- footer: support ---------- */
+.support-link{display:inline-flex;align-items:center;gap:8px;margin-top:var(--s2);color:#fff;font-weight:700;text-decoration:none;border:2px solid #fff;border-radius:var(--r-pill);padding:8px 16px}
+.support-link span{color:var(--cta)}
+.support-link:hover{background:#fff;color:var(--ink)}
+
+/* ---------- funnel pages (checkout, offers, thank you, support, account) ---------- */
+.fx{min-height:100vh;background:var(--paper);color:var(--ink);--fg:var(--ink);--fg-soft:var(--ink-soft)}
+.fx-top{display:flex;justify-content:center;align-items:center;padding:20px 16px 8px}
+.fx-wrap{max-width:1040px;margin:0 auto;padding:var(--s2) 16px var(--s6)}
+.fx-narrow{max-width:720px}
+.fx-preview{max-width:1040px;margin:8px auto 0;padding:10px 16px;border:2px dashed var(--ink);border-radius:var(--r-s);background:#FFF1A8;font-size:14px;font-weight:600;text-align:center}
+.fx-steps{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;list-style:none;margin:var(--s2) 0 var(--s4);font-size:14px;font-weight:700;color:var(--ink-soft)}
+.fx-steps li{display:flex;align-items:center;gap:8px}
+.fx-steps li + li::before{content:"";width:28px;height:2px;background:var(--hair)}
+.fx-steps .on{color:var(--ink)}
+.fx-steps .done{color:var(--ok)}
+.fx-grid{display:grid;grid-template-columns:1.25fr .75fr;gap:var(--s4);align-items:start}
+.fx-card{background:#fff;border-radius:var(--r-l);box-shadow:var(--sh-2);padding:var(--s4)}
+.fx-card h1{font-size:clamp(30px,4vw,42px);margin-bottom:6px}
+.fx-card h2{font-size:22px;margin:var(--s3) 0 var(--s1)}
+.fx-sub{color:var(--ink-soft);margin-bottom:var(--s2)}
+.fx-product{display:grid;grid-template-columns:72px 1fr;gap:16px;align-items:center;margin:var(--s2) 0}
+.fx-product svg{width:72px;height:72px}
+.fx-product b{font:800 20px/1.25 var(--head);display:block}
+.fx-product small{color:var(--ink-soft);font-size:15px}
+.fx-field{display:flex;flex-direction:column;gap:6px;font-weight:700;font-size:15px;margin-bottom:12px}
+.fx-field input,.fx-field textarea{border:2px solid var(--ink);border-radius:var(--r-s);min-height:52px;padding:12px 14px;font:500 17px var(--body);background:#fff;color:var(--ink);width:100%}
+.fx-field small{font-weight:500;color:var(--ink-soft)}
+.total{display:flex;justify-content:space-between;font:800 22px var(--head);padding:14px 0 4px}
+.pay{display:grid;gap:10px;margin-top:var(--s2)}
+.pay .btn{width:100%;justify-content:center}
+.btn-paypal{background:#FFC439;color:#111;border-color:#111}
+.btn-paypal:hover{filter:brightness(.97)}
+.pay-or{text-align:center;font-size:13px;font-weight:700;color:var(--ink-soft)}
+.fx-trust{list-style:none;display:grid;gap:6px;margin-top:var(--s2);font-size:14px;color:var(--ink-soft)}
+.fx-trust li{display:flex;gap:8px;align-items:center}
+.fx-trust li::before{content:"✓";font-weight:800;color:var(--ok)}
+.fx-aside{display:grid;gap:var(--s2)}
+.fx-aside .fx-card{box-shadow:var(--sh-1);padding:var(--s3)}
+.fx-aside h3{font-size:20px;margin-bottom:8px}
+.fx-aside ol{padding-left:20px;display:grid;gap:6px}
+.fx-note{background:var(--toci-t)}
+.fx-err{color:var(--cta);font-weight:700;font-size:14px;margin-top:8px}
+/* one-time offers */
+.oto{text-align:center}
+.oto .hand{font:700 26px var(--hand);color:var(--ink-soft);display:block}
+.oto h1{font-size:clamp(30px,4.6vw,48px);margin:6px 0 var(--s2)}
+.oto .fx-sub{max-width:56ch;margin:0 auto var(--s3)}
+.oto .art svg{width:140px;height:140px;margin:0 auto var(--s2)}
+.oto .stack{text-align:left;max-width:520px;margin:0 auto var(--s3)}
+.oto .price{font:800 clamp(40px,6vw,56px)/1 var(--head);letter-spacing:-.03em;margin-bottom:4px}
+.oto .price s{font-size:.5em;color:var(--ink-soft);font-weight:600;margin-left:8px}
+.oto .per{font-weight:700;color:var(--ink-soft);margin-bottom:var(--s3)}
+.oto .btn-main{min-height:64px;font-size:20px;width:100%;max-width:520px;justify-content:center}
+.no-thanks{display:block;margin:14px auto 0;background:none;border:0;color:var(--ink-soft);font:600 16px var(--body);text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:8px}
+.oto .fine{margin-top:var(--s2)}
+/* thank you */
+.ty-list{list-style:none;margin:var(--s2) 0}
+.ty-list li{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:2px dashed var(--hair);font-weight:600}
+.ty-next{counter-reset:n;list-style:none;display:grid;gap:12px;margin:var(--s2) 0}
+.ty-next li{counter-increment:n;padding-left:46px;position:relative}
+.ty-next li::before{content:counter(n);position:absolute;left:0;top:-2px;width:32px;height:32px;border-radius:50%;background:var(--dopa);font:800 16px/32px var(--head);text-align:center}
+/* support */
+.amounts{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:var(--s2) 0}
+.amounts button{min-height:64px;border:2px solid var(--ink);border-radius:var(--r-m);background:#fff;font:800 22px var(--head);cursor:pointer;color:var(--ink)}
+.amounts button[aria-pressed="true"]{background:var(--dopa);box-shadow:0 0 0 3px var(--ink) inset}
+.amount-other{display:flex;align-items:center;gap:8px;font-weight:700}
+.amount-other input{width:120px;border:2px solid var(--ink);border-radius:var(--r-s);min-height:48px;padding:8px 12px;font:600 18px var(--body)}
+/* membership account + cancel flow */
+.acct-row{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:2px dashed var(--hair)}
+.acct-row span:first-child{color:var(--ink-soft)}
+.acct-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:var(--s3)}
+.reasons{display:grid;gap:10px;margin:var(--s2) 0}
+.reasons label{display:flex;gap:12px;align-items:center;border:2px solid var(--hair);border-radius:var(--r-m);padding:14px 16px;cursor:pointer;font-weight:600}
+.reasons label:has(input:checked){border-color:var(--ink);background:var(--dopa-t)}
+.reasons input{width:20px;height:20px;accent-color:var(--ink)}
+.save-offer{background:var(--endo-t);border-radius:var(--r-m);padding:var(--s3);margin:var(--s2) 0}
+.save-offer h3{font-size:24px;margin-bottom:6px}
+.save-offer .btn{margin-top:var(--s2)}
+.pause-opts{display:flex;gap:10px;flex-wrap:wrap;margin-top:var(--s2)}
+.cancel-anyway{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;border-top:2px dashed var(--hair);margin-top:var(--s3);padding-top:var(--s2)}
+.btn-quiet{background:#fff;color:var(--ink)}
+@media(max-width:860px){.fx-grid{grid-template-columns:1fr}.amounts{grid-template-columns:repeat(2,1fr)}.fx-card{padding:var(--s3)}}

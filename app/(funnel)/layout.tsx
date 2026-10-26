@@ -1,0 +1,17 @@
+import type { Metadata } from "next";
+import { PREVIEW } from "@/lib/funnel";
+
+// Checkout, offers, thank you, support and account: no menu, nothing to click away to.
+export const metadata: Metadata = { robots: { index: false, follow: false } };
+
+export default function FunnelLayout({ children }: LayoutProps<"/">) {
+  return (
+    <div className="fx">
+      <header className="fx-top">
+        <a href="/" className="logo" aria-label="Little Brain Crew home"><i aria-hidden="true">♥</i>LITTLE BRAIN CREW</a>
+      </header>
+      {PREVIEW && <p className="fx-preview">Preview: no real payment is taken. Stripe and PayPal get connected next.</p>}
+      <main className="fx-wrap">{children}</main>
+    </div>
+  );
+}

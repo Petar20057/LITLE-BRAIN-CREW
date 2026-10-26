@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The crew for schools, employers and clinics · Little Brain Crew</title>
+<meta name="description" content="Class packs, school licenses, a benefit for working parents and free waiting-room posters.">
+<meta property="og:type" content="website">
+<meta property="og:image:alt" content="The crew: six cartoon characters for the brain chemicals behind a kid’s mood, sleep and focus.">
+</head>
+<body>
+<!-- include:partials/header.html -->
+
+<main id="main">
+<!-- 19 · B2B -->
+<section class="sec lazy-sec b2b" id="schools" data-c="var(--dopa)">
+  <div class="wrap">
+    <div class="sec-head"><h2>Bring the crew<br>to your people.</h2><p>For schools, kindergartens, employers, clinics and creators who work with families.</p></div>
+    <div class="tabs" role="tablist" aria-label="Who are you?">
+      <button class="tab" role="tab" type="button" data-t="school" aria-selected="true">Schools &amp; kindergartens</button>
+      <button class="tab" role="tab" type="button" data-t="work" aria-selected="false">Employers</button>
+      <button class="tab" role="tab" type="button" data-t="clinic" aria-selected="false">Clinics &amp; waiting rooms</button>
+      <button class="tab" role="tab" type="button" data-t="partner" aria-selected="false">Partners &amp; creators</button>
+    </div>
+    <div class="b2b-grid">
+      <div class="pane" id="pane" role="tabpanel"></div>
+      <form class="inline-form" data-form="b2b">
+        <span class="form-title" id="b2b-title">Get the class pack details</span>
+        <input type="hidden" name="type" id="b2b-type" value="school">
+        <div class="row2"><input name="name" placeholder="Your name" aria-label="Your name" required><input name="organization" placeholder="Organization" aria-label="Organization" required></div>
+        <input type="email" name="email" placeholder="Work email" aria-label="Work email" required autocomplete="email">
+        <input name="size" id="b2b-size" placeholder="How many kids?" aria-label="Size">
+        <textarea name="message" rows="3" placeholder="Anything we should know?" aria-label="Message"></textarea>
+        <button class="btn btn-main" type="submit">Send</button>
+        <span class="ok">Thanks! We’ll get back to you soon ✓</span>
+      </form>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- include:partials/footer.html -->
+
+<script src="assets/crew-art.js" defer></script>
+<script src="assets/site.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ask the crew: one small habit for tonight · Little Brain Crew</title>
+<meta name="description" content="Tell us what’s hard right now. Toci brings in the right crew member and gives you one small habit to try tonight. Free. Habits only.">
+<meta property="og:type" content="website">
+<meta property="og:image:alt" content="The crew: six cartoon characters for the brain chemicals behind a kid’s mood, sleep and focus.">
+</head>
+<body>
+<!-- include:partials/header.html -->
+
+<main id="main">
+<!-- 6 · ASK THE CREW -->
+<section class="sec lazy-sec s-plain" id="ask" data-c="var(--toci)">
+  <div class="wrap ask-grid">
+    <div data-reveal>
+      <span class="kick">new · free to try</span>
+      <h2>Ask the crew.</h2>
+      <p class="lede">Tell us what’s hard right now. You get one small habit to try tonight, from the character in charge.</p>
+      <div class="ask-host"><div data-char="toci"></div><p>Toci hosts the chat and brings in the right crew member.</p></div>
+      <ul class="ask-points">
+        <li><b>1</b>Pick a topic or type it your way</li>
+        <li><b>2</b>Answer 2 quick questions</li>
+        <li><b>3</b>Get one habit for tonight</li>
+      </ul>
+      <p class="fine" style="margin-top:16px">Habits only. If you type something serious, like pain, injury or not eating, it will tell you to call your pediatrician instead.</p>
+    </div>
+    <div class="chat" aria-label="Ask the crew chat">
+      <div class="chat-head"><div data-char="toci"></div><div>Toci<small>usually answers in a second</small></div></div>
+      <div class="chat-log" id="chat-log" aria-live="polite"></div>
+      <form class="chat-form" id="chat-form" autocomplete="off">
+        <label class="sr" for="chat-in">Type your question</label>
+        <input id="chat-in" type="text" maxlength="200" placeholder="Or type it in your own words…">
+        <button type="submit">Send</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- include:partials/footer.html -->
+
+<script src="assets/crew-art.js" defer></script>
+<script src="assets/site.js" defer></script>
+<script src="assets/ask.js" defer></script>
+</body>
+</html>
