@@ -8,26 +8,36 @@ import type { CharKey, SectionKey } from "./learn/types.ts";
 /** Every screen of the quiz, in order. Also the only step names the tracking API accepts. */
 export const STEPS = [
   "intro", "age", "stage", "moments", "lesson-1", "lesson-2", "lesson-3",
-  "myth-1", "myth-2", "plasti", "duo", "duo-card", "gate", "result",
+  "sleep", "villains", "myth-1", "myth-2", "myth-3", "plasti", "duo", "duo-card", "gate", "result",
 ] as const;
 export type StepId = (typeof STEPS)[number];
 
 /** A/B tests. A visitor gets one variant at random (or ?v=b), kept for the whole session. Add a variant here,
- *  then compare it on /stats/quiz. Only the intro headline changes for now. */
+ *  then compare it on /admin/quiz. Only the intro headline changes for now. */
 export const VARIANTS = {
-  a: { headline: "Crack your kid’s code in 3 minutes.", sub: "Tell us what happens at your house. Learn who’s behind it, and get a 3-night plan for your kid’s age." },
-  b: { headline: "Why does your kid do that? Find out in 3 minutes.", sub: "Pick the moments you see at home. Meet the crew behind them, and get a 3-night plan for your kid’s age." },
+  a: { headline: "Crack your kid’s code in 5 minutes.", sub: "Tell us what happens at your house. Guess who’s behind it, check your kid’s sleep, find the villains at home, and get a 3-night plan for your kid’s age." },
+  b: { headline: "Why does your kid do that? Find out in 5 minutes.", sub: "Pick the moments you see at home. Meet the crew behind them, spot the villains in your house, and get a 3-night plan for your kid’s age." },
 } as const;
 export type Variant = keyof typeof VARIANTS;
 
-/** Age buttons → the stage character and its Learn page. Ranges follow the site (Whyzi 3–6 … Seki 14–17). */
-export const AGES: { id: string; label: string; stage: CharKey; slug: string; teen: boolean }[] = [
-  { id: "4-5", label: "4–5", stage: "whyzi", slug: "brain-age-3-to-6", teen: false },
-  { id: "6-7", label: "6–7", stage: "skuli", slug: "brain-age-6-to-8", teen: false },
-  { id: "8-9", label: "8–9", stage: "ruli", slug: "brain-age-8-to-10", teen: false },
-  { id: "10-11", label: "10–11", stage: "tweeni", slug: "brain-age-10-to-12", teen: false },
-  { id: "12-13", label: "12–13", stage: "sprouti", slug: "brain-age-12-to-14", teen: true },
-  { id: "14-17", label: "14–17", stage: "seki", slug: "brain-age-14-to-17", teen: true },
+/** Recommended sleep per 24 hours (AASM 2016, the table on /guides/sleep-hours-by-age, source S03). */
+export type SleepRange = { min: number; max: number; says: string };
+const SLEEP = {
+  preschool: { min: 10, max: 13, says: "10 to 13 hours for ages 3 to 5, naps included" },
+  school: { min: 9, max: 12, says: "9 to 12 hours for ages 6 to 12" },
+  // 12-year-olds fall in the school-age range, 13-year-olds in the teen one: the bucket spans both.
+  bridge: { min: 8, max: 12, says: "9 to 12 hours at 12, and 8 to 10 from 13" },
+  teen: { min: 8, max: 10, says: "8 to 10 hours for teens 13 to 18" },
+} satisfies Record<string, SleepRange>;
+
+/** Age buttons → the stage character, its Learn page and the sleep range. Ranges follow the site (Whyzi 3–6 … Seki 14–17). */
+export const AGES: { id: string; label: string; stage: CharKey; slug: string; teen: boolean; sleep: SleepRange }[] = [
+  { id: "4-5", label: "4–5", stage: "whyzi", slug: "brain-age-3-to-6", teen: false, sleep: SLEEP.preschool },
+  { id: "6-7", label: "6–7", stage: "skuli", slug: "brain-age-6-to-8", teen: false, sleep: SLEEP.school },
+  { id: "8-9", label: "8–9", stage: "ruli", slug: "brain-age-8-to-10", teen: false, sleep: SLEEP.school },
+  { id: "10-11", label: "10–11", stage: "tweeni", slug: "brain-age-10-to-12", teen: false, sleep: SLEEP.school },
+  { id: "12-13", label: "12–13", stage: "sprouti", slug: "brain-age-12-to-14", teen: true, sleep: SLEEP.bridge },
+  { id: "14-17", label: "14–17", stage: "seki", slug: "brain-age-14-to-17", teen: true, sleep: SLEEP.teen },
 ];
 
 export type MomentDef = {
@@ -65,10 +75,32 @@ export const MOMENTS: MomentDef[] = [
 /** How many moments a parent can pick (one lesson screen each). */
 export const MAX_MOMENTS = 3;
 
-/** Myth or fact: two Learn myth pages. Both lead into Rule 1 (Plasti). */
+/** Sleep check: school-night times to pick from, as minutes after midnight (bedtimes past midnight are 24:00+). */
+export const BEDTIMES = Array.from({ length: 11 }, (_, i) => 19 * 60 + i * 30); // 7:00 p.m. … 12:00 a.m.
+export const WAKE_TIMES = Array.from({ length: 8 }, (_, i) => 5 * 60 + 30 + i * 30); // 5:30 … 9:00 a.m.
+/** What to say after the sleep check. Tips are from the sleep Learn pages. */
+export const SLEEP_VERDICT = {
+  short: { title: "That’s under the range for this age.", body: "Plenty of kids fall short on school nights, and it can show up as meltdowns, a second wind at bedtime and grumpy mornings. Mela needs a dark, calm evening to show up on time.", tip: { slug: "second-wind-at-bedtime", i: 1 } },
+  ok: { title: "That’s inside the range. Nice.", body: "Protect it: the same bedtime and wake-up time on weekends too, give or take an hour. Lati, the villain who moves bedtimes around, hates that.", tip: { slug: "irregular-bedtimes", i: 0 } },
+  long: { title: "That’s above the range for this age.", body: "Some kids simply need more. If your kid sleeps this long and still seems tired, it’s worth mentioning to your pediatrician.", tip: { slug: "irregular-bedtimes", i: 1 } },
+} as const;
+export type SleepVerdict = keyof typeof SLEEP_VERDICT;
+
+/** Villain check: one plain habit per villain (the Habits Learn pages), and the tip that beats it. */
+export const VILLAIN_CHECK: { villain: CharKey; label: string; slug: string; tip: number }[] = [
+  { villain: "bedi", label: "A phone or tablet sleeps in your kid’s room", slug: "phone-in-bed", tip: 0 },
+  { villain: "glo", label: "Screens in the last hour before bed", slug: "screens-before-bed", tip: 1 },
+  { villain: "lupi", label: "The next episode or video plays by itself", slug: "autoplay", tip: 0 },
+  { villain: "pingi", label: "A phone buzzes nearby during homework or play", slug: "notifications-and-homework", tip: 1 },
+  { villain: "lati", label: "Bedtime moves by more than an hour from night to night", slug: "irregular-bedtimes", tip: 0 },
+  { villain: "kafi", label: "Soda, iced tea or energy drinks after lunch", slug: "caffeine-and-kids", tip: 1 },
+];
+
+/** Myth or fact: three Learn myth pages. They lead into Rule 1 (Plasti). */
 export const MYTHS: { slug: string; ask: string }[] = [
   { slug: "does-sugar-make-kids-hyper", ask: "Sugar makes kids hyper." },
   { slug: "dopamine-detox-for-kids", ask: "After too much screen time, a ‘dopamine detox’ resets a kid’s brain." },
+  { slug: "is-the-brain-done-at-25", ask: "The brain is fully developed at 25." },
 ];
 
 /** The two rules, word for word from the home page. */

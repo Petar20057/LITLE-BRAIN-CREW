@@ -1,6 +1,6 @@
 import { ITEMS, PRODUCTS, per, total, usd, type Item } from "@/lib/funnel";
 import { renderEmail, type Block, type Email } from "./layout";
-import type { QuizResult } from "@/lib/quiz-plan";
+import { hoursLabel, type QuizResult } from "@/lib/quiz-plan";
 import { DISCLAIMER } from "@/content/quiz";
 
 // Every email we send. Copy follows the site (English, calm, no hype, no promises about a child): words like
@@ -87,6 +87,8 @@ export function quizResultEmail(r: QuizResult): Email {
     { list: r.picks.map((m) => `${m.label}: ${m.line}`) },
     { p: `Your kid’s stage: ${r.age.stage.name} (${r.age.stage.real}), ${r.age.stage.job}.` },
   ];
+  if (r.sleep) blocks.push({ p: `Sleep check: about ${hoursLabel(r.sleep.hours)} hours a night. Sleep doctors (AASM) recommend ${r.sleep.says}.` });
+  if (r.home.length) blocks.push({ p: `Villains at your house: ${r.home.map((v) => `${v.char.name} (${v.char.real.toLowerCase()})`).join(", ")}.` });
   if (r.villain) blocks.push({ p: `The villain to beat first: ${r.villain.name} (${r.villain.real}).` });
   blocks.push(
     { p: "Your 3-night plan. Same time, same words, three nights in a row:" },

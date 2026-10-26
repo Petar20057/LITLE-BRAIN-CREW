@@ -9,7 +9,7 @@ import { quizResultEmail } from "@/lib/email/templates";
 
 // The /code email gate: saves the parent's email (one row per address) and sends the result they're about to see.
 // The screen shows the result whatever happens here, so only a bad email address is reported back.
-type Body = { sid?: unknown; email?: unknown; consent?: unknown; age?: unknown; moments?: unknown };
+type Body = { sid?: unknown; email?: unknown; consent?: unknown; age?: unknown; moments?: unknown; sleep?: unknown; villains?: unknown };
 
 export async function POST(request: NextRequest) {
   let body: Body;
@@ -26,7 +26,10 @@ export async function POST(request: NextRequest) {
   const sid = isSessionId(body.sid) ? body.sid : null;
   const consent = body.consent === true;
   const moments = Array.isArray(body.moments) ? body.moments.filter((m): m is string => typeof m === "string").slice(0, 3) : [];
-  const result = quizResult(quizData(), typeof body.age === "string" ? body.age : null, moments);
+  const s = body.sleep as { bed?: unknown; wake?: unknown } | null | undefined;
+  const sleep = s && Number.isInteger(s.bed) && Number.isInteger(s.wake) ? { bed: s.bed as number, wake: s.wake as number } : null;
+  const villains = Array.isArray(body.villains) ? body.villains.filter((v): v is string => typeof v === "string").slice(0, 6) : null;
+  const result = quizResult(quizData(), { age: typeof body.age === "string" ? body.age : null, moments, sleep, villains });
 
   // One result email per quiz visit, and only for a visit we saw: a script can't use this to mail strangers.
   let send = !supabaseConfigured;

@@ -1,15 +1,16 @@
 "use client";
 
 import { useEffect, useState, useSyncExternalStore, type FormEvent, type ReactNode } from "react";
-import { DISCLAIMER, DUO_LEAD, DUO_OPTIONS, DUO_QUESTION, MAX_MOMENTS, VARIANTS, type StepId } from "@/content/quiz";
+import { BEDTIMES, DISCLAIMER, DUO_LEAD, DUO_OPTIONS, DUO_QUESTION, MAX_MOMENTS, VARIANTS, WAKE_TIMES, type StepId } from "@/content/quiz";
 import type { QuizChar, QuizData, QuizSource } from "@/lib/quiz";
-import { crewOf, quizResult } from "@/lib/quiz-plan";
+import { crewOf, hoursLabel, quizResult, sleepCheck, type QuizAnswers } from "@/lib/quiz-plan";
 import CrewArt from "@/components/funnel/CrewArt";
 import { START, getSession, markStep, onStep, save, subscribe, track, type Progress } from "./session";
 
-// The /code quiz: a 3-minute walk through everything the site teaches (age stages, the 12 moments, myths,
-// the two rules), an email gate, then the parent's crew profile and a 3-night plan. Every screen view,
-// answer, back click and exit goes to /api/quiz/event so /stats/quiz can show where parents drop off.
+// The /code quiz: a 5-minute walk through everything the site teaches (age stages, the 12 moments with a
+// "who's behind it?" guess, sleep, the villains, myths, the two rules), an email gate, then the parent's crew
+// profile and a 3-night plan. Every screen view, answer, back click and exit goes to /api/quiz/event so
+// /admin/quiz can show where parents drop off.
 
 export default function Quiz({ data }: { data: QuizData }) {
   const session = useSyncExternalStore(subscribe, getSession, () => null);
@@ -19,7 +20,7 @@ export default function Quiz({ data }: { data: QuizData }) {
   const order: StepId[] = [
     "intro", "age", "stage", "moments",
     ...(["lesson-1", "lesson-2", "lesson-3"] as const).slice(0, lessons),
-    "myth-1", "myth-2", "plasti", "duo", "duo-card", "gate", "result",
+    "sleep", "villains", "myth-1", "myth-2", "myth-3", "plasti", "duo", "duo-card", "gate", "result",
   ];
   const at = Math.max(0, order.indexOf(p.step));
 
@@ -58,7 +59,7 @@ export default function Quiz({ data }: { data: QuizData }) {
 
   const age = data.ages.find((a) => a.id === p.age);
   const moments = data.moments.filter((m) => !m.teen || !age || age.teen);
-  const result = quizResult(data, p.age, p.moments);
+  const result = quizResult(data, answersOf(p));
   const v = session ? VARIANTS[session.variant] : null;
 
   let screen: ReactNode;
@@ -71,7 +72,7 @@ export default function Quiz({ data }: { data: QuizData }) {
           <h1 className={v ? "" : "q-wait"}>{v?.headline ?? VARIANTS.a.headline}</h1>
           <p className="fx-sub">{v?.sub ?? VARIANTS.a.sub}</p>
           <button className="btn btn-main" type="button" disabled={!session} onClick={() => answer("start")}>Start →</button>
-          <p className="fine">12 moments · the crew behind them · 2 rules that run every kid’s brain</p>
+          <p className="fine">About 5 minutes · 12 moments · 6 villains · 2 rules that run every kid’s brain</p>
         </div>
       );
       break;
@@ -127,8 +128,27 @@ export default function Quiz({ data }: { data: QuizData }) {
     case "lesson-3": {
       const i = Number(step.slice(-1)) - 1;
       const m = data.moments.find((x) => x.id === p.moments[i]);
-      screen = m && (
-        <Lesson kick={`Moment ${i + 1} of ${p.moments.length}`} char={m.char} title={m.label} line={m.line}>
+      const guessed = p.guesses[i];
+      const kick = `Moment ${i + 1} of ${p.moments.length}`;
+      const pick = (key: string) => {
+        const guesses = [...p.guesses];
+        guesses[i] = key;
+        answer({ guess: key, right: key === m?.char.key }, { guesses }, false);
+      };
+      screen = m && !guessed ? (
+        <Ask kick={kick} title={m.label} sub="Who’s behind it? Take a guess.">
+          <div className="q-guess">
+            {m.guess.map((c) => (
+              <button key={c.key} className="opt" type="button" style={{ ["--c" as string]: c.color }} onClick={() => pick(c.key)}>
+                <CrewArt k={c.key} />
+                <b>{c.name}</b>
+                <span>{c.real}</span>
+              </button>
+            ))}
+          </div>
+        </Ask>
+      ) : m && (
+        <Lesson kick={kick} char={m.char} title={m.label} line={m.line} lead={guessed === m.char.key ? `You got it: it’s ${m.char.name}.` : `Good guess. It’s ${m.char.name}.`}>
           <h3>What’s going on</h3>
           <p>{m.lesson}</p>
           <div className="q-tonight"><b>Try tonight</b>{m.tips[0]}</div>
@@ -139,9 +159,104 @@ export default function Quiz({ data }: { data: QuizData }) {
       break;
     }
 
+    case "sleep": {
+      const { bed, wake, checked } = p.sleep;
+      const set = (patch: Partial<Progress["sleep"]>) => save({ ...p, sleep: { ...p.sleep, ...patch } });
+      const check = bed != null && wake != null ? sleepCheck(data, p.age, { bed, wake }) : undefined;
+      if (!checked || !check) {
+        screen = (
+          <Ask kick="Sleep check" title="On school nights, when does your kid usually fall asleep and wake up?" sub="Your best guess is fine.">
+            <div className="q-sleep">
+              <label className="fx-field">
+                Falls asleep around
+                <select value={bed ?? ""} onChange={(e) => set({ bed: Number(e.target.value) })}>
+                  <option value="" disabled>Pick a time</option>
+                  {BEDTIMES.map((t) => <option key={t} value={t}>{clock(t)}</option>)}
+                </select>
+              </label>
+              <label className="fx-field">
+                Wakes up around
+                <select value={wake ?? ""} onChange={(e) => set({ wake: Number(e.target.value) })}>
+                  <option value="" disabled>Pick a time</option>
+                  {WAKE_TIMES.map((t) => <option key={t} value={t}>{clock(t)}</option>)}
+                </select>
+              </label>
+            </div>
+            <Next disabled={!check} onClick={() => check && answer({ bed, wake, hours: check.hours, verdict: check.verdict }, { sleep: { bed, wake, checked: true } }, false)}>
+              Check my kid’s sleep
+            </Next>
+          </Ask>
+        );
+      } else {
+        const v = data.sleep[check.verdict];
+        screen = (
+          <Lesson kick="Sleep check" char={data.sleep.char} title={`About ${hoursLabel(check.hours)} hours a night`} line={`Sleep doctors (AASM) recommend ${check.says}.`}>
+            <p className="q-big"><b>{v.title}</b></p>
+            <p>{v.body}</p>
+            <div className="q-tonight"><b>Try tonight</b>{v.tip}</div>
+            <Source s={data.sleep.source} />
+            <Next onClick={() => next()}>Next: the villains</Next>
+          </Lesson>
+        );
+      }
+      break;
+    }
+
+    case "villains": {
+      const { picks, checked } = p.villains;
+      const home = data.villains.filter((v) => picks.includes(v.char.key));
+      const toggle = (key: string) => save({ ...p, villains: { picks: picks.includes(key) ? picks.filter((k) => k !== key) : [...picks, key], checked: false } });
+      if (!checked) {
+        screen = (
+          <Ask kick="The villains" title="Which of these happen at your house?" sub="Tick all that apply. No judgment: every house has a few.">
+            <div className="opts">
+              {data.villains.map((v) => (
+                <button key={v.char.key} className="opt q-moment" type="button" style={{ ["--c" as string]: v.char.color }} aria-pressed={picks.includes(v.char.key)} onClick={() => toggle(v.char.key)}>
+                  <i aria-hidden="true" />{v.label}
+                </button>
+              ))}
+            </div>
+            <Next onClick={() => answer(picks, { villains: { picks, checked: true } }, false)}>{picks.length ? "Show me the villains" : "None of these"}</Next>
+          </Ask>
+        );
+      } else {
+        const first = home[0];
+        screen = (
+          <div className="qstep">
+            <small>The villains</small>
+            <h1 className="q-title">{home.length ? `${home.length} of ${data.villains.length} villains live at your house` : "No villains found at your house"}</h1>
+            <p className="fx-sub">They’re not people, and they’re not your kid. They’re habits and things that sneak into every house. Each one has a simple way to beat it.</p>
+            {home.length > 0 && (
+              <ul className="q-crew">
+                {home.map((v) => (
+                  <li key={v.char.key} style={{ ["--ct" as string]: tint(v.char.color) }}>
+                    <CrewArt k={v.char.key} />
+                    <div><b>{v.char.name} · {v.char.real}</b><span>{capFirst(v.char.job)}.</span></div>
+                  </li>
+                ))}
+              </ul>
+            )}
+            {first ? (
+              <>
+                <h3>Beat {first.char.name} first</h3>
+                <p><b>{first.question}</b> {first.lesson}</p>
+                <div className="q-tonight"><b>Try tonight</b>{first.tip}</div>
+                <Source s={first.source} />
+              </>
+            ) : (
+              <p>Keep it that way: phones charge outside the bedroom, screens go off an hour before bed, and bedtime stays steady.</p>
+            )}
+            <Next onClick={() => next()}>Next: myth or fact?</Next>
+          </div>
+        );
+      }
+      break;
+    }
+
     case "myth-1":
-    case "myth-2": {
-      const i = step === "myth-1" ? 0 : 1;
+    case "myth-2":
+    case "myth-3": {
+      const i = Number(step.slice(-1)) - 1;
       const m = data.myths[i];
       const said = p.myths[i];
       const pick = (myth: boolean) => {
@@ -150,7 +265,7 @@ export default function Quiz({ data }: { data: QuizData }) {
         answer({ said: myth ? "myth" : "fact", right: myth === m.isMyth }, { myths }, false);
       };
       screen = (
-        <Ask kick={`Myth or fact? ${i + 1} of 2`} title={`“${m.ask}”`}>
+        <Ask kick={`Myth or fact? ${i + 1} of ${data.myths.length}`} title={`“${m.ask}”`}>
           {said === null ? (
             <div className="q-two">
               <button className="btn" type="button" onClick={() => pick(true)}>Myth</button>
@@ -274,7 +389,7 @@ function Gate({ sid, variant, p, crew, ageLabel, onDone }: { sid: string; varian
       const res = await fetch("/api/quiz/lead", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ sid, variant, email: email.trim(), consent, age: p.age, moments: p.moments }),
+        body: JSON.stringify({ sid, variant, email: email.trim(), consent, ...answersOf(p) }),
       });
       if (res.status === 400) {
         setBusy(false);
@@ -292,7 +407,8 @@ function Gate({ sid, variant, p, crew, ageLabel, onDone }: { sid: string; varian
       <div className="q-arts">{crew.map((c) => <CrewArt key={c.key} k={c.key} mood="happy" />)}</div>
       <ul className="fx-trust">
         <li>Who’s behind the moments you picked</li>
-        <li>The villain to beat first</li>
+        <li>Your kid’s sleep check</li>
+        <li>The villains at your house, and which to beat first</li>
         <li>A 3-night plan for ages {ageLabel}</li>
         <li>What to say to your kid, word for word</li>
       </ul>
@@ -314,7 +430,7 @@ function Gate({ sid, variant, p, crew, ageLabel, onDone }: { sid: string; varian
 }
 
 function Result({ sid, data, p }: { sid: string; data: QuizData; p: Progress }) {
-  const r = quizResult(data, p.age, p.moments);
+  const r = quizResult(data, answersOf(p));
   if (!r) return null;
   const q = `src=quiz&qs=${sid}`;
   const click = (to: string) => () => track("click", "result", { to });
@@ -334,7 +450,7 @@ function Result({ sid, data, p }: { sid: string; data: QuizData; p: Progress }) 
         ))}
       </ul>
 
-      <div className="q-row">
+      <div className="q-row q-row-3">
         <div className="q-mini" style={{ ["--ct" as string]: tint(r.age.stage.color) }}>
           <CrewArt k={r.age.stage.key} />
           <div><small>Your kid’s stage</small><b>{r.age.stage.name} · {r.age.stage.real}</b><span>{capFirst(r.age.stage.job)}.</span></div>
@@ -345,7 +461,17 @@ function Result({ sid, data, p }: { sid: string; data: QuizData; p: Progress }) 
             <div><small>Villain to beat first</small><b>{r.villain.name} · {r.villain.real}</b><span>{capFirst(r.villain.job)}.</span></div>
           </div>
         )}
+        {r.sleep && (
+          <div className="q-mini" style={{ ["--ct" as string]: tint(data.sleep.char.color) }}>
+            <CrewArt k={data.sleep.char.key} />
+            <div><small>Sleep check</small><b>About {hoursLabel(r.sleep.hours)} hours</b><span>{data.sleep[r.sleep.verdict].title} Recommended: {r.sleep.says}.</span></div>
+          </div>
+        )}
       </div>
+
+      {r.home.length > 1 && (
+        <p className="fine">Villains at your house: {r.home.map((v) => `${v.char.name} (${v.char.real.toLowerCase()})`).join(", ")}.</p>
+      )}
 
       <h2>Your 3-night plan</h2>
       <ol className="tonight">
@@ -375,6 +501,8 @@ function Result({ sid, data, p }: { sid: string; data: QuizData; p: Progress }) 
       <ul className="q-more">
         {r.picks.map((m) => <li key={m.id}><a href={m.path} target="_blank" rel="noopener" onClick={click(m.path)}>{m.label}</a></li>)}
         <li><a href={r.age.path} target="_blank" rel="noopener" onClick={click(r.age.path)}>What’s normal at {r.age.label}</a></li>
+        {r.sleep && <li><a href={data.sleep.path} target="_blank" rel="noopener" onClick={click(data.sleep.path)}>How much sleep kids need, by age</a></li>}
+        {r.home.slice(0, 2).map((v) => <li key={v.char.key}><a href={v.path} target="_blank" rel="noopener" onClick={click(v.path)}>Beat {v.char.name}: {v.char.real.toLowerCase()}</a></li>)}
       </ul>
 
       <p className="disclaim">{DISCLAIMER}</p>
@@ -383,3 +511,21 @@ function Result({ sid, data, p }: { sid: string; data: QuizData; p: Progress }) 
 }
 
 const capFirst = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+
+/** The answers that shape the result, from the saved progress. */
+function answersOf(p: Progress): QuizAnswers {
+  const { bed, wake, checked } = p.sleep;
+  return {
+    age: p.age,
+    moments: p.moments,
+    sleep: checked && bed != null && wake != null ? { bed, wake } : null,
+    villains: p.villains.checked ? p.villains.picks : null,
+  };
+}
+
+/** Minutes after midnight → "8:30 p.m." (24:00 and later is past midnight). */
+function clock(min: number) {
+  const m = min % (24 * 60);
+  const h = Math.floor(m / 60);
+  return `${h % 12 || 12}:${String(m % 60).padStart(2, "0")} ${h < 12 ? "a.m." : "p.m."}`;
+}

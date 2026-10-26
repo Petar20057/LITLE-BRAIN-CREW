@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { AdminHeader } from "@/components/admin/Admin";
-import { DUO_OPTIONS, MOMENTS, STEPS, VARIANTS, type StepId } from "@/content/quiz";
+import { DUO_OPTIONS, MOMENTS, STEPS, VARIANTS, VILLAIN_CHECK, type StepId } from "@/content/quiz";
 import { pct, rangeFrom, requireAdmin } from "@/lib/admin";
 import { createAdminClient } from "@/lib/supabase/admin";
 
@@ -13,14 +13,20 @@ export const instant = false;
 
 const STEP_LABEL: Record<StepId, string> = {
   intro: "Intro", age: "Age", stage: "Age stage card", moments: "Pick moments", "lesson-1": "Lesson 1", "lesson-2": "Lesson 2 (picked 2+)",
-  "lesson-3": "Lesson 3 (picked 3)", "myth-1": "Myth 1", "myth-2": "Myth 2", plasti: "Rule 1 · Plasti", duo: "Duo question",
+  "lesson-3": "Lesson 3 (picked 3)", sleep: "Sleep check", villains: "Villain check", "myth-1": "Myth 1", "myth-2": "Myth 2", "myth-3": "Myth 3",
+  plasti: "Rule 1 · Plasti", duo: "Duo question",
   "duo-card": "Rule 2 · Duo", gate: "Email gate", result: "Result",
 };
 const ANSWER_LABEL: Record<string, string> = {
   ...Object.fromEntries(MOMENTS.map((m) => [m.id, m.label])),
   ...Object.fromEntries(DUO_OPTIONS.map((d) => [d.id, d.label])),
+  ...Object.fromEntries(VILLAIN_CHECK.map((v) => [v.villain, v.label])),
+  short: "Under the recommended range", ok: "Inside the range", long: "Above the range", none: "None of the six",
 };
-const QUESTION_LABEL: Record<string, string> = { age: "Age", moment: "Moments picked", duo: "Duo question", "myth-1": "Myth 1 (sugar)", "myth-2": "Myth 2 (dopamine detox)", tips: "Ticked weekly tips" };
+const QUESTION_LABEL: Record<string, string> = {
+  age: "Age", moment: "Moments picked", duo: "Duo question", "myth-1": "Myth 1 (sugar)", "myth-2": "Myth 2 (dopamine detox)",
+  "myth-3": "Myth 3 (brain done at 25)", guess: "“Who’s behind it?” guesses", sleep: "Sleep check", villain: "Villains at home", tips: "Ticked weekly tips",
+};
 
 const secs = (ms: number | null | undefined) => (ms == null ? "–" : `${Math.round(ms / 1000)} s`);
 

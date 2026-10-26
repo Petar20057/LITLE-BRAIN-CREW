@@ -10,6 +10,12 @@ export type Progress = {
   step: StepId;
   age: string | null;
   moments: string[];
+  /** "Who's behind it?" guesses, by lesson: the crew key picked. */
+  guesses: (string | null)[];
+  /** Sleep check: school-night bedtime and wake-up in minutes after midnight; checked = answer shown. */
+  sleep: { bed: number | null; wake: number | null; checked: boolean };
+  /** Villain check: the habits ticked (villain keys); checked = answer shown. */
+  villains: { picks: string[]; checked: boolean };
   /** Myth answers, by index: true = said "myth". */
   myths: (boolean | null)[];
   duo: string | null;
@@ -19,14 +25,21 @@ export type Progress = {
 export type QuizSession = { sid: string; variant: Variant; progress: Progress };
 
 const KEY = "vlc-quiz";
-export const START: Progress = { step: "intro", age: null, moments: [], myths: [null, null], duo: null, emailed: false };
+export const START: Progress = {
+  step: "intro", age: null, moments: [], guesses: [null, null, null], sleep: { bed: null, wake: null, checked: false },
+  villains: { picks: [], checked: false }, myths: [null, null, null], duo: null, emailed: false,
+};
 
 let current: QuizSession | null = null;
 
 function load(): QuizSession {
   try {
     const saved = JSON.parse(sessionStorage.getItem(KEY) ?? "null") as QuizSession | null;
-    if (saved?.sid && isVariant(saved.variant)) return { ...saved, progress: { ...START, ...saved.progress } };
+    // Fills fields added since the visit started (a tab kept open across a deploy).
+    if (saved?.sid && isVariant(saved.variant)) {
+      const p = { ...START, ...saved.progress };
+      return { ...saved, progress: { ...p, myths: [...p.myths, null, null, null].slice(0, 3), guesses: [...p.guesses, null, null, null].slice(0, 3) } };
+    }
   } catch {}
   const asked = new URLSearchParams(location.search).get("v");
   const keys = Object.keys(VARIANTS) as Variant[];
@@ -83,7 +96,7 @@ export const markStep = () => {
 /** Milliseconds on the current screen. */
 export const onStep = () => Date.now() - enteredAt;
 
-/** Fire-and-forget event for /stats/quiz. Uses a beacon when the page is going away. */
+/** Fire-and-forget event for /admin/quiz. Uses a beacon when the page is going away. */
 export function track(event: QuizEvent, step: StepId, value?: unknown, ms?: number) {
   const s = getSession();
   const body: Record<string, unknown> = { sid: s.sid, variant: s.variant, step, event, value, ms };

@@ -307,9 +307,9 @@ Odluke 2026-10-26 (Luka): članovi kluba zarađuju **20%** od prodaje preko svog
 
 ## 12. Lead magnet: kviz `/code` (Instagram DM, 2026-10-26)
 
-**Šta je:** kviz od 3–4 minuta na `littlebraincrew.com/code`. Nije na početnoj, nema meni, ima `noindex` i nije u sitemap-u. Šalje ga ManyChat u Instagram DM kada neko napiše ključnu reč **CODE**. Pokriva sve sa sajta: uzrasne faze, 12 trenutaka (isti kao decoder na početnoj), likove i negativce, 2 mita, Pravilo 1 (Plasti) i Pravilo 2 (Duo).
+**Šta je:** kviz od oko 5 minuta (produžen 2026-10-26 sa 3–4, da se roditelji više „ulože“) na `littlebraincrew.com/code`. Nije na početnoj, nema meni, ima `noindex` i nije u sitemap-u. Šalje ga ManyChat u Instagram DM kada neko napiše ključnu reč **CODE**. Pokriva sve sa sajta: uzrasne faze, 12 trenutaka (isti kao decoder na početnoj), likove, spavanje po uzrastu, svih 6 negativaca, 3 mita, Pravilo 1 (Plasti) i Pravilo 2 (Duo).
 
-**Tok:** intro → uzrast → kartica uzrasne faze → izbor do 3 trenutka → lekcija za svaki trenutak (lik, šta se dešava, šta probati večeras, izvor) → Myth or Fact × 2 → Plasti → pitanje „šta obično radiš“ → Duo → **email** → rezultat (likovi iza trenutaka, faza, negativac, plan za 3 večeri, šta reći detetu, Toolkit $9 sa `?crew=` i Reset $39).
+**Tok:** intro → uzrast → kartica uzrasne faze → izbor do 3 trenutka → za svaki trenutak „Who’s behind it?“ (pogađa jednog od 3 lika), pa lekcija (šta se dešava, šta probati večeras, izvor) → provera spavanja (kad zaspi i kad ustaje, poređenje sa AASM preporukom za uzrast) → provera negativaca (koje od 6 navika postoje kod kuće, pa kako pobediti prvog) → Myth or Fact × 3 → Plasti → pitanje „šta obično radiš“ → Duo → **email** → rezultat (likovi, faza, negativac, spavanje, plan za 3 večeri u kom su trenutak, negativac i spavanje, šta reći detetu, Toolkit $9 sa `?crew=` i Reset $39).
 
 **Gde je šta:**
 - Tekst, trenuci, varijante: `content/quiz.ts`. Lekcije i saveti se uzimaju iz `content/learn` (`lib/quiz.ts`), pa se tekst menja tamo.
@@ -333,6 +333,7 @@ Za druge kampanje promeni `utm_campaign` ili `k`, pa se vide odvojeno. „Commen
 
 **Šta još fali:**
 - Migracija je primenjena na živu bazu 2026-10-26 i proverena prolaskom kroz kviz (test redovi obrisani).
+- `20261026180000_quiz_answers_v2.sql`: `quiz_answers` broji i nove odgovore (pogađanja, spavanje, negativci, treći mit) za `/admin/quiz`. Treba je primeniti na živu bazu.
 - Drift u bazi je rešen 2026-10-26: živa baza je imala staru Stripe/PayPal verziju `20261026120000_crew_club.sql`, a `20261026160000_crew_club_creem.sql` je prebacuje na Creem. `npm run db:types` sada opet generiše ceo fajl sa tipovima.
 - SES ključevi (bez njih se email sa rezultatom ne šalje, samo se loguje).
 - Nedeljni saveti za one koji su štiklirali: sekvenca mejlova i unsubscribe ruta još ne postoje.

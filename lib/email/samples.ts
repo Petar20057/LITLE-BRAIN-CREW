@@ -10,6 +10,6 @@ export const SAMPLES: Record<string, () => Email> = {
   "club-welcome-yearly": () => clubWelcome("yearly"),
   "order-receipt": () => orderReceipt([ITEMS.guide, ITEMS.bedtimeKit], [{ name: "The Kid Brain Toolkit", url: "/account" }, { name: "the Bedtime & Screen-Off Kit", url: "/account" }]),
   "renewal-reminder": () => renewalReminder("November 26, 2026"),
-  "quiz-result": () => quizResultEmail(quizResult(quizData(), "6-7", ["screens", "after-school", "wired"])!),
+  "quiz-result": () => quizResultEmail(quizResult(quizData(), { age: "6-7", moments: ["screens", "after-school", "wired"], sleep: { bed: 21 * 60 + 30, wake: 6 * 60 + 30 }, villains: ["bedi", "lupi"] })!),
 };
 
