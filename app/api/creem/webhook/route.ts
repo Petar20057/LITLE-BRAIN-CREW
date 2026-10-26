@@ -1,12 +1,15 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { ITEMS } from "@/lib/funnel";
 import { keyForProduct, verifyWebhook, webhookConfigured } from "@/lib/creem";
+import { sendEmail } from "@/lib/email/send";
+import { clubWelcome } from "@/lib/email/templates";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { Database } from "@/lib/supabase/database.types";
 
 // Creem → us. Set this URL as the webhook in the Creem dashboard: <site>/api/creem/webhook.
 // Mirrors Crew Club subscriptions into Supabase (the source of truth stays Creem), so pages can check access with
-// has_club_access(). One-time products (Toolkit, Reset, ...) are only logged: emailing the files is not built yet.
+// has_club_access(), and sends the Crew Club welcome email the first time a subscription shows up. One-time products
+// (Toolkit, Reset, ...) are only logged: the receipt email (lib/email/templates.ts) needs file delivery, not built yet.
 // Any failure answers 500 so Creem retries; writes are idempotent (one row per Creem subscription id).
 
 type Status = Database["public"]["Enums"]["subscription_status"];
@@ -122,6 +125,14 @@ async function syncSubscription(sub: CreemSubscription) {
     renewal_consent_at: consent,
   });
   if (error) throw error;
+
+  // The row exists now, so a retried webhook takes the update path above and never sends this twice. A failed
+  // email is only logged: it must not make Creem retry a webhook whose work is already done.
+  try {
+    await sendEmail(email, clubWelcome(plan.interval === "year" ? "yearly" : "monthly"), { tag: "club-welcome" });
+  } catch (err) {
+    console.error("[email] club welcome failed", { subscription: sub.id }, err);
+  }
 }
 
 // The parent's member row, by email. A first-time buyer gets a Supabase user (the members row follows from the

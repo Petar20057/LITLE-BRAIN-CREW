@@ -9,9 +9,11 @@
     "lint": "eslint",
     "sync": "node scripts/sync-design.mjs design",
     "db:types": "set -a && . ./.env.local && set +a && { printf '// Generated from the live database by npm run db:types. Do not edit by hand: change the schema in\\n// supabase/migrations/, apply it, then regenerate.\\n\\n'; supabase gen types typescript --db-url \"$POSTGRES_URL_NON_POOLING\" --schema public; } > lib/supabase/database.types.ts && oxfmt lib/supabase/database.types.ts",
-    "check:learn": "node scripts/check-learn.mjs"
+    "check:learn": "node scripts/check-learn.mjs",
+    "email:art": "node scripts/email-art.mjs"
   },
   "dependencies": {
+    "@aws-sdk/client-sesv2": "^3.1156.0",
     "@supabase/ssr": "^0.12.7",
     "@supabase/supabase-js": "^2.118.0",
     "next": "16.4.3",

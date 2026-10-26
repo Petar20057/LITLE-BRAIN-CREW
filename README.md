@@ -65,6 +65,34 @@ SEO content, rendered as server components with the same global CSS classes as t
 
 Copy `.env.example` to `.env.local`. `NEXT_PUBLIC_SITE_URL` is the public origin (canonical URLs, Open Graph, JSON-LD, sitemap). Leave it empty: production builds use `https://www.littlebraincrew.com`, local dev `http://localhost:3000`. Keep unused keys empty.
 
+## Email
+
+Sending goes through Amazon SES in `eu-north-1`, where `littlebraincrew.com` is a verified domain (Easy DKIM, MAIL FROM `mail.littlebraincrew.com`, records in Vercel DNS). Receiving stays on Hostinger (root MX). The account is out of the SES sandbox.
+
+- Code: `lib/email/send.ts` (SES), `lib/email/layout.ts` (the site's look, HTML and text from the same blocks), `lib/email/templates.ts` (Club welcome, order receipt, renewal reminder).
+- Wired: the Creem webhook sends the Club welcome once per new subscription. The order receipt waits for file delivery; the renewal reminder waits for a daily job.
+- Preview in dev: `/dev/emails` (404 in production). Send yourself one: `curl -X POST "localhost:3000/dev/emails/club-welcome?to=you@example.com"`.
+- Crew images for email are PNGs in `public/email/crew/` (`npm run email:art` re-renders them from the site's art, macOS).
+
+**Keys.** In AWS IAM, create a user (e.g. `littlebraincrew-ses`) with only this inline policy, create an access key for it, and put it in `.env.local` and Vercel as `SES_ACCESS_KEY_ID` / `SES_SECRET_ACCESS_KEY`:
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    { "Effect": "Allow", "Action": ["ses:SendEmail", "ses:SendRawEmail"], "Resource": "arn:aws:ses:eu-north-1:*:identity/littlebraincrew.com" }
+  ]
+}
+```
+
+**Staying out of spam** (already done in code and DNS unless marked):
+- SPF, DKIM and DMARC all pass and align with the From domain; From is always `hello@littlebraincrew.com`. `EMAIL_REPLY_TO` must be a mailbox that exists in Hostinger.
+- Every email has a text part, alt text on images, real links only to our own domain, no link shorteners, and stays far under Gmail's 102 KB clipping.
+- Copy stays calm: no "free!!!", no all caps, no promises (also the brand rule).
+- Mail people signed up for (newsletters, challenges) must pass `unsubscribeUrl` to `sendEmail`, which adds one-click `List-Unsubscribe` headers that Gmail and Yahoo require from bulk senders. Receipts and account emails don't.
+- SES drops addresses that bounced or complained (account suppression list). Keep bounces under 2% and complaints under 0.1%.
+- To do: after a few weeks of clean sending, move DMARC from `p=none` to `p=quarantine`, and add a `rua=` report address. Start with low volume and only ever mail people who asked.
+
 ## Planned stack
 
 GitHub → Vercel (Root Directory `web` if the repo is the parent folder), Supabase for orders, members and form submissions, Creem (merchant of record) for payments and the affiliate program.
