@@ -133,7 +133,7 @@ export const SITE_PAGES: SitePage[] = [
       {
         h2: "The short version",
         paras: [
-          "Little Brain Crew is for parents and other adults. We don’t collect children’s names, photos or other personal details. We use no advertising trackers and no analytics tools on this site today. We collect an email address and a few details only when you fill in a form or buy something, and we use them for the reason you gave us.",
+          "Little Brain Crew is for parents and other adults. We don’t collect children’s names, photos or other personal details. We use no advertising trackers and no third-party analytics tools. The parent quiz at /code keeps its own simple count of which screens were seen and answered (see below). We collect an email address and a few details only when you fill in a form or buy something, and we use them for the reason you gave us.",
           "Parts of this page describe features that are not switched on yet. We mark those as planned, and we will update this page when they go live.",
         ],
       },
@@ -155,6 +155,13 @@ export const SITE_PAGES: SitePage[] = [
         paras: [
           "Form entries are meant to be delivered to us by email through Web3Forms, a third-party form service. Along with what you type, the service receives the name of the form and the page you were on. This connection is planned and is not switched on yet, so forms do not send anything today.",
           "We use your information to answer you, send what you asked for, and, if you signed up for updates, send occasional emails. Every marketing email will have an unsubscribe link (planned).",
+        ],
+      },
+      {
+        h2: "The parent quiz at /code",
+        paras: [
+          "The quiz we share on Instagram asks for your child’s age range (such as 6 to 7), which hard moments happen at home, and a few quiz answers. It never asks for your child’s name. To learn which screens are clear and where parents stop, it records, under a random id that isn’t linked to you, each screen you see, your answers, how long you spent on each screen, the link that brought you (such as Instagram) and the type of device. It sets no cookies; the random id is kept in your browser’s session storage (key “vlc-quiz”) and disappears when you close the tab.",
+          "If you ask for your results by email, we store your email address with that quiz visit and send you the results once. If you also tick “send me one short crew tip a week”, we will send those tips, and every one will have an unsubscribe link. If you buy something right after the quiz, the order is linked to the quiz visit so we can see whether the quiz helps. All of this is stored with Supabase, our database service.",
         ],
       },
       {

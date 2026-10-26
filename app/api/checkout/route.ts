@@ -2,11 +2,12 @@ import { NextResponse, type NextRequest } from "next/server";
 import { createCheckout, creemConfigured, itemsFor, orderKey, productIdFor } from "@/lib/creem";
 import { CREW_NAMES } from "@/lib/funnel";
 import { SITE_URL } from "@/lib/design";
+import { isSessionId } from "@/lib/quiz-track";
 
 // Starts a Creem checkout for what the funnel page asks for and returns its URL (lib/payments.ts redirects there).
 // The browser only names item ids; prices and the Creem product come from the server. Access is granted later
 // by the webhook (app/api/creem/webhook), never by the redirect back.
-type Body = { items?: unknown; email?: unknown; next?: unknown; consent?: unknown; crew?: unknown };
+type Body = { items?: unknown; email?: unknown; next?: unknown; consent?: unknown; crew?: unknown; quiz?: unknown };
 
 const NEXT = /^\/[a-z0-9/-]*$/;
 
@@ -41,6 +42,8 @@ export async function POST(request: NextRequest) {
   const metadata: Record<string, string> = { order: key };
   if (recurring) metadata.renewal_consent_at = new Date().toISOString();
   if (typeof body.crew === "string" && body.crew in CREW_NAMES) metadata.crew = body.crew;
+  // The webhook marks the /code quiz visit as bought (quiz_sessions.purchased_at).
+  if (isSessionId(body.quiz)) metadata.quiz_session = body.quiz;
 
   try {
     const url = await createCheckout({ productId, email, successUrl: `${SITE_URL}${next}`, metadata });

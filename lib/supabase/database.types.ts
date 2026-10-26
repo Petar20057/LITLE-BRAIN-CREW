@@ -86,6 +86,154 @@ export type Database = {
         };
         Relationships: [];
       };
+      quiz_events: {
+        Row: {
+          created_at: string;
+          event: string;
+          id: number;
+          ms: number | null;
+          session_id: string;
+          step: string;
+          value: Json | null;
+        };
+        ComputedFields: never;
+        Insert: {
+          created_at?: string;
+          event: string;
+          id?: never;
+          ms?: number | null;
+          session_id: string;
+          step: string;
+          value?: Json | null;
+        };
+        Update: {
+          created_at?: string;
+          event?: string;
+          id?: never;
+          ms?: number | null;
+          session_id?: string;
+          step?: string;
+          value?: Json | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "quiz_events_session_id_fkey";
+            columns: ["session_id"];
+            isOneToOne: false;
+            referencedRelation: "quiz_sessions";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      quiz_leads: {
+        Row: {
+          consent_at: string | null;
+          created_at: string;
+          email: string;
+          id: string;
+          session_id: string | null;
+          tips_consent: boolean;
+          unsubscribed_at: string | null;
+        };
+        ComputedFields: never;
+        Insert: {
+          consent_at?: string | null;
+          created_at?: string;
+          email: string;
+          id?: string;
+          session_id?: string | null;
+          tips_consent?: boolean;
+          unsubscribed_at?: string | null;
+        };
+        Update: {
+          consent_at?: string | null;
+          created_at?: string;
+          email?: string;
+          id?: string;
+          session_id?: string | null;
+          tips_consent?: boolean;
+          unsubscribed_at?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "quiz_leads_session_id_fkey";
+            columns: ["session_id"];
+            isOneToOne: false;
+            referencedRelation: "quiz_sessions";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      quiz_sessions: {
+        Row: {
+          age: string | null;
+          checkout_at: string | null;
+          checkout_product: string | null;
+          device: string | null;
+          duo: string | null;
+          emailed_at: string | null;
+          id: string;
+          keyword: string | null;
+          last_step: string;
+          moments: string[];
+          purchase_order: string | null;
+          purchased_at: string | null;
+          referrer: string | null;
+          result_at: string | null;
+          started_at: string;
+          updated_at: string;
+          utm_campaign: string | null;
+          utm_medium: string | null;
+          utm_source: string | null;
+          variant: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          age?: string | null;
+          checkout_at?: string | null;
+          checkout_product?: string | null;
+          device?: string | null;
+          duo?: string | null;
+          emailed_at?: string | null;
+          id: string;
+          keyword?: string | null;
+          last_step?: string;
+          moments?: string[];
+          purchase_order?: string | null;
+          purchased_at?: string | null;
+          referrer?: string | null;
+          result_at?: string | null;
+          started_at?: string;
+          updated_at?: string;
+          utm_campaign?: string | null;
+          utm_medium?: string | null;
+          utm_source?: string | null;
+          variant: string;
+        };
+        Update: {
+          age?: string | null;
+          checkout_at?: string | null;
+          checkout_product?: string | null;
+          device?: string | null;
+          duo?: string | null;
+          emailed_at?: string | null;
+          id?: string;
+          keyword?: string | null;
+          last_step?: string;
+          moments?: string[];
+          purchase_order?: string | null;
+          purchased_at?: string | null;
+          referrer?: string | null;
+          result_at?: string | null;
+          started_at?: string;
+          updated_at?: string;
+          utm_campaign?: string | null;
+          utm_medium?: string | null;
+          utm_source?: string | null;
+          variant?: string;
+        };
+        Relationships: [];
+      };
       subscriptions: {
         Row: {
           billing_interval: string;
@@ -164,6 +312,35 @@ export type Database = {
     };
     Functions: {
       has_club_access: { Args: Record<PropertyKey, never>; Returns: boolean };
+      quiz_answers: {
+        Args: { since: string };
+        Returns: {
+          answer: string;
+          question: string;
+          sessions: number;
+        }[];
+      };
+      quiz_funnel: {
+        Args: { since: string; src?: string };
+        Returns: {
+          median_ms: number;
+          sessions: number;
+          step: string;
+          variant: string;
+        }[];
+      };
+      quiz_totals: {
+        Args: { since: string };
+        Returns: {
+          checkouts: number;
+          emailed: number;
+          purchases: number;
+          results: number;
+          source: string;
+          started: number;
+          variant: string;
+        }[];
+      };
     };
     Enums: {
       age_group: "whyzi" | "skuli" | "ruli" | "tweeni" | "sprouti" | "seki";

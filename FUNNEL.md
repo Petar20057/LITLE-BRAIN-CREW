@@ -50,7 +50,7 @@ Strip („One evening with Dopa“) je **uklonjen** sa sajta, zajedno sa `comic.
 | `/free` | besplatni saveti, stikeri, Screen-Off Challenge (email lista) |
 | `/gift`, `/shop`, `/founding`, `/schools`, `/faq` | poklon, waitlist, founding parents, B2B, pitanja |
 
-**Bez kviza više nema glavnog hvatanja emaila.** Ostale su samo forme na `/free` (lista „15 ways to end screen time“, stikeri, izazov). Ako reklame budu skupe, vredi ponovo dodati lead magnet.
+**Bez kviza na početnoj više nema glavnog hvatanja emaila na sajtu.** Na `/free` ostale su forme (lista „15 ways to end screen time“, stikeri, izazov). Lead magnet je sada kviz `/code`, koji se šalje samo kroz Instagram DM (sekcija 12).
 
 ## 2. Hormozi: value equation
 
@@ -304,3 +304,35 @@ Odluke 2026-10-26 (Luka): članovi kluba zarađuju **20%** od prodaje preko svog
 2. Može li se proizvod (Support the crew) **isključiti** iz programa?
 3. Da li Creem izdaje afilijejtima poreske formulare (1099 za US) ili to radimo mi?
 4. Pravni tekst uslova (žuti `draft` na stranicama).
+
+## 12. Lead magnet: kviz `/code` (Instagram DM, 2026-10-26)
+
+**Šta je:** kviz od 3–4 minuta na `littlebraincrew.com/code`. Nije na početnoj, nema meni, ima `noindex` i nije u sitemap-u. Šalje ga ManyChat u Instagram DM kada neko napiše ključnu reč **CODE**. Pokriva sve sa sajta: uzrasne faze, 12 trenutaka (isti kao decoder na početnoj), likove i negativce, 2 mita, Pravilo 1 (Plasti) i Pravilo 2 (Duo).
+
+**Tok:** intro → uzrast → kartica uzrasne faze → izbor do 3 trenutka → lekcija za svaki trenutak (lik, šta se dešava, šta probati večeras, izvor) → Myth or Fact × 2 → Plasti → pitanje „šta obično radiš“ → Duo → **email** → rezultat (likovi iza trenutaka, faza, negativac, plan za 3 večeri, šta reći detetu, Toolkit $9 sa `?crew=` i Reset $39).
+
+**Gde je šta:**
+- Tekst, trenuci, varijante: `content/quiz.ts`. Lekcije i saveti se uzimaju iz `content/learn` (`lib/quiz.ts`), pa se tekst menja tamo.
+- Ekran: `components/quiz/Quiz.tsx`; sesija i praćenje: `components/quiz/session.ts`.
+- API: `/api/quiz/event` (svaki klik), `/api/quiz/lead` (email + email sa rezultatom, šablon `quizResultEmail`, preview `/dev/emails/quiz-result`).
+- Baza: `supabase/migrations/20261026150000_quiz.sql` (`quiz_sessions`, `quiz_events`, `quiz_leads` + funkcije za statistiku). Pregledač ne može da čita ni piše ništa.
+- Kupovina: `?qs=<sesija>` ide iz rezultata u checkout → Creem `metadata.quiz_session` → webhook upisuje `purchased_at`.
+
+**Kako se čita levak:** `/stats/quiz` (lozinka = `STATS_TOKEN` u env-u; prazno = stranica ne postoji). Prikazuje:
+1. konverziju po varijanti (start → email → rezultat → klik na checkout → kupovina),
+2. koliko ljudi je videlo svaki ekran, sa % od starta i medijanom vremena po ekranu (gde najviše odustaju),
+3. odgovore (uzrast, trenuci, mitovi, Duo, štikliran nedeljni savet).
+
+Filteri: 7/30/90 dana i izvor (`utm_source`).
+
+**A/B test:** varijante su u `content/quiz.ts` (`VARIANTS`). Posetilac dobije nasumičnu varijantu za celu sesiju, a može se i zadati preko `?v=b`. Za sada se testira samo naslov intro ekrana. Varijantu koja gubi treba skloniti tek kad obe imaju bar nekoliko stotina startova.
+
+**ManyChat (radi Luka, plaća se):** ManyChat Pro (~$15/mes) → Instagram → Automation „Comment/DM keyword“ = `CODE` → DM sa dugmetom i linkom:
+`https://www.littlebraincrew.com/code?utm_source=instagram&utm_medium=dm&utm_campaign=code&k=CODE`
+Za druge kampanje promeni `utm_campaign` ili `k`, pa se vide odvojeno. „Comment CODE“ je u skladu sa pravilom za mesec 1 (komentar, bez linka u postu).
+
+**Šta još fali:**
+- Migracija je primenjena na živu bazu 2026-10-26 i proverena prolaskom kroz kviz (test redovi obrisani).
+- Drift u bazi je rešen 2026-10-26: živa baza je imala staru Stripe/PayPal verziju `20261026120000_crew_club.sql`, a `20261026160000_crew_club_creem.sql` je prebacuje na Creem. `npm run db:types` sada opet generiše ceo fajl sa tipovima.
+- SES ključevi (bez njih se email sa rezultatom ne šalje, samo se loguje).
+- Nedeljni saveti za one koji su štiklirali: sekvenca mejlova i unsubscribe ruta još ne postoje.

@@ -4,6 +4,7 @@ import { keyForProduct, verifyWebhook, webhookConfigured } from "@/lib/creem";
 import { sendEmail } from "@/lib/email/send";
 import { clubWelcome } from "@/lib/email/templates";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { isSessionId } from "@/lib/quiz-track";
 import type { Database } from "@/lib/supabase/database.types";
 
 // Creem → us. Set this URL as the webhook in the Creem dashboard: <site>/api/creem/webhook.
@@ -57,6 +58,7 @@ export async function POST(request: NextRequest) {
     if (type.startsWith("subscription.")) {
       await syncSubscription(obj as CreemSubscription);
     } else if (type === "checkout.completed") {
+      await markQuizPurchase(obj.metadata as Record<string, unknown> | null | undefined);
       const sub = obj.subscription as CreemSubscription | undefined;
       if (sub?.id) {
         // The checkout carries the product, customer and metadata; its subscription only has id and status.
@@ -153,4 +155,17 @@ async function memberFor(admin: ReturnType<typeof createAdminClient>, email: str
     if (linkError) throw linkError;
   }
   return id;
+}
+
+/** An order that started on the /code quiz (metadata.quiz_session from /api/checkout): count it on /stats/quiz. */
+async function markQuizPurchase(metadata: Record<string, unknown> | null | undefined) {
+  const sid = metadata?.quiz_session;
+  if (!isSessionId(sid)) return;
+  const order = typeof metadata?.order === "string" ? metadata.order : null;
+  const { error } = await createAdminClient()
+    .from("quiz_sessions")
+    .update({ purchased_at: new Date().toISOString(), purchase_order: order })
+    .eq("id", sid)
+    .is("purchased_at", null);
+  if (error) throw error;
 }

@@ -13,6 +13,8 @@ export default function Checkout({ slug }: { slug: Product["slug"] }) {
   const router = useRouter();
   const crewParam = useQueryParam("crew");
   const crew = crewParam && crewParam in CREW_NAMES ? (crewParam as CrewKey) : undefined;
+  // The /code quiz visit this order came from (?qs=), so /stats/quiz can count the purchase.
+  const quiz = useQueryParam("qs") ?? undefined;
   const isGift = useQueryParam("gift") === "1";
   const giftRaw = useStored("vlc-gift");
   const gift = isGift ? parseGift(giftRaw) : undefined;
@@ -39,7 +41,7 @@ export default function Checkout({ slug }: { slug: Product["slug"] }) {
     setBusy(true);
     try {
       const next = gift ? "/thank-you" : p.next;
-      await charge(items, email, { next, consent: recurring ? consent : undefined, crew, commit: () => saveOrder({ email, items, crew, gift }) });
+      await charge(items, email, { next, consent: recurring ? consent : undefined, crew, quiz, commit: () => saveOrder({ email, items, crew, gift }) });
       router.push(next);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Payment didn’t go through. Please try again.");

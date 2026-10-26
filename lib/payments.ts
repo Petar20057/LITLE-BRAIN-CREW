@@ -15,11 +15,13 @@ type Options = {
   next: string;
   consent?: boolean;
   crew?: CrewKey;
+  /** Quiz session id from /code, passed to Creem as metadata. */
+  quiz?: string;
   /** Saves what was bought for the next pages. Runs before we leave for Creem, or right away in preview. */
   commit: () => void;
 };
 
-export async function charge(items: Item[], email: string, { next, consent, crew, commit }: Options): Promise<void> {
+export async function charge(items: Item[], email: string, { next, consent, crew, quiz, commit }: Options): Promise<void> {
   if (PREVIEW) {
     console.info("[preview] would open a Creem checkout", { email, items, next });
     await new Promise((r) => setTimeout(r, 350));
@@ -29,7 +31,7 @@ export async function charge(items: Item[], email: string, { next, consent, crew
   const res = await fetch("/api/checkout", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ items: items.map((i) => i.id), email, next, consent, crew }),
+    body: JSON.stringify({ items: items.map((i) => i.id), email, next, consent, crew, quiz }),
   });
   const data = (await res.json().catch(() => ({}))) as { url?: string; error?: string };
   if (!res.ok || !data.url) throw new Error(data.error || "Payment couldn’t start. Please try again.");

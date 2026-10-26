@@ -1,7 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import type { CrewKey } from "@/lib/funnel";
+import type { CharKey } from "@/content/learn/types";
 
 declare global {
   interface Window {
@@ -22,7 +22,7 @@ function subscribe(cb: () => void) {
   return () => subs.delete(cb);
 }
 
-export default function CrewArt({ k, mood = "main", className }: { k: CrewKey; mood?: "main" | "happy" | "tired"; className?: string }) {
+export default function CrewArt({ k, mood = "main", className }: { k: CharKey; mood?: "main" | "happy" | "tired"; className?: string }) {
   const html = useSyncExternalStore(subscribe, () => (ready && window.svg ? window.svg(k, mood) : ""), () => "");
   return <div className={className} aria-hidden="true" dangerouslySetInnerHTML={{ __html: html }} />;
 }

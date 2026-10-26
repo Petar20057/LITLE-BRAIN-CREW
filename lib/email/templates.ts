@@ -1,5 +1,7 @@
 import { ITEMS, PRODUCTS, per, total, usd, type Item } from "@/lib/funnel";
 import { renderEmail, type Block, type Email } from "./layout";
+import type { QuizResult } from "@/lib/quiz-plan";
+import { DISCLAIMER } from "@/content/quiz";
 
 // Every email we send. Copy follows the site (English, calm, no hype, no promises about a child): words like
 // "free", "guaranteed", ALL CAPS and piles of exclamation marks are spam signals as much as they're off-brand.
@@ -75,5 +77,34 @@ export function renewalReminder(renewsOn: string): Email {
       { note: "Want to pause or cancel? Do it in your account, in 2 clicks, before that date and you won’t be charged." },
     ],
     reason: "You’re getting this email because you have a yearly Crew Club membership. We send it before every renewal.",
+  });
+}
+
+/** The /code quiz result, sent when a parent leaves their email at the gate. Same result as the screen (lib/quiz-plan.ts). */
+export function quizResultEmail(r: QuizResult): Email {
+  const blocks: Block[] = [
+    { p: "Here’s what you saw in the quiz, to keep. These are the crew members behind the moments you picked:" },
+    { list: r.picks.map((m) => `${m.label}: ${m.line}`) },
+    { p: `Your kid’s stage: ${r.age.stage.name} (${r.age.stage.real}), ${r.age.stage.job}.` },
+  ];
+  if (r.villain) blocks.push({ p: `The villain to beat first: ${r.villain.name} (${r.villain.real}).` });
+  blocks.push(
+    { p: "Your 3-night plan. Same time, same words, three nights in a row:" },
+    { list: r.nights.map((n, i) => `Night ${i + 1}: ${n}`) },
+  );
+  if (r.lead.kid) blocks.push({ note: `Say it to your kid: ${r.lead.kid}` });
+  blocks.push(
+    { p: "Want all 12 moments decoded? The Kid Brain Toolkit has all 12 crew members, the 12 hardest moments with the exact words to say, the 6 villains, and what’s normal at every age." },
+    { button: { label: `Get the Toolkit · ${usd(ITEMS.guide.price)}`, url: `/checkout/guide?crew=${r.lead.char.key}&src=quiz-email` } },
+    { note: DISCLAIMER },
+  );
+  return renderEmail({
+    subject: "Your kid’s crew and 3-night plan",
+    preheader: `${r.lead.char.name} and the crew behind your hard moments, plus what to try tonight.`,
+    kick: "your quiz results",
+    title: "Meet the crew behind your hard moments",
+    art: r.lead.char.key,
+    blocks,
+    reason: "You’re getting this email because you asked for your quiz results at littlebraincrew.com/code.",
   });
 }
