@@ -6,9 +6,10 @@ export { PAGES };
 export type PageName = keyof typeof PAGES;
 
 // Public origin of the site. NEXT_PUBLIC_SITE_URL wins (e.g. a preview deployment); otherwise production builds use
-// https://littlebraincrew.com and local development uses http://localhost:3000.
+// https://www.littlebraincrew.com (the domain Vercel serves; the bare domain redirects there) and local development
+// uses http://localhost:3000.
 export const SITE_URL = (
-  process.env.NEXT_PUBLIC_SITE_URL || (process.env.NODE_ENV === "production" ? "https://littlebraincrew.com" : "http://localhost:3000")
+  process.env.NEXT_PUBLIC_SITE_URL || (process.env.NODE_ENV === "production" ? "https://www.littlebraincrew.com" : "http://localhost:3000")
 ).replace(/\/$/, "");
 
 // "noindex,follow" from a page's <meta name="robots"> -> Next's robots object. Pages without one are indexable.

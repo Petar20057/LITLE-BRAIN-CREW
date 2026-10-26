@@ -63,7 +63,7 @@ SEO content, rendered as server components with the same global CSS classes as t
 
 ## Environment
 
-Copy `.env.example` to `.env.local`. `NEXT_PUBLIC_SITE_URL` is the public origin (canonical URLs, Open Graph, JSON-LD, sitemap). Leave it empty: production builds use `https://littlebraincrew.com`, local dev `http://localhost:3000`. Keep unused keys empty.
+Copy `.env.example` to `.env.local`. `NEXT_PUBLIC_SITE_URL` is the public origin (canonical URLs, Open Graph, JSON-LD, sitemap). Leave it empty: production builds use `https://www.littlebraincrew.com`, local dev `http://localhost:3000`. Keep unused keys empty.
 
 ## Planned stack
 
