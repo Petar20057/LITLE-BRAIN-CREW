@@ -333,7 +333,7 @@ Za druge kampanje promeni `utm_campaign` ili `k`, pa se vide odvojeno. „Commen
 
 **Šta još fali:**
 - Migracija je primenjena na živu bazu 2026-10-26 i proverena prolaskom kroz kviz (test redovi obrisani).
-- `20261026180000_quiz_answers_v2.sql`: `quiz_answers` broji i nove odgovore (pogađanja, spavanje, negativci, treći mit) za `/admin/quiz`. Treba je primeniti na živu bazu.
+- `20261026180000_quiz_answers_v2.sql`: `quiz_answers` broji i nove odgovore (pogađanja, spavanje, negativci, treći mit) za `/admin/quiz`. Primenjena na živu bazu 2026-10-27.
 - Drift u bazi je rešen 2026-10-26: živa baza je imala staru Stripe/PayPal verziju `20261026120000_crew_club.sql`, a `20261026160000_crew_club_creem.sql` je prebacuje na Creem. `npm run db:types` sada opet generiše ceo fajl sa tipovima.
 - SES ključevi (bez njih se email sa rezultatom ne šalje, samo se loguje).
 - Nedeljni saveti za one koji su štiklirali: sekvenca mejlova i unsubscribe ruta još ne postoje.
