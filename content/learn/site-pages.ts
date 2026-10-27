@@ -2,7 +2,7 @@ import type { SitePage } from "./types.ts";
 
 // /about, /editorial-policy, /privacy, /terms
 // Authorship is brand-only: "Little Brain Crew editorial team". No named people, no invented credentials.
-// Pages marked draft wait for the owner's OK (company details, contact email, legal review).
+// Pages marked draft wait for the owner's OK (legal review). Contact: hello@littlebraincrew.com; no company details are published.
 export const SITE_PAGES: SitePage[] = [
   {
     slug: "about",
@@ -10,7 +10,6 @@ export const SITE_PAGES: SitePage[] = [
     metaTitle: "About Little Brain Crew",
     description: "Little Brain Crew turns the science of kids’ brains into a cartoon crew for parents of kids 4 to 17. What we make, why characters, and what we are not.",
     dek: "Short cartoon explainers that turn the science of everyday kid behavior into something you can see, remember and use tonight.",
-    draft: true,
     updated: "2026-10-26",
     sections: [
       {
@@ -49,7 +48,7 @@ export const SITE_PAGES: SitePage[] = [
       {
         h2: "How to reach us",
         paras: [
-          "Questions, corrections or ideas for the next crew member? Our contact email and company details will be published here before launch.",
+          "Questions, corrections or ideas for the next crew member? Write to us at hello@littlebraincrew.com. A real person reads every email.",
         ],
       },
     ],
@@ -224,7 +223,7 @@ export const SITE_PAGES: SitePage[] = [
       {
         h2: "Contact and changes",
         paras: [
-          "Our company name, address and contact email will be published here before launch. When we change this policy we will update the date at the top of the page and, for big changes, tell subscribers by email.",
+          "Questions about your data, or a request to see, correct or delete it: hello@littlebraincrew.com. When we change this policy we will update the date at the top of the page and, for big changes, tell subscribers by email.",
         ],
       },
     ],
@@ -295,7 +294,7 @@ export const SITE_PAGES: SitePage[] = [
         h2: "Limits and changes",
         paras: [
           "We try hard to keep our pages accurate and up to date, and we name our sources. We provide the site and our products “as is.” To the extent the law allows, we are not liable for indirect or consequential losses from using them. Nothing in these terms limits any rights you have that cannot be limited by law.",
-          "We may update these terms and will change the date on this page. Which state’s law applies, our company name and address, and our contact email will be published here before launch.",
+          "We may update these terms and will change the date on this page. Which state’s law applies will be published here before launch. Questions about these terms: hello@littlebraincrew.com.",
         ],
       },
     ],

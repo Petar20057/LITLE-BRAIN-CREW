@@ -55,7 +55,7 @@ export default function ThankYou() {
 
         <h2>Your next 3 steps</h2>
         <ol className="ty-next">
-          <li>Open the email from Little Brain Crew. Not there in 5 minutes? Check Promotions or Spam. <span className="draft">sender address</span></li>
+          <li>Open the email from Little Brain Crew (hello@littlebraincrew.com). Not there in 5 minutes? Check Promotions or Spam.</li>
           <li>{program ? "Tonight: watch Day 1 with your kid. It takes 10 minutes." : `Tonight: read ${order.crew ? `${CREW_NAMES[order.crew]}’s moments` : "the moment you see most at home"} in The Kid Brain Toolkit. It takes 5 minutes.`}</li>
           <li>Pick one small habit for tomorrow, and stick the poster on the fridge.</li>
         </ol>

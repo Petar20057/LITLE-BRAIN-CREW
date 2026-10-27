@@ -144,7 +144,7 @@ function SaveOffer({ reason, onKeep }: { reason: Reason; onKeep: (what: string) 
       return (
         <div className="save-offer">
           <h3>Let us fix it, and the next month is on us</h3>
-          <p>Tell us what broke. A real person answers within one working day. <span className="draft">support email</span></p>
+          <p>Tell us what broke at <a className="link" href="mailto:hello@littlebraincrew.com">hello@littlebraincrew.com</a>. A real person answers within one working day.</p>
           <button className="btn btn-main" type="button" onClick={() => onKeep("We’ve got your report, and your next month is free.")}>Fix it and give me a free month</button>
         </div>
       );

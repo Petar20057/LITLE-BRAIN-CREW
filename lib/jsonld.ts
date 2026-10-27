@@ -9,7 +9,7 @@ export const ORG_ID = `${SITE_URL}/#org`;
 export const WEBSITE_ID = `${SITE_URL}/#website`;
 const abs = (path: string) => `${SITE_URL}${path === "/" ? "/" : path}`;
 const CTX = "https://schema.org";
-const org = { "@type": "Organization", "@id": ORG_ID, name: BRAND, url: `${SITE_URL}/` };
+const org = { "@type": "Organization", "@id": ORG_ID, name: BRAND, url: `${SITE_URL}/`, email: "hello@littlebraincrew.com" };
 const website = { "@type": "WebSite", "@id": WEBSITE_ID, name: BRAND, url: `${SITE_URL}/` };
 
 export type Crumb = { name: string; path?: string };

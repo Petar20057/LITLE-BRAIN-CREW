@@ -64,7 +64,7 @@ export default function Support() {
         </div>
         {error && <p className="fx-err" role="alert">{error}</p>}
         <p className="fine" style={{ marginTop: 16 }}>
-          This is a payment to Little Brain Crew, a company. It is not a charitable donation and is not tax-deductible. You don’t get a product for it, just our thanks. <span className="draft">company name</span>
+          This is a payment to Little Brain Crew, a company. It is not a charitable donation and is not tax-deductible. You don’t get a product for it, just our thanks.
         </p>
       </form>
     </div>
