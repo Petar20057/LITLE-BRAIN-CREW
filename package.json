@@ -10,7 +10,9 @@
     "sync": "node scripts/sync-design.mjs design",
     "db:types": "set -a && . ./.env.local && set +a && { printf '// Generated from the live database by npm run db:types. Do not edit by hand: change the schema in\\n// supabase/migrations/, apply it, then regenerate.\\n\\n'; supabase gen types typescript --db-url \"$POSTGRES_URL_NON_POOLING\" --schema public; } > lib/supabase/database.types.ts && oxfmt lib/supabase/database.types.ts",
     "check:learn": "node scripts/check-learn.mjs",
-    "email:art": "node scripts/email-art.mjs"
+    "email:art": "node scripts/email-art.mjs",
+    "test": "vitest run",
+    "verify": "npm run lint && npm run check:learn && npm test && npm run build"
   },
   "dependencies": {
     "@aws-sdk/client-sesv2": "^3.1156.0",
@@ -22,13 +24,14 @@
     "server-only": "^0.0.1"
   },
   "devDependencies": {
-    "@types/node": "^20",
+    "@types/node": "^22.20.5",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.4.3",
     "oxfmt": "^0.74.0",
     "supabase": "^2.122.0",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^5.0.5"
   }
 }

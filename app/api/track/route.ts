@@ -4,10 +4,12 @@ import { supabaseConfigured } from "@/lib/supabase/env";
 import { UNTRACKED } from "@/lib/analytics";
 import { isSessionId } from "@/lib/quiz-track";
 import { SITE_URL } from "@/lib/design";
+import { allow } from "@/lib/rate-limit";
 
 // One page view (components/Track.tsx, sent with sendBeacon). Anonymous and fire-and-forget: every failure answers
 // 204 and is only logged. Bots are skipped, values are capped, and only the referrer's host is kept. No IP address
 // or user agent is stored: the country comes from Vercel's header, the device type from the user agent.
+// Rate-limited per IP (lib/rate-limit.ts), so a script can't fill the table or the numbers.
 
 const BOT = /bot|crawl|spider|slurp|preview|facebookexternalhit|headless|lighthouse|pingdom|uptime|monitor|curl|wget|python|axios|node-fetch/i;
 const SITE_HOST = new URL(SITE_URL).hostname.replace(/^www\./, "");
@@ -45,6 +47,7 @@ export async function POST(request: NextRequest) {
   const { visitor, session, path } = body;
   if (!isSessionId(visitor) || !isSessionId(session)) return done;
   if (typeof path !== "string" || !path.startsWith("/") || path.length > 200 || UNTRACKED.test(path)) return done;
+  if (!(await allow("track", request))) return done;
 
   try {
     const { error } = await createAdminClient()

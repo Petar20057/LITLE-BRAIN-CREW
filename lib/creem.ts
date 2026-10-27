@@ -48,6 +48,8 @@ export function productIdFor(key: string): string {
 
 /** Which of our items a Creem product id is (for webhooks), or undefined for a product we don't know. */
 export function keyForProduct(productId: string): string | undefined {
+  // An empty id must never match a product whose id isn't filled in yet.
+  if (!productId) return undefined;
   return Object.keys(PRODUCTS).find((k) => productIdFor(k) === productId);
 }
 

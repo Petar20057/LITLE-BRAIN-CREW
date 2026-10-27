@@ -127,7 +127,7 @@ export const SITE_PAGES: SitePage[] = [
     description: "What Little Brain Crew collects, what stays in your browser, how forms and payments work, and why we never ask for kids’ names. Draft.",
     dek: "Plain words about what this site collects and what it doesn’t. This is a draft and will be updated before launch.",
     draft: true,
-    updated: "2026-10-26",
+    updated: "2026-10-27",
     sections: [
       {
         h2: "The short version",
@@ -153,21 +153,22 @@ export const SITE_PAGES: SitePage[] = [
         h2: "How form entries reach us",
         paras: [
           "Form entries are stored in our database at Supabase, together with the name of the form, the page you were on, the campaign tag of the link that brought you (if any) and the random visit id described below. Gift card details are not stored there: they stay in your browser until checkout.",
-          "Form entries may also be delivered to us by email through Web3Forms, a third-party form service, which then receives what you typed, the name of the form and the page you were on. This connection is planned and is not switched on yet.",
-          "We use your information to answer you, send what you asked for, and, if you signed up for updates, send occasional emails. Every marketing email will have an unsubscribe link (planned).",
+          "When you sign up for tips, the free list or the challenge, we first email you a link to confirm the address is yours. We send nothing more until you tap it, so nobody can sign you up without your say.",
+          "We use your information to answer you, send what you asked for, and, if you confirmed you want updates, send occasional emails. Every marketing email has an unsubscribe link, and one tap takes you off all our lists.",
         ],
       },
       {
         h2: "How we count visits",
         paras: [
-          "To know which pages help parents and where visitors come from, our own script records each page you open: the page address, the site that linked to you (only its name, such as instagram.com), the campaign tags in the link, whether you are on a phone, tablet or computer, and the country your connection comes from. It sets no cookies and stores no IP address. Instead it keeps two random ids in your browser: one in local storage (key “lbc-vid”) that tells us a visitor came back, and one in session storage (keys “lbc-sid” and “lbc-origin”) that groups the pages of one visit and disappears when you close the tab. Clearing your browser data removes them. Bots and our own team pages are not counted.",
+          "To know which pages help parents and where visitors come from, our own script records each page you open: the page address, the site that linked to you (only its name, such as instagram.com), the campaign tags in the link, whether you are on a phone, tablet or computer, and the country your connection comes from. It sets no cookies and stores no IP address. Instead it keeps two random ids in your browser: one in local storage (key “lbc-vid”) that tells us a visitor came back, and one in session storage (keys “lbc-sid” and “lbc-origin”) that groups the pages of one visit and disappears when you close the tab. Clearing your browser data removes them. Bots and our own team pages are not counted. We keep these visit records for 13 months, then delete them automatically.",
+          "To stop scripts from flooding our forms, the quiz and our visit counter, we count requests from each connection for up to an hour. For that we keep a scrambled code made from your connection’s IP address with a secret key, never the address itself, and delete it within a day.",
         ],
       },
       {
         h2: "The parent quiz at /code",
         paras: [
           "The quiz we share on Instagram asks for your child’s age range (such as 6 to 7), which hard moments happen at home, and a few quiz answers. It never asks for your child’s name. To learn which screens are clear and where parents stop, it records, under a random id that isn’t linked to you, each screen you see, your answers, how long you spent on each screen, the link that brought you (such as Instagram) and the type of device. It sets no cookies; the random id is kept in your browser’s session storage (key “vlc-quiz”) and disappears when you close the tab.",
-          "If you ask for your results by email, we store your email address with that quiz visit and send you the results once. If you also tick “send me one short crew tip a week”, we will send those tips, and every one will have an unsubscribe link. If you buy something right after the quiz, the order is linked to the quiz visit so we can see whether the quiz helps. All of this is stored with Supabase, our database service.",
+          "If you ask for your results by email, we store your email address with that quiz visit and send you the results once. If you also tick “send me one short crew tip a week”, the results email asks you to confirm, and we send tips only after you do. Every tip will have an unsubscribe link. If you buy something right after the quiz, the order is linked to the quiz visit so we can see whether the quiz helps. All of this is stored with Supabase, our database service. The record of quiz screens and answers is deleted automatically after 13 months; your email stays until you unsubscribe or ask us to delete it.",
         ],
       },
       {
@@ -192,7 +193,7 @@ export const SITE_PAGES: SitePage[] = [
         h2: "Payments",
         paras: [
           "Payments are in preview today: the buttons walk through the checkout steps, and nothing is charged. Payments will be handled by Creem, our payment partner and the merchant of record, which processes your card, Apple Pay or Google Pay under its own privacy policy. We won’t see or store your card number. We will receive your email, what you bought and the payment status, so we can send your files and manage memberships.",
-          "If we later add other tools, such as an email service to deliver your purchase, we will name them here.",
+          "If we later add other tools, we will name them here first.",
         ],
       },
       {
@@ -204,8 +205,21 @@ export const SITE_PAGES: SitePage[] = [
       {
         h2: "Cookies, ads and tracking",
         paras: [
-          "We don’t use advertising cookies, tracking pixels or analytics tools today. We use two cookies of our own. The sign-in cookie for Crew Club accounts is described above. When you open a Crew Club member’s share link, Creem, our payment partner, sets a referral cookie for 60 days, so that if you buy, that member gets their share. It is used only for that, never for advertising. Like any website, our hosting provider may keep standard server logs, such as IP address and pages requested, to keep the site running and secure. If we add analytics later, we will describe them here first.",
+          "We don’t use advertising cookies, tracking pixels or analytics tools today. We use two cookies of our own. The sign-in cookie for Crew Club accounts is described above. When you open a Crew Club member’s share link, Creem, our payment partner, sets a referral cookie for 60 days, so that if you buy, that member gets their share. It is used only for that, never for advertising. Like any website, our hosting provider, Vercel, keeps standard server logs, such as IP address and pages requested, to keep the site running and secure. If we add analytics later, we will describe them here first.",
           "We don’t sell your personal information.",
+        ],
+      },
+      {
+        h2: "Services that handle your data",
+        paras: [
+          "We use a few companies to run the site. Each gets only what it needs for its job:",
+        ],
+        bullets: [
+          "Vercel hosts the website. It handles every page request, which includes your IP address, and tells us the country it comes from.",
+          "Supabase stores our database: form entries, quiz answers, visit counts and, later, Crew Club accounts.",
+          "Amazon Web Services (Amazon SES) sends our emails, such as quiz results and confirmation links. It receives your email address and the email we send you.",
+          "Hostinger runs our hello@littlebraincrew.com inbox, so it holds any email you write to us.",
+          "Creem will handle payments once they are switched on (see Payments).",
         ],
       },
       {
@@ -217,7 +231,7 @@ export const SITE_PAGES: SitePage[] = [
       {
         h2: "Your choices",
         paras: [
-          "You can ask us what we have about you, ask us to correct or delete it, or unsubscribe at any time. Depending on where you live, for example California, you may have additional rights under state privacy laws. We keep email signups until you unsubscribe or ask us to delete them, and purchase records for as long as we need them for taxes and support.",
+          "You can ask us what we have about you, ask us to correct or delete it, or unsubscribe at any time. Depending on where you live, for example California, you may have additional rights under state privacy laws. We keep email signups until you unsubscribe or ask us to delete them, page visit records and quiz screen data for 13 months, and purchase records for as long as we need them for taxes and support. When you ask us to delete your data, we remove your email address and everything stored with it from our database, keep only a note at our email service that this address must not be emailed again, and tell you when it’s done.",
         ],
       },
       {

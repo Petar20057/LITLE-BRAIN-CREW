@@ -1,0 +1,28 @@
+# Runs on every push and pull request. A red run is a "don't deploy": make it a required check on main in
+# GitHub (Settings → Branches → Branch protection) so Vercel only ever builds a commit that passed.
+# Needs no secrets: the build and the tests never reach Supabase, SES or Creem.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run check:learn
+      - run: npm test
+      - run: npm run build

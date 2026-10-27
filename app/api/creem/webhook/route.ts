@@ -12,6 +12,8 @@ import type { Database } from "@/lib/supabase/database.types";
 // has_club_access(), and sends the Crew Club welcome email the first time a subscription shows up. One-time products
 // (Toolkit, Reset, ...) are only logged: the receipt email (lib/email/templates.ts) needs file delivery, not built yet.
 // Any failure answers 500 so Creem retries; writes are idempotent (one row per Creem subscription id).
+// Creem doesn't promise delivery order, so each row remembers the time of the newest event applied
+// (provider_event_at) and an older event arriving late is skipped instead of overwriting a newer status.
 
 type Status = Database["public"]["Enums"]["subscription_status"];
 type Plan = Database["public"]["Enums"]["club_plan"];
@@ -33,7 +35,7 @@ type CreemSubscription = {
   canceled_at?: string | null;
   metadata?: Record<string, unknown> | null;
 };
-type CreemEvent = { id?: string; eventType?: string; object?: Record<string, unknown> };
+type CreemEvent = { id?: string; eventType?: string; created_at?: number; object?: Record<string, unknown> };
 
 const idOf = (r: Ref) => (typeof r === "string" ? r : r?.id);
 
@@ -53,16 +55,18 @@ export async function POST(request: NextRequest) {
   }
   const type = event.eventType ?? "";
   const obj = event.object ?? {};
+  // created_at is epoch milliseconds in Creem's examples; without it the event is applied as before.
+  const eventAt = typeof event.created_at === "number" && Number.isFinite(event.created_at) ? new Date(event.created_at).toISOString() : null;
 
   try {
     if (type.startsWith("subscription.")) {
-      await syncSubscription(obj as CreemSubscription);
+      await syncSubscription(obj as CreemSubscription, eventAt);
     } else if (type === "checkout.completed") {
       await markQuizPurchase(obj.metadata as Record<string, unknown> | null | undefined);
       const sub = obj.subscription as CreemSubscription | undefined;
       if (sub?.id) {
         // The checkout carries the product, customer and metadata; its subscription only has id and status.
-        await syncSubscription({ ...sub, product: obj.product as Ref, customer: obj.customer as Ref, metadata: obj.metadata as CreemSubscription["metadata"] });
+        await syncSubscription({ ...sub, product: obj.product as Ref, customer: obj.customer as Ref, metadata: obj.metadata as CreemSubscription["metadata"] }, eventAt);
       } else {
         console.info("[creem] one-time order", { event: event.id, product: idOf(obj.product as Ref), metadata: obj.metadata });
       }
@@ -76,7 +80,7 @@ export async function POST(request: NextRequest) {
   return NextResponse.json({ received: true });
 }
 
-async function syncSubscription(sub: CreemSubscription) {
+async function syncSubscription(sub: CreemSubscription, eventAt: string | null) {
   const key = keyForProduct(idOf(sub.product) ?? "");
   const plan = key ? PLANS[key] : undefined;
   const status = STATUSES.find((s) => s === sub.status);
@@ -91,10 +95,12 @@ async function syncSubscription(sub: CreemSubscription) {
     status,
     price_cents: plan.cents,
     billing_interval: plan.interval,
-    current_period_start: sub.current_period_start_date ?? null,
-    current_period_end: sub.current_period_end_date ?? null,
-    canceled_at: sub.canceled_at ?? null,
+    // checkout.completed carries a subscription with only id and status: missing dates must not blank stored ones.
+    ...(sub.current_period_start_date !== undefined ? { current_period_start: sub.current_period_start_date } : {}),
+    ...(sub.current_period_end_date !== undefined ? { current_period_end: sub.current_period_end_date } : {}),
+    ...(sub.canceled_at !== undefined ? { canceled_at: sub.canceled_at } : {}),
     cancel_at_period_end: status === "scheduled_cancel",
+    ...(eventAt ? { provider_event_at: eventAt } : {}),
   };
 
   const { data: existing, error: findError } = await admin
@@ -106,8 +112,11 @@ async function syncSubscription(sub: CreemSubscription) {
   if (findError) throw findError;
 
   if (existing) {
-    const { error } = await admin.from("subscriptions").update(fields).eq("id", existing.id);
+    let update = admin.from("subscriptions").update(fields).eq("id", existing.id);
+    if (eventAt) update = update.or(`provider_event_at.is.null,provider_event_at.lte."${eventAt}"`);
+    const { data: applied, error } = await update.select("id");
     if (error) throw error;
+    if (!applied?.length) console.info("[creem] older event skipped", { id: sub.id, status, eventAt });
     return;
   }
 

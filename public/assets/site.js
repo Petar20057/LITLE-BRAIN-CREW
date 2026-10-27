@@ -148,7 +148,8 @@ if (gi('ages-row')) gi('ages-row').innerHTML = AGES.map(([k, n, age, normal, foc
     ${svg(k, 'happy')}<span class="a-age">${age}</span><h3>${n}</h3><p>${normal}</p><p class="a-focus"><b>Focus:</b> ${focus}</p></article>`).join('');
 
 /* ---------- forms ---------- */
-function post(f) {
+// Sends a form. Resolves to '' when it's stored, or to the message to show when it isn't.
+async function post(f) {
   const fd = new FormData(f);
   // Every email form lands in our database (app/api/signup), shown on /admin. The gift form is a checkout: never store the friend's email.
   if (f.dataset.form && f.dataset.form !== 'gift') {
@@ -156,20 +157,39 @@ function post(f) {
     fd.forEach((v, k) => { if (k !== 'email' && typeof v === 'string' && v) details[k] = k in details ? [].concat(details[k], v) : v; });
     let visitor = null, utm = null;
     try { visitor = localStorage.getItem('lbc-vid'); utm = JSON.parse(sessionStorage.getItem('lbc-origin') || 'null')?.utm_source || null; } catch (err) { /* storage blocked: still store the email */ }
-    fetch('/api/signup', { method: 'POST', headers: { 'content-type': 'application/json' }, keepalive: true,
-      body: JSON.stringify({ form: f.dataset.form, email: fd.get('email'), page: location.pathname, details, visitor, utm_source: utm }) }).catch(() => {});
+    let res;
+    try {
+      res = await fetch('/api/signup', { method: 'POST', headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ form: f.dataset.form, email: fd.get('email'), page: location.pathname, details, visitor, utm_source: utm }) });
+    } catch (err) {
+      return 'That didn’t go through. Please check your connection and try again.';
+    }
+    if (res.status === 400) return 'Please check your email address.';
+    if (res.status === 429) return 'Too many tries from this connection. Please wait a few minutes and try again.';
+    if (!res.ok) return 'That didn’t go through on our side. Please try again in a minute.';
   }
-  if (!W3F_KEY) return;
-  fd.append('access_key', W3F_KEY);
-  fd.append('subject', 'Little Brain Crew · ' + (f.dataset.form || 'signup'));
-  fd.append('page', location.pathname);
-  fetch('https://api.web3forms.com/submit', { method: 'POST', body: fd }).catch(() => {});
+  if (W3F_KEY) {
+    fd.append('access_key', W3F_KEY);
+    fd.append('subject', 'Little Brain Crew · ' + (f.dataset.form || 'signup'));
+    fd.append('page', location.pathname);
+    fetch('https://api.web3forms.com/submit', { method: 'POST', body: fd }).catch(() => {});
+  }
+  return '';
 }
-function sent(f) {
-  post(f);
+// "Thank you" only once the form is stored; otherwise the message, with the button back and what was typed kept.
+async function sent(f) {
   const ok = f.querySelector('.ok'), btn = f.querySelector('button[type=submit]') || f.querySelector('button');
+  if (btn) { if (btn.disabled) return false; btn.disabled = true; }
+  let err = f.querySelector('.form-err');
+  if (err) err.textContent = '';
+  const problem = await post(f);
+  if (problem) {
+    if (!err) { err = document.createElement('p'); err.className = 'form-err'; err.setAttribute('role', 'alert'); f.appendChild(err); }
+    err.textContent = problem;
+    if (btn) btn.disabled = false;
+    return false;
+  }
   if (ok) ok.style.display = 'block';
-  if (btn) btn.disabled = true;
   if (f.dataset.form === 'sticker-pack' && gi('st-dl')) gi('st-dl').classList.add('on');
   return false;
 }

@@ -174,8 +174,11 @@ export type Database = {
           created_at: string;
           email: string;
           id: string;
+          result_emailed_at: string | null;
           session_id: string | null;
           tips_consent: boolean;
+          tips_requested_at: string | null;
+          token: string;
           unsubscribed_at: string | null;
         };
         ComputedFields: never;
@@ -184,8 +187,11 @@ export type Database = {
           created_at?: string;
           email: string;
           id?: string;
+          result_emailed_at?: string | null;
           session_id?: string | null;
           tips_consent?: boolean;
+          tips_requested_at?: string | null;
+          token?: string;
           unsubscribed_at?: string | null;
         };
         Update: {
@@ -193,8 +199,11 @@ export type Database = {
           created_at?: string;
           email?: string;
           id?: string;
+          result_emailed_at?: string | null;
           session_id?: string | null;
           tips_consent?: boolean;
+          tips_requested_at?: string | null;
+          token?: string;
           unsubscribed_at?: string | null;
         };
         Relationships: [
@@ -277,8 +286,30 @@ export type Database = {
         };
         Relationships: [];
       };
+      rate_limits: {
+        Row: {
+          hits: number;
+          key: string;
+          window_start: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          hits?: number;
+          key: string;
+          window_start?: string;
+        };
+        Update: {
+          hits?: number;
+          key?: string;
+          window_start?: string;
+        };
+        Relationships: [];
+      };
       signups: {
         Row: {
+          confirm_sent_at: string | null;
+          confirm_token: string;
+          confirmed_at: string | null;
           created_at: string;
           details: Json | null;
           email: string;
@@ -291,6 +322,9 @@ export type Database = {
         };
         ComputedFields: never;
         Insert: {
+          confirm_sent_at?: string | null;
+          confirm_token?: string;
+          confirmed_at?: string | null;
           created_at?: string;
           details?: Json | null;
           email: string;
@@ -302,6 +336,9 @@ export type Database = {
           visitor_id?: string | null;
         };
         Update: {
+          confirm_sent_at?: string | null;
+          confirm_token?: string;
+          confirmed_at?: string | null;
           created_at?: string;
           details?: Json | null;
           email?: string;
@@ -329,6 +366,7 @@ export type Database = {
           plan: Database["public"]["Enums"]["club_plan"];
           price_cents: number;
           provider: Database["public"]["Enums"]["payment_provider"];
+          provider_event_at: string | null;
           provider_subscription_id: string;
           renewal_consent_at: string;
           status: Database["public"]["Enums"]["subscription_status"];
@@ -350,6 +388,7 @@ export type Database = {
           plan: Database["public"]["Enums"]["club_plan"];
           price_cents: number;
           provider: Database["public"]["Enums"]["payment_provider"];
+          provider_event_at?: string | null;
           provider_subscription_id: string;
           renewal_consent_at: string;
           status: Database["public"]["Enums"]["subscription_status"];
@@ -370,6 +409,7 @@ export type Database = {
           plan?: Database["public"]["Enums"]["club_plan"];
           price_cents?: number;
           provider?: Database["public"]["Enums"]["payment_provider"];
+          provider_event_at?: string | null;
           provider_subscription_id?: string;
           renewal_consent_at?: string;
           status?: Database["public"]["Enums"]["subscription_status"];
@@ -393,6 +433,7 @@ export type Database = {
     Functions: {
       has_club_access: { Args: Record<PropertyKey, never>; Returns: boolean };
       newsletter_subscribers: { Args: { forms: string[] }; Returns: number };
+      prune_old_data: { Args: never; Returns: undefined };
       quiz_answers: {
         Args: { since: string };
         Returns: {
@@ -421,6 +462,10 @@ export type Database = {
           started: number;
           variant: string;
         }[];
+      };
+      rate_limit_hit: {
+        Args: { p_key: string; p_max: number; p_window_seconds: number };
+        Returns: boolean;
       };
       signups_daily: {
         Args: { since: string };

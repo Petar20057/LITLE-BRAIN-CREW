@@ -3,6 +3,7 @@ import { createCheckout, creemConfigured, itemsFor, orderKey, productIdFor } fro
 import { CREW_NAMES } from "@/lib/funnel";
 import { SITE_URL } from "@/lib/design";
 import { isSessionId } from "@/lib/quiz-track";
+import { allow, tooMany } from "@/lib/rate-limit";
 
 // Starts a Creem checkout for what the funnel page asks for and returns its URL (lib/payments.ts redirects there).
 // The browser only names item ids; prices and the Creem product come from the server. Access is granted later
@@ -13,6 +14,7 @@ const NEXT = /^\/[a-z0-9/-]*$/;
 
 export async function POST(request: NextRequest) {
   if (!creemConfigured) return NextResponse.json({ error: "Payments are not connected yet." }, { status: 503 });
+  if (!(await allow("checkout", request))) return tooMany();
 
   let body: Body;
   try {

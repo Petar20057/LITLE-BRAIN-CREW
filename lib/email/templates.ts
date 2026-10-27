@@ -80,8 +80,9 @@ export function renewalReminder(renewsOn: string): Email {
   });
 }
 
-/** The /code quiz result, sent when a parent leaves their email at the gate. Same result as the screen (lib/quiz-plan.ts). */
-export function quizResultEmail(r: QuizResult): Email {
+/** The /code quiz result, sent when a parent leaves their email at the gate. Same result as the screen (lib/quiz-plan.ts).
+ *  confirmTipsUrl: the parent ticked the weekly tips; nothing is sent until they confirm with this link (double opt-in). */
+export function quizResultEmail(r: QuizResult, { confirmTipsUrl }: { confirmTipsUrl?: string } = {}): Email {
   const blocks: Block[] = [
     { p: "Here’s what you saw in the quiz, to keep. These are the crew members behind the moments you picked:" },
     { list: r.picks.map((m) => `${m.label}: ${m.line}`) },
@@ -97,8 +98,14 @@ export function quizResultEmail(r: QuizResult): Email {
   if (r.lead.kid) blocks.push({ note: `Say it to your kid: ${r.lead.kid}` });
   blocks.push(
     { p: "Want all 12 moments decoded? The Kid Brain Toolkit is coming soon: all 12 crew members, the 12 hardest moments with the exact words to say, the 6 villains, and what’s normal at every age. We’ll email you the day it opens." },
-    { note: DISCLAIMER },
   );
+  if (confirmTipsUrl) {
+    blocks.push(
+      { p: "You also asked for one short crew tip a week. Tap below to confirm it’s you. Until you do, we won’t send any." },
+      { button: { label: "Yes, send me the weekly tip", url: confirmTipsUrl } },
+    );
+  }
+  blocks.push({ note: DISCLAIMER });
   return renderEmail({
     subject: "Your kid’s crew and 3-night plan",
     preheader: `${r.lead.char.name} and the crew behind your hard moments, plus what to try tonight.`,
@@ -107,5 +114,31 @@ export function quizResultEmail(r: QuizResult): Email {
     art: r.lead.char.key,
     blocks,
     reason: "You’re getting this email because you asked for your quiz results at littlebraincrew.com/code.",
+  });
+}
+
+/** What each newsletter form promised, for its confirmation email (lib/analytics.ts NEWSLETTER_FORMS). */
+const CONFIRM_FOR: Record<string, { what: string; art: string }> = {
+  "free-screen-list": { what: "the free list: 15 ways to end screen time without tears", art: "dopa" },
+  "sticker-pack": { what: "the free crew sticker pack and a few tips", art: "toci" },
+  "screen-off-challenge": { what: "the 5-day Screen-Off Challenge with Dopa", art: "dopa" },
+};
+
+/** Double opt-in: sent when someone signs up on a newsletter form. Nothing else is sent until they tap the button. */
+export function confirmSignup(form: string, url: string): Email {
+  const c = CONFIRM_FOR[form] ?? { what: "crew tips by email", art: "duo" };
+  return renderEmail({
+    subject: "Please confirm your email",
+    preheader: "One tap, so we know it’s really you.",
+    kick: "one tap",
+    title: "Is this you?",
+    art: c.art,
+    blocks: [
+      { p: `Someone, hopefully you, asked littlebraincrew.com for ${c.what}.` },
+      { p: "Tap the button to confirm. Until you do, we won’t send anything else." },
+      { button: { label: "Yes, that’s me", url } },
+      { note: "Didn’t ask for this? Just ignore this email and we won’t write again." },
+    ],
+    reason: "You’re getting this email because this address was entered in a form at littlebraincrew.com.",
   });
 }

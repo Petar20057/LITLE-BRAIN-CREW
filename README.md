@@ -8,9 +8,13 @@ Next.js (App Router) site for Little Brain Crew (littlebraincrew.com). Marketing
 npm install
 npm run dev     # http://localhost:3000
 npm run sync    # after editing anything in design/
-npm run build   # verify before every commit
 npm run lint
+npm test        # unit tests (tests/, Vitest): webhook, quiz email gate, forms, opt-in, unsubscribe
+npm run build
+npm run verify  # all of the above plus check:learn: run before every commit
 ```
+
+CI (`.github/workflows/ci.yml`) runs the same checks on every push and pull request, with no secrets. Make it a required check on `main` (GitHub → Settings → Branches) so Vercel only deploys commits that passed.
 
 ## Marketing pages (from `design/`)
 
@@ -58,8 +62,10 @@ SEO content, rendered as server components with the same global CSS classes as t
 ## Known gaps
 
 - `/downloads/crew-stickers.zip` is linked on `/free` but the file doesn't exist yet.
-- Yellow “draft” labels on the site mark text waiting for an OK: guarantee and refund terms, Club content and launch date, company name and emails, guide page numbers.
+- The free screen-time list and the 5-day challenge emails aren't written yet: signing up only sends the confirmation link.
+- Yellow “draft” labels mark text waiting for an OK: the Privacy policy and Terms, Club content and launch date, guide page numbers.
 - Testimonials stay empty until there are real ones.
+- File delivery for paid products isn't built, so payments stay off (`COMING_SOON` in `next.config.ts` and `lib/funnel.ts`).
 
 ## Environment
 
@@ -93,6 +99,37 @@ Sending goes through Amazon SES in `eu-north-1`, where `littlebraincrew.com` is 
 - SES drops addresses that bounced or complained (account suppression list). Keep bounces under 2% and complaints under 0.1%.
 - To do: after a few weeks of clean sending, move DMARC from `p=none` to `p=quarantine`, and add a `rua=` report address. Start with low volume and only ever mail people who asked.
 
-## Planned stack
+## Email lists: double opt-in and unsubscribe
 
-GitHub → Vercel (Root Directory `web` if the repo is the parent folder), Supabase for orders, members and form submissions, Creem (merchant of record) for payments and the affiliate program.
+- Newsletter forms (`NEWSLETTER_FORMS` in `lib/analytics.ts`) and the /code weekly-tips tick count only after the person taps the link in the email we send (`signups.confirmed_at`, `quiz_leads.tips_consent`). Waitlists, founding parents and schools have nothing to confirm.
+- Links: `/confirm?t=<token>` and `/unsubscribe?t=<token>` are pages with a button (mail scanners open links, they don't press buttons). `/api/unsubscribe?t=<token>` is the one-click POST for the `List-Unsubscribe` header: pass `${EMAIL_BASE}/api/unsubscribe?t=<token>` as `unsubscribeUrl` to `sendEmail` for every list email. One unsubscribe takes the address off every list. Logic: `lib/consent.ts`.
+- The CSV export (`/admin/newsletter/export`) marks `newsletter = yes` only for confirmed, still-subscribed rows. Mail only those.
+- Rows from before 27 Oct 2026 were kept as confirmed (they signed up under the old form).
+
+## Abuse limits
+
+Public routes count requests per client IP in `rate_limits` (`lib/rate-limit.ts`, limits in `LIMITS`): over the limit the email gate, forms and checkout answer 429, page views and quiz clicks are dropped. The IP is stored only as an HMAC keyed with the Supabase secret key. On top of that the /code gate sends one result email per quiz visit and one per address a day, and a newsletter form one confirmation per address and form a day.
+
+## Database (Supabase)
+
+- Schema lives in `supabase/migrations/`, applied in file order. Never edit an applied migration; add a new file.
+- **Apply a migration:** Supabase dashboard → SQL Editor → paste the file → Run (or `supabase db push` with the CLI linked to the project). Apply it **before** deploying code that needs it. Then `npm run db:types` and commit the regenerated `lib/supabase/database.types.ts`.
+- Pending as of 27 Oct 2026: `20261027120000_abuse_controls_consent.sql` (rate limits, double opt-in, webhook event order, retention). `database.types.ts` was edited by hand for it; regenerate after applying.
+- Admin account: `node scripts/create-admin.mjs <email>` (creates it or resets its password; prints it once).
+
+## Retention and deletion
+
+- `prune_old_data()` deletes page views and quiz visits (with their clicks) older than 13 months and rate-limit rows older than a day. It runs daily at 03:17 UTC through pg_cron, if pg_cron was enabled (Database → Extensions) before the migration ran. Otherwise enable it, then run once in the SQL Editor: `select cron.schedule('prune-old-data', '17 3 * * *', 'select public.prune_old_data()');`. The privacy policy promises the 13 months, so check the job exists (`select * from cron.job;`).
+- **Someone asks to be deleted:** `node scripts/delete-person.mjs <email>` (dry run, counts only), then again with `--yes`. It prints the manual steps that follow (SES suppression list, Hostinger inbox, Creem, reply).
+
+## Operations
+
+- **Deploy:** push to `main` → Vercel builds and deploys production. Preview deployments must not get production keys (Vercel → Settings → Environment Variables: scope Supabase, SES and Creem keys to Production; give Preview a separate Supabase project).
+- **Rollback:** Vercel → Deployments → pick the last good one → Promote to Production (no rebuild). The database doesn't roll back with it: migrations only add, so older code keeps working on the newer schema. A migration that removes or renames something needs its reverse SQL written before it's applied.
+- **Backups:** depend on the Supabase plan (Database → Backups). Check that daily backups exist and how long they're kept. Before payments go live, rehearse a restore into a *new* project (never over production): restore, point a local `.env.local` at it, run `npm run dev` and open `/admin`. Write the date and result here.
+- **Something is broken:** Vercel → project → Logs (filter by `[creem]`, `[quiz]`, `[signup]`, `[email]`, `[rate-limit]`). Creem retries a failed webhook 4 times over about 6 hours, then stops: after a fix, resend failed events from the Creem dashboard. SES bounces and complaints: AWS console → SES → Reputation metrics.
+- **Monitoring (to set up):** an uptime check on `/` and `/code`, error alerts from Vercel, and SES/AWS budget alarms, all to hello@littlebraincrew.com.
+
+## Stack
+
+GitHub (`Petar20057/LITLE-BRAIN-CREW`, this folder is the repo root) → Vercel, Supabase for members, subscriptions, form signups, quiz data and the admin login, Amazon SES for email, Creem (merchant of record) for payments and the affiliate program.

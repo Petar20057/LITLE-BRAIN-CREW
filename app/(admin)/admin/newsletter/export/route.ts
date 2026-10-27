@@ -3,7 +3,8 @@ import { NEWSLETTER_FORMS } from "@/lib/analytics";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 // Every signup and quiz email as CSV, for sending the newsletter or importing into an email tool.
-// One row per email per form; "newsletter" says whether that row is newsletter consent.
+// One row per email per form; "newsletter" says whether that row is newsletter consent: a newsletter form or the quiz
+// tips, confirmed by the emailed link (double opt-in since 2026-10-27), and not unsubscribed.
 
 const PAGE = 1000;
 const cell = (v: unknown) => {
@@ -28,13 +29,13 @@ export async function GET() {
   const forms: readonly string[] = NEWSLETTER_FORMS;
 
   const [signups, leads] = await Promise.all([
-    all((a, b) => db.from("signups").select("email, form, page, details, utm_source, created_at, unsubscribed_at").order("created_at").range(a, b)),
+    all((a, b) => db.from("signups").select("email, form, page, details, utm_source, created_at, confirmed_at, unsubscribed_at").order("created_at").range(a, b)),
     all((a, b) => db.from("quiz_leads").select("email, tips_consent, created_at, unsubscribed_at").order("created_at").range(a, b)),
   ]);
 
   const lines = [
     ["email", "form", "newsletter", "unsubscribed_at", "created_at", "page", "utm_source", "details"],
-    ...signups.map((s) => [s.email, s.form, forms.includes(s.form) && !s.unsubscribed_at ? "yes" : "no", s.unsubscribed_at, s.created_at, s.page, s.utm_source, s.details]),
+    ...signups.map((s) => [s.email, s.form, forms.includes(s.form) && s.confirmed_at && !s.unsubscribed_at ? "yes" : "no", s.unsubscribed_at, s.created_at, s.page, s.utm_source, s.details]),
     ...leads.map((l) => [l.email, "quiz", l.tips_consent && !l.unsubscribed_at ? "yes" : "no", l.unsubscribed_at, l.created_at, "/code", null, null]),
   ];
   const csv = lines.map((r) => r.map(cell).join(",")).join("\r\n");

@@ -4,10 +4,12 @@ import { supabaseConfigured } from "@/lib/supabase/env";
 import { isEvent, isSessionId, isStep, isVariant } from "@/lib/quiz-track";
 import { AGES, DUO_OPTIONS, MAX_MOMENTS, MOMENTS } from "@/content/quiz";
 import type { Database } from "@/lib/supabase/database.types";
+import { allow } from "@/lib/rate-limit";
 
 // One click in the /code quiz (components/quiz/session.ts → track()). Anonymous and fire-and-forget: the browser
 // never waits for it, so every failure answers 204 and is only logged. Only known steps, events and answers are
-// stored, and values are capped, so the tables can't be filled with arbitrary text.
+// stored, and values are capped, so the tables can't be filled with arbitrary text. Clicks and new visits are
+// rate-limited per IP (lib/rate-limit.ts): over the limit they are dropped, like any other failure.
 
 type Session = Database["public"]["Tables"]["quiz_sessions"]["Update"];
 const ORIGIN_KEYS = ["utm_source", "utm_medium", "utm_campaign", "keyword", "referrer", "device"] as const;
@@ -30,14 +32,16 @@ export async function POST(request: NextRequest) {
   const json = value === undefined ? null : JSON.stringify(value);
   if (json && json.length > 500) return done;
   const ms = typeof body.ms === "number" && body.ms >= 0 ? Math.min(Math.round(body.ms), 3_600_000) : null;
+  const origin = body.origin && typeof body.origin === "object" ? (body.origin as Record<string, unknown>) : null;
+  if (!(await allow("quizEvent", request))) return done;
+  if (origin && !(await allow("quizSession", request))) return done;
 
   try {
     const db = createAdminClient();
 
     // The first event of a page load carries where the visit came from; the first one ever creates the session.
-    if (body.origin && typeof body.origin === "object") {
-      const o = body.origin as Record<string, unknown>;
-      const row = Object.fromEntries(ORIGIN_KEYS.map((k) => [k, text(o[k])]));
+    if (origin) {
+      const row = Object.fromEntries(ORIGIN_KEYS.map((k) => [k, text(origin[k])]));
       const { error } = await db.from("quiz_sessions").upsert({ id: sid, variant, ...row }, { onConflict: "id", ignoreDuplicates: true });
       if (error) throw error;
     }

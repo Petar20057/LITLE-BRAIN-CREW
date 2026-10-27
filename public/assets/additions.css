@@ -358,6 +358,8 @@ html.dad .top .logo .on-dark,html.dad .ad-top .logo .on-dark{display:block}
 .q-check{display:flex;gap:10px;align-items:flex-start;font-size:15px;color:var(--ink-soft);margin:4px 0 var(--s2);cursor:pointer}
 .q-check input{width:22px;height:22px;flex:none;margin-top:1px;accent-color:var(--ink)}
 .q-error{color:var(--alert);font-weight:700;font-size:15px}
+/* A design-page form that didn’t go through (site.js sent()) */
+.form-err{flex-basis:100%;color:var(--alert);font-weight:700;font-size:15px;margin:8px 0 0}
 .q-crew{list-style:none;display:grid;gap:10px;margin:var(--s3) 0}
 .q-crew li{display:grid;grid-template-columns:72px 1fr;gap:14px;align-items:center;background:var(--ct);border-radius:var(--r-m);padding:12px 16px}
 .q-crew li > div:first-child{width:72px;height:72px}

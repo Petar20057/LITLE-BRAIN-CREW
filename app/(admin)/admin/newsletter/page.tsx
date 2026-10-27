@@ -58,7 +58,7 @@ export default async function Page({ searchParams }: PageProps<"/admin/newslette
       <h1>Newsletter &amp; forms</h1>
       <Tiles
         items={[
-          { label: "Newsletter subscribers", value: Number(subscribers.data ?? 0), note: "unique emails, still subscribed" },
+          { label: "Newsletter subscribers", value: Number(subscribers.data ?? 0), note: "unique emails, confirmed, still subscribed" },
           { label: `New signups, ${days} days`, value: newInPeriod, note: "all forms and the quiz" },
           { label: "Signups all time", value: allTime, note: "one email can be on several forms" },
         ]}
@@ -73,7 +73,7 @@ export default async function Page({ searchParams }: PageProps<"/admin/newslette
         rows={forms.sort((a, b) => Number(b.in_period) - Number(a.in_period) || Number(b.total) - Number(a.total)).map((f) => ({ label: label(f.form), values: [Number(f.in_period), Number(f.total), Number(f.subscribed)] }))}
         empty="No signups yet."
       />
-      <p className="fine">Newsletter = the free screen-time list, the sticker pack, the 5-day challenge, and quiz parents who ticked the weekly tips. Waitlists, founding parents and schools are counted per form but aren’t the newsletter.</p>
+      <p className="fine">Newsletter = the free screen-time list, the sticker pack, the 5-day challenge, and quiz parents who ticked the weekly tips. Waitlists, founding parents and schools are counted per form but aren’t the newsletter. Since 27 Oct 2026 a newsletter signup or a quiz tips tick counts as subscribed only after the person taps the link in the confirmation email.</p>
 
       <div className="table-wrap">
         <table className="learn-table adm-list">
