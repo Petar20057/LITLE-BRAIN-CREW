@@ -47,7 +47,7 @@ export const CHARS: Record<CharKey, CharInfo> = {
   bedi: { name: "Bedi", real: "Phone in bed", color: "#6C6A9E", group: "villain", job: "a phone in the bedroom is linked with worse sleep, even when nobody’s using it" },
   glo: { name: "Glo", real: "Bright light late at night", color: "#FFE066", group: "villain", job: "bright evening light turns Mela down and pushes sleep later" },
   lupi: { name: "Lupi", real: "Autoplay and the endless feed", color: "#F46FA3", group: "villain", job: "the next video starts by itself, so the ending never comes" },
-  pingi: { name: "Pingi", real: "Notifications", color: "#F2A541", group: "villain", job: "every ping pulls the spotlight off homework and back to the screen" },
+  pingi: { name: "Pingi", real: "Notifications", color: "#F2A541", group: "villain", job: "every ping pulls the spotlight off the task and back to the screen" },
   lati: { name: "Lati", real: "Late bedtimes that change every night", color: "#9C8FD0", group: "villain", job: "irregular bedtimes are linked with more behavior struggles in kids" },
   kafi: { name: "Kafi", real: "Caffeine", color: "#6FD18A", group: "villain", job: "caffeine can keep a body awake for hours" },
   whyzi: { name: "Whyzi", real: "Ages 3–6", color: "#FFD6A5", group: "age", job: "the “why?” years: huge imagination and “I do it myself!”" },

@@ -53,12 +53,12 @@ export const WHAT_TO_SAY: LearnEntry[] = [
       { instead: "“Fine, five more minutes…” after a long argument", say: "“I hear that you want more. In our family, screens end at six.”", why: "Short, calm and the same every day. Debating teaches that the rule is up for negotiation." },
       { instead: "“Don’t make me take it away!”", say: "“Do you want to turn it off, or should I?”", why: "A small choice gives back a bit of control while the ending stays fixed. Touch a shoulder and wait for eye contact first." },
       { instead: "“If you cry about it, no screens tomorrow!”", say: "“You wish you could watch more. Want a snack, or a game in the kitchen?”", why: "Answer the wish under the whine, then give a soft landing. A new punishment piles a second loss on the first." },
-      { instead: "“You’re glued to that thing!”", say: "“Dopa likes easy stars. Let’s find you some strong ones. Want to build a tower?”", why: "It names what’s happening without blame, and it swaps rather than bans." },
+      { instead: "“You’re glued to that thing!”", say: "“Dopa likes easy stars. Let’s find you some strong ones. Want to build a tower?”", why: "It names what’s happening without blame, and it swaps rather than bans. The tower swap suits a 3 to 6 year old. For school-age kids, offer a game, a bike ride or a snack instead." },
     ],
     atHome: [
       "Tears or rage the second the tablet goes dark",
       "“Five more minutes” that turns into ninety",
-      "“Everyone else is allowed!”",
+      "“Everyone else is allowed!” (school-age and older kids)",
       "Not hearing you while the screen is on",
       "A flat or grumpy mood after a long session",
     ],
@@ -219,7 +219,7 @@ export const WHAT_TO_SAY: LearnEntry[] = [
       },
     ],
     whatToSay: [
-      { instead: "“We don’t hit! Bad boy!”", say: "“I won’t let you hit. I’m moving your hand.”", why: "It states a limit you control and separates the act from the kid. A label shames and teaches little." },
+      { instead: "“We don’t hit! Hitting hurts.”", say: "“I won’t let you hit. I’m moving your hand.”", why: "It states a limit you control and separates the act from the kid. A lecture or a label shames and teaches little." },
       { instead: "“Say sorry right now!”", say: "Later: “You were so mad. Hitting hurts. When that feeling comes, you can stomp or squeeze this pillow.”", why: "A forced apology teaches the word. Teaching a replacement works once the storm has passed." },
       { instead: "“Why would you do that?”", say: "“Something felt really unfair. I’m right here.”", why: "Asking the kindest likely reason keeps the door open. It doesn’t excuse the hit, but it keeps you connected." },
       { instead: "“If you hit again, no tablet for a week!”", say: "“I’m going to step back until hands are safe. Then I’ll come right back.”", why: "A calm boundary that describes your action. A big punishment turns the focus from the feeling to payback." },
@@ -239,7 +239,7 @@ export const WHAT_TO_SAY: LearnEntry[] = [
     whenToTalk: "Talk with your pediatrician if hitting is frequent, intense, hurts people or pets, or continues well beyond the preschool years despite consistent responses. Also reach out if it comes with sudden changes in sleep, mood or school. If anyone in the home isn’t safe, get help right away.",
     faqs: [
       { q: "Should I hit back so they know how it feels?", a: "No. Kids copy what they see, and hitting back models the thing you want them to stop. A calm limit and stepping away teach more, with less harm." },
-      { q: "Is hitting normal for toddlers?", a: "It’s common in the toddler and preschool years, when language and self-control are both still growing. It usually becomes less frequent with age, steady limits and plenty of practice with other ways to show anger." },
+      { q: "Is hitting normal for 3 and 4 year olds?", a: "It’s common at 3 and 4, and in the toddler years before that, when language and self-control are both still growing. It usually becomes less frequent with age, steady limits and plenty of practice with other ways to show anger." },
       { q: "What if my older child or teen hits?", a: "The same principle applies: safety first, few words, and a talk later. If it happens more than once or anyone feels unsafe, call your pediatrician for support." },
       { q: "Does a time-out help?", a: "A short break to settle can work for some kids, as long as it is calm and not a punishment. Staying close and quiet (a “time-in”) fits kids who feel abandoned alone. Either way, talk about it afterward." },
     ],
@@ -300,7 +300,8 @@ export const WHAT_TO_SAY: LearnEntry[] = [
       { instead: "“You’re so smart!”", say: "“You kept going on that tricky part.”", why: "It names something your child did and can do again. Intelligence feels fixed, effort does not." },
       { instead: "“That’s perfect!”", say: "“I can see how much care you put into the colors.”", why: "Specific and true. “Perfect” sets a bar they may feel afraid to miss next time." },
       { instead: "“It’s easy for you. You’re a natural.”", say: "“That took practice. What did you try that worked?”", why: "It credits the work and invites them to explain their strategy, which builds the skill again." },
-      { instead: "“Don’t worry, you’re just not a math person.”", say: "“Not yet. What’s one small piece we could try first?”", why: "It leaves room to grow and turns the stuck feeling into a plan." },
+      { instead: "“Don’t worry, you’re just not a math person.”", say: "“Not yet. What’s one small piece we could try first?”", why: "It leaves room to grow and turns the stuck feeling into a plan. This one suits school-age kids and older." },
+      { instead: "“What a good builder you are!” (to a 3 or 4 year old)", say: "“You tried a new way when the tower fell.”", why: "For a preschooler, name the action in a few simple words. It teaches what to do again, and the praise is about the trying." },
       { instead: "“Great job!” (without looking up)", say: "“Tell me how you made this.”", why: "Curiosity is praise in disguise. It tells them their work and their thinking matter." },
       { instead: "“You’re still the smartest in your class.”", say: "“That didn’t work this time. What could you try next?”", why: "It frames a mistake as information, not a verdict on who they are." },
     ],
@@ -313,7 +314,7 @@ export const WHAT_TO_SAY: LearnEntry[] = [
     ],
     tryTonight: [
       "Praise one specific thing you saw today, such as a strategy, a retry or a bit of patience, and skip the word “smart.”",
-      "Ask “What was the trickiest part?” about homework or a game and just listen.",
+      "Ask “What was the trickiest part?” about a game, a drawing or (for school-age kids) homework, and just listen.",
       "Add “yet” the next time you hear “I can’t.”",
     ],
     whenToTalk: "Talk with your pediatrician or your child’s school if avoidance looks fear-driven, if “I can’t” comes with real distress, or if trouble with focus or learning shows up everywhere for months. A change in mood, sleep or appetite that lasts more than about two weeks also deserves a check-in.",
@@ -341,7 +342,7 @@ export const WHAT_TO_SAY: LearnEntry[] = [
     slug: "when-your-kid-cant-sleep",
     h1: "What to say when your child says “I can’t sleep”",
     metaTitle: "What to Say When Your Child Says “I Can’t Sleep”",
-    description: "What to say when your child says “I can’t sleep”: calm, brief lines for 10 p.m., how to handle bedtime worries, and what to leave for morning.",
+    description: "What to say when your child says “I can’t sleep”: calm, brief lines for after lights-out, how to handle bedtime worries, and what to leave for morning.",
     kicker: "What to say · Bedtime · Mela",
     answer: "When your child says “I can’t sleep,” keep it calm, brief and boring: “Your body knows how to rest. Lie here with me for a minute.” Skip the big talk and the “why are you still awake?” questions. Save the detective work for tomorrow, and try slow breathing, dim light and a steady routine.",
     char: "mela",
@@ -356,9 +357,9 @@ export const WHAT_TO_SAY: LearnEntry[] = [
         ],
       },
       {
-        h2: "What should I say when they call out at 10 p.m.?",
+        h2: "What should I say when they call out after lights-out?",
         paras: [
-          "Be the most boring person in the house. A calm voice, a steady hand on the back and a short sentence tell their body that nothing is wrong. The more energy you bring to the conversation, the more awake everyone gets.",
+          "Lights-out is around 7:30 p.m. for many 3 to 5 year olds and closer to 9 or 10 p.m. for school-age kids and older, so read “10 p.m.” scenes as the older-kid version. Be the most boring person in the house. A calm voice, a steady hand on the back and a short sentence tell their body that nothing is wrong. The more energy you bring to the conversation, the more awake everyone gets.",
         ],
         bullets: [
           "Do one quick check: thirsty, bathroom, too hot or too cold, a worry.",
@@ -391,10 +392,10 @@ export const WHAT_TO_SAY: LearnEntry[] = [
       ],
     },
     whatToSay: [
-      { instead: "“Just go to sleep!”", say: "“You don’t have to sleep. Just lie cozy and breathe with me: smell the flower, blow out the candle.”", why: "Sleep can’t be forced, and pressure makes it harder. Slow breathing is easier to do than sleeping, and it helps the body settle." },
+      { instead: "“Just go to sleep!”", say: "“You don’t have to sleep. Just lie cozy and breathe with me: smell the flower, blow out the candle.”", why: "Sleep can’t be forced, and pressure makes it harder. Slow breathing is easier to do than sleeping, and it helps the body settle. The flower-and-candle breath suits younger kids, roughly ages 3 to 8." },
       { instead: "“Why are you still awake?!”", say: "“I’m right here. Let’s check: thirsty, bathroom, cozy?”", why: "A question with an edge puts Corti on alert. A quick, calm check covers the usual causes." },
       { instead: "“There’s nothing to be scared of.”", say: "“That sounds like a big worry. Let’s write it down and look at it together tomorrow.”", why: "It takes the worry seriously without feeding it at midnight." },
-      { instead: "“Let’s talk about why you can’t sleep.” (at 11 p.m.)", say: "“Tonight we rest. Tomorrow we’ll do detective work together.”", why: "Late conversations wake everyone up. Daytime is for finding the cause." },
+      { instead: "“Let’s talk about why you can’t sleep.” (late at night, to a school-age kid or older)", say: "“Tonight we rest. Tomorrow we’ll do detective work together.”", why: "Late conversations wake everyone up. Daytime is for finding the cause." },
       { instead: "“If you don’t sleep you’ll be a zombie tomorrow!”", say: "“Resting your body still helps. I’ll check on you in five minutes.”", why: "Warnings raise the alarm. Resting counts, and a predictable check-in is reassuring." },
     ],
     atHome: [
@@ -406,7 +407,7 @@ export const WHAT_TO_SAY: LearnEntry[] = [
     ],
     tryTonight: [
       "Dim the house and turn screens off one hour before bed.",
-      "Practice slow breathing together for two minutes: smell the flower, blow out the candle.",
+      "Practice slow breathing together for two minutes. With a younger child, use “smell the flower, blow out the candle”; with a tween or teen, try a slow count of four in and six out.",
       "Keep the same bedtime as last night and use one short line if they call out.",
     ],
     whenToTalk: "Talk with your pediatrician if sleep stays hard for weeks, or if you notice loud snoring, breathing pauses or extreme daytime sleepiness. Also mention bedtime fears that are intense or growing, and any mood, appetite or school change lasting more than about two weeks.",
@@ -528,13 +529,13 @@ export const WHAT_TO_SAY: LearnEntry[] = [
     kicker: "What to say · Puberty · Tweeni",
     answer: "Start before the changes begin, often around age 8 or 9, and keep it to many short, casual talks instead of one big one. Try “Bodies change at your age, and I’m happy to answer anything.” Puberty usually starts at 8 to 13 in girls and 9 to 14 in boys, so every kid’s timing differs.",
     char: "tweeni",
-    charCaption: "Tweeni: puberty starts and friends begin to matter more",
+    charCaption: "Tweeni, ages 10–12: puberty starts and friends begin to matter more",
     kidVersion: "Tweeni is the part of you that’s growing into a bigger body. Soon you might notice new hair, new smells, a growth spurt or new feelings. Everyone goes through it, just at different times, and nothing you ask will ever be weird to me.",
     sections: [
       {
         h2: "When should I start talking about puberty?",
         paras: [
-          "Earlier than feels natural. NICHD says puberty typically begins between ages 8 and 13 for girls and 9 and 14 for boys, and some kids notice body odor or underarm hair even earlier, from a hormone step called adrenarche. If you wait until you see changes, your child may already be confused. Starting around 8 or 9 gives you time to go slowly.",
+          "Earlier than feels natural. NICHD says puberty typically begins between ages 8 and 13 for girls and 9 and 14 for boys, and some kids notice body odor or underarm hair even earlier, from a hormone step called adrenarche. If you wait until you see changes, your child may already be confused. Starting around 8 or 9 gives you time to go slowly. Our character for this topic, Tweeni, belongs to the 10 to 12 stage, when changes are most often underway. The talks themselves are best started a year or two earlier, so they feel normal by the time Tweeni arrives.",
           "Think of it as a hundred small talks instead of one big one. The main thing is not the script, it’s being the kind of person your kid can ask. A relaxed face matters more than a perfect speech.",
         ],
       },

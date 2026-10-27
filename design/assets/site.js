@@ -58,8 +58,8 @@ const CREW = {
     what: 'Nora is about alertness and attention. Nora turns the spotlight on, so the brain notices what counts right now.',
     upL: 'Helps Nora', up: ['Moving before focus time', 'One task at a time', 'A clear start signal', 'Short breaks'],
     downL: 'Throws Nora off', down: ['Notifications in the middle of a task', 'Sitting for a long time', 'Too many things at once'],
-    fix: 'Move for a few minutes before homework. Put the phone in another room. Work in short blocks with a clear start and a short break.',
-    tonight: ['Do 20 jumping jacks together before homework.', 'Phone in another room until the first task is done.', 'Work 10 minutes, break 2, repeat.'] },
+    fix: 'Move for a few minutes before homework or any job (for little ones: before a puzzle or clean-up). Put the phone in another room. Work in short blocks with a clear start and a short break.',
+    tonight: ['Do 20 jumping jacks together before homework or clean-up.', 'Phone in another room until the first task is done.', 'Work 10 minutes, break 2, repeat.'] },
   gabi: { name: 'Gabi', real: 'GABA', group: 'Messenger', color: '#C5B4F5', job: 'presses the brain’s brake and turns the volume down', isNew: true,
     what: 'Gabi is the brain’s main brake. After a big feeling, Gabi quiets the signals so the body can settle. Nora switches the lights on, Gabi dims them.',
     upL: 'Helps Gabi', up: ['Slow breathing', 'A calm grown-up close by', 'Quiet, dim evenings', 'Routines that look the same'],
@@ -121,7 +121,7 @@ const VILLAINS = [
   ['bedi', 'Bedi', 'Phone in bed', 'A phone in the bedroom is linked with worse sleep, even when nobody’s using it.', 'Phones sleep in the kitchen.', 'Mela'],
   ['glo', 'Glo', 'Bright light late at night', 'Bright evening light turns Mela down and pushes sleep later, most of all in little kids.', 'Lamps low and warm after dinner.', 'Mela'],
   ['lupi', 'Lupi', 'Autoplay and the endless feed', 'The next video starts by itself, so the ending never comes.', 'Autoplay off. Pick the episode before you press play.', 'Dopa, Fronti'],
-  ['pingi', 'Pingi', 'Notifications', 'Every ping pulls the spotlight off homework and back to the screen.', 'Phone in another room until the task is done.', 'Nora'],
+  ['pingi', 'Pingi', 'Notifications', 'Every ping pulls the spotlight off the task and back to the screen.', 'Phone in another room until the task is done.', 'Nora'],
   ['lati', 'Lati', 'Late bedtimes that change every night', 'Irregular bedtimes are linked with more behavior struggles in kids.', 'Same bedtime every night, give or take an hour.', 'Sero, Mela'],
   ['kafi', 'Kafi', 'Caffeine: energy drinks, cola, iced tea', 'Caffeine can keep a body awake for hours. Pediatricians advise no energy drinks for kids.', 'No caffeine after lunch. Energy drinks never.', 'Mela']
 ];

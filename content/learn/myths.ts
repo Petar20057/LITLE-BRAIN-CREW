@@ -332,9 +332,9 @@ export const MYTHS: LearnEntry[] = [
       "Study sessions that are one long cram the night before a test",
     ],
     tryTonight: [
-      "Pick one fact from tonight’s homework. Have your kid say it, then draw it, then explain it to you, in that order.",
+      "For a school-age kid, pick one fact from tonight’s homework. Have your kid say it, then draw it, then explain it to you, in that order.",
       "Close the book and ask: “What do you remember?” Then check together.",
-      "Plan homework in two short sessions on different evenings this week instead of one long one.",
+      "For school-age kids, plan homework in two short sessions on different evenings this week instead of one long one.",
     ],
     whenToTalk: "Preferences aren’t a concern. But if your child has trouble learning in every format, such as reading, listening and hands-on tasks, for months, or if school struggles show up everywhere and are getting worse, talk to your pediatrician and the school. Struggles with school that keep going, or new refusal to go to school, deserve a conversation.",
     faqs: [
@@ -421,7 +421,7 @@ export const MYTHS: LearnEntry[] = [
     ],
     tryTonight: [
       "Play a waiting game with a younger kid, such as Freeze or Simon Says. With a teen, agree on one small deal, like phone-off time for a later weekend curfew.",
-      "Offer two choices instead of ten: “Homework before or after a snack?”",
+      "Offer two choices instead of ten: “Homework before or after a snack?” for a school-age kid, or “Puzzle or blocks first?” for a 3 to 5 year old.",
       "Agree on a phone-off time that gives your teen a full night’s sleep, and put the charger outside the bedroom.",
     ],
     whenToTalk: "Slow brakes are normal. Talk to your pediatrician if problems with attention or impulse control show up everywhere (home and school) for months, or if a change in mood, sleep or appetite lasts more than about two weeks or is getting worse. If your teen talks about hurting themselves, act the same day. Ask directly and stay close. Call or text 988 (Suicide & Crisis Lifeline). In an emergency, call 911.",
@@ -496,7 +496,7 @@ export const MYTHS: LearnEntry[] = [
         ],
         bullets: [
           "Turn autoplay off. Pick the episode before you press play.",
-          "Use a window, not a ban: “Tablet after homework, until dinner.”",
+          "Use a window, not a ban: “Tablet after homework, until dinner” for a school-age kid, or “Tablet after we clean up, until dinner” for a younger one.",
           "Name the replacement before the screen goes off: a game they can win, a walk, a drawing.",
           "Phones charge outside the bedroom, yours included.",
         ],

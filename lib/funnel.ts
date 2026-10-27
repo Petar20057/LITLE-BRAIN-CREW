@@ -58,7 +58,7 @@ export const PRODUCTS: Record<Product["slug"], Product> = {
   guide: {
     slug: "guide",
     title: "The Kid Brain Toolkit",
-    sub: "The science of your kid’s brain in one evening: the whole crew, the 12 hardest moments, the villains, and what’s normal at every age. Ages 4–17.",
+    sub: "The science of your kid’s brain in one evening: the whole crew, the 12 hardest moments, the villains, and what’s normal at every age. Ages 3–17.",
     art: "fronti",
     get: [
       "All 12 crew members: what each one does, what helps it, what throws it off",

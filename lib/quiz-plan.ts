@@ -28,6 +28,9 @@ export type QuizResult = {
   nights: string[];
 };
 
+/** The moment as this age sees it: kids under 6 get the wording without homework. Lives here, not in lib/quiz.ts, so the client bundle stays free of Learn content. */
+export const forAge = (m: QuizMoment, age?: { young: boolean }): QuizMoment => (age?.young && m.youngLabel ? { ...m, label: m.youngLabel } : m);
+
 /** Hours of sleep between bedtime and wake-up, to the nearest half hour. */
 export const sleepHours = (bed: number, wake: number) => Math.round(((wake + 24 * 60 - bed) / 60) * 2) / 2;
 
@@ -41,7 +44,7 @@ export function sleepCheck(data: QuizData, ageId: string | null, s: QuizAnswers[
 
 export function quizResult(data: QuizData, a: QuizAnswers): QuizResult | null {
   const age = data.ages.find((x) => x.id === a.age);
-  const picks = a.moments.map((id) => data.moments.find((m) => m.id === id)).filter((m): m is QuizMoment => Boolean(m));
+  const picks = a.moments.map((id) => data.moments.find((m) => m.id === id)).filter((m): m is QuizMoment => Boolean(m)).map((m) => forAge(m, age));
   if (!age || !picks.length) return null;
   const sleep = sleepCheck(data, a.age, a.sleep);
   const home = data.villains.filter((v) => a.villains?.includes(v.char.key));

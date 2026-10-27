@@ -25,7 +25,7 @@
     screens: { label: 'Screens', when: ['When it’s time to stop', 'Before bed', 'All day, they keep asking'] },
     sleep: { label: 'Sleep', when: ['Falling asleep', 'Waking up at night', 'Hard to wake up'] },
     mood: { label: 'Mood and anger', when: ['When they don’t get their way', 'After school', 'Out of nowhere'] },
-    focus: { label: 'Focus and homework', when: ['Homework', 'Chores', 'Listening when I talk'] },
+    focus: { label: 'Focus and tasks', when: ['Homework', 'Chores', 'Listening when I talk'] },
     energy: { label: 'Energy and moving', when: ['They sit a lot', 'Too much energy at bedtime', 'They seem tired all day'] },
     teen: { label: 'Teen confidence', when: ['Low confidence', 'Up late on the phone', 'Always tired'], teenOnly: true }
   };
@@ -37,7 +37,14 @@
     energy: ['energy', 'lazy', 'sit', 'sitting', 'move', 'sport', 'active', 'bored', 'hyper', 'tired'],
     teen: ['teen', 'confiden', 'puberty', 'shy', 'self-esteem', 'self esteem']
   };
-  const AGES = ['4–7 years', '8–12 years', '13–17 years'];
+  const AGES = ['3–5 years', '6–12 years', '13–17 years'];
+  // Preschool wording: kids under 6 have no homework, so the Focus topic swaps in tasks and clean-up.
+  const WHEN_YOUNG = { focus: ['Getting started on a task', 'Chores and clean-up', 'Listening when I talk'] };
+  const A_YOUNG = {
+    focus: [
+      ['dopa', 'A big job feels too big to start. Cut it into one small step with a clear finish line, so it gives a win.', 'Pick one tiny job tonight, like putting the blocks in the bin. Cheer when it is done.', 'program']
+    ]
+  };
   const AGE_TIP = ['For little ones, keep your words short and do it together.', 'Kids this age like having a say, so let them help plan it.', 'Teens push back on orders, so make it a deal, not a rule.'];
 
   // answers[topic][whenIndex] = [crew, text, tryTonight, cta]
@@ -88,8 +95,9 @@
     if (!state.topic) return { kind: 'topics', text: 'Hi! What’s hard at your house right now?' };
     const T = TOPICS[state.topic];
     if (state.age == null && !T.teenOnly) return { kind: 'ask', field: 'age', text: 'How old is your child?', options: AGES };
-    if (state.when == null) return { kind: 'ask', field: 'when', text: 'When does it happen most?', options: T.when };
-    const [crew, text, tryTonight, cta] = A[state.topic][state.when];
+    if (state.when == null) return { kind: 'ask', field: 'when', text: 'When does it happen most?', options: (state.age === 0 && WHEN_YOUNG[state.topic]) || T.when };
+    const young = state.age === 0 && A_YOUNG[state.topic] && A_YOUNG[state.topic][state.when];
+    const [crew, text, tryTonight, cta] = young || A[state.topic][state.when];
     const ageTip = T.teenOnly ? '' : ' ' + AGE_TIP[state.age];
     return { kind: 'answer', crew, text: text + ageTip, tryTonight, cta };
   }

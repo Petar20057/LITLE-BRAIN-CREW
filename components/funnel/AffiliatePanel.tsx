@@ -19,7 +19,7 @@ const RULES = [
 
 const CAPTIONS = [
   "We’ve been learning about our kid’s brain with the Little Brain Crew: cartoon characters for the brain chemicals behind sleep, screens and meltdowns. If screen-off is a fight at your house too, take a look: [your link] (I’m a Crew Club member and I earn a commission if you buy.)",
-  "Why does screen time end in tears? The Little Brain Crew explains it with a character called Dopa, in 3 minutes, for parents of kids 4–17. [your link] #ad, I earn a commission",
+  "Why does screen time end in tears? The Little Brain Crew explains it with a character called Dopa, in 3 minutes, for parents of kids 3–17. [your link] #ad, I earn a commission",
   "The crew that explains my kid’s brain → [your link] (#ad: I earn a commission if you buy)",
 ];
 

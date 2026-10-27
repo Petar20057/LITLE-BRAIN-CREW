@@ -46,7 +46,7 @@ export const BRAIN_CHEMICALS: LearnEntry[] = [
         bullets: [
           "**Shrink the job.** “Clean your room” is a mountain. “Put the books on the shelf” is a star.",
           "**Make the finish line visible.** A timer, a checklist or a count of five items turns “forever” into “almost done.”",
-          "**Cheer the finish, not the grade.** Name what they did: “You stuck with that tricky part.”",
+          "**Cheer the finish, not the score.** Name what they did: “You stuck with that tricky part.”",
           "**Build skills in steps.** Learning a song, a sport or a drawing in small levels gives Dopa a chain of earned stars.",
           "**Be careful with prizes.** In the classic Stanford nursery study, preschoolers promised an award for drawing, something they already liked, later drew less on their own. Save prizes for genuinely hard new habits, and use specific praise for the rest.",
         ],
@@ -54,7 +54,7 @@ export const BRAIN_CHEMICALS: LearnEntry[] = [
       {
         h2: "What changes as kids get older?",
         paras: [
-          "Little kids (about 4 to 7) take stars literally. Sticker charts and “first this, then that” work well, and waiting is still a skill under construction. A larger 2018 replication of the famous marshmallow test found that the link between waiting and later achievement shrank a lot once family background was counted. Patience grows with age and practice, so train it in short, winnable bits and keep your promises reliable.",
+          "Little kids (about 3 to 7) take stars literally. Sticker charts and “first this, then that” work well, and waiting is still a skill under construction. A larger 2018 replication of the famous marshmallow test found that the link between waiting and later achievement shrank a lot once family background was counted. Patience grows with age and practice, so train it in short, winnable bits and keep your promises reliable.",
           "Tweens and teens feel rewards more strongly, and friends turn the volume up. In one lab study of 40 people, teens took more risks in a driving game when two friends were watching from the next room, and reward-related brain activity rose too. Adults in the same study didn’t change. That’s a reason to help older kids find wins that don’t depend on a feed: a sport, a craft, a job they can finish and show.",
         ],
       },
@@ -229,7 +229,7 @@ export const BRAIN_CHEMICALS: LearnEntry[] = [
         h2: "How much movement does my child need?",
         paras: [
           "The CDC recommends at least 60 minutes a day of moderate-to-vigorous activity for ages 6 to 17, with more vigorous activity and muscle- and bone-strengthening play on at least three days a week. The World Health Organization uses an average of 60 minutes a day for ages 5 to 17. It also says to limit sedentary time without setting a number.",
-          "That sounds like a lot, but it doesn’t have to be a workout. Recess, bike rides, dancing in the kitchen, walking the dog and playing tag all count. For kids who hate organized sport, try “movement snacks”: five minutes, three times a day.",
+          "That sounds like a lot, but it doesn’t have to be a workout. Recess, bike rides, dancing in the kitchen, walking the dog and playing tag all count. For kids who hate organized sport, try “movement snacks”: five minutes, three times a day. For ages 3 to 5, CDC guidance is simpler: active play throughout the day, which adults can encourage by joining in.",
         ],
         bullets: [
           "**Little kids** move in bursts, so offer many short chances.",
@@ -285,12 +285,12 @@ export const BRAIN_CHEMICALS: LearnEntry[] = [
     slug: "norepinephrine-for-kids",
     h1: "Norepinephrine (noradrenaline) for kids: the attention spotlight",
     metaTitle: "Norepinephrine for Kids: The Attention Spotlight",
-    description: "Norepinephrine, also called noradrenaline, helps kids notice what matters. How it relates to focus and homework, and how to keep the spotlight steady.",
+    description: "Norepinephrine, also called noradrenaline, helps kids notice what matters. How it relates to focus at every age, and how to keep the spotlight steady.",
     kicker: "Brain chemicals · Norepinephrine",
     answer: "Norepinephrine, called noradrenaline in the UK and many other countries, is a brain messenger and stress hormone involved in alertness and attention. Picture a spotlight that switches on when something matters. Kids focus better with a clear start, one task at a time and a bit of movement first, and worse when pings keep pulling the light away.",
     char: "nora",
     charCaption: "Nora: switches on the spotlight when something matters",
-    kidVersion: "This is Nora. Nora is the spotlight in your head. When something matters, Nora turns it on, and you can see what’s in front of you, like your math page. A buzzing phone grabs the spotlight and swings it away. So let’s put the phone in the other room and let Nora shine on your homework.",
+    kidVersion: "This is Nora. Nora is the spotlight in your head. When something matters, Nora turns it on, and you can see what’s in front of you, like your puzzle or your page. Something loud or buzzing grabs the spotlight and swings it away. So let’s move the noisy thing to the other room and let Nora shine on what you’re doing.",
     sections: [
       {
         h2: "Norepinephrine or noradrenaline: are they the same thing?",
@@ -308,10 +308,10 @@ export const BRAIN_CHEMICALS: LearnEntry[] = [
         ],
       },
       {
-        h2: "Why does my kid’s spotlight flicker during homework?",
+        h2: "Why does my school-age kid’s spotlight flicker during homework?",
         paras: [
           "A few usual suspects. Notifications are built to be noticed, so a buzz drags the beam toward the phone and the brain has to find its way back to the page. Sitting still for a long stretch with no clear start can leave the light dim. And too many things at once, like homework, music, a game and a group chat, split it so thin it doesn’t shine on anything.",
-          "Our villain **Pingi** lives right here. Every ping pulls the spotlight off the task and back onto the screen.",
+          "Our villain **Pingi** lives right here. Every ping pulls the spotlight off the task and back onto the screen. For a 3 to 5 year old the same thing happens with a TV on in the background or a loud toy nearby, long before any phone is involved.",
         ],
       },
       {
@@ -321,7 +321,7 @@ export const BRAIN_CHEMICALS: LearnEntry[] = [
         ],
         bullets: [
           "**Move first.** Two or three minutes of jumping, wall push-ups or a quick lap outside before sitting down. Siegel and Bryson’s “move it or lose it” idea is that moving the body helps a kid come back to a calm, workable state.",
-          "**Phone in another room.** Out of sight beats face-down on the desk.",
+          "**Phone in another room** (school-age and older). Out of sight beats face-down on the desk. For a preschooler, the same idea is switching the TV off before a puzzle or a story.",
           "**One task at a time.** Say what the one task is, out loud, before starting.",
           "**A clear start signal.** A timer, a song ending or a “ready, set, go” makes the beginning obvious.",
           "**Short blocks, short breaks.** Ten minutes of work, two minutes off, repeat.",
@@ -330,30 +330,32 @@ export const BRAIN_CHEMICALS: LearnEntry[] = [
       {
         h2: "Is this the same as Dopa?",
         paras: [
-          "They’re neighbors, but different jobs. Dopa is about wanting and effort: is this worth going after? Nora is about noticing: this matters, look here. A kid can want the reward and still be pulled away by a ping, and a kid can have a bright spotlight on something they have no interest in. When homework stalls, ask both questions: is the task too big to want, or is the spotlight getting hijacked?",
+          "They’re neighbors, but different jobs. Dopa is about wanting and effort: is this worth going after? Nora is about noticing: this matters, look here. A kid can want the reward and still be pulled away by a ping, and a kid can have a bright spotlight on something they have no interest in. When homework (or a puzzle, for a younger kid) stalls, ask both questions: is the task too big to want, or is the spotlight getting hijacked?",
         ],
       },
     ],
     atHome: [
-      "Starting homework, then drifting to the phone every few minutes",
+      "School-age: starting homework, then drifting to the phone every few minutes",
       "A kid who needs three reminders to begin",
       "Better focus after a run around the block",
-      "Tabs, music and chats open at once while “studying”",
+      "Older kids: tabs, music and chats open at once while “studying”",
+      "Preschool: wandering off from a puzzle or story when the TV is on",
     ],
     tryTonight: [
-      "Do twenty jumping jacks together right before homework.",
-      "Park the phone in the kitchen until the first task is done.",
-      "Set a timer for ten minutes of work and two minutes of break, and run three rounds.",
+      "Do twenty jumping jacks together right before homework (for a 3 to 5 year old, right before a puzzle or story).",
+      "For school-age kids and up, park the phone in the kitchen until the first task is done.",
+      "For school-age kids, set a timer for ten minutes of work and two minutes of break, and run three rounds. For a 3 to 5 year old, try a three-minute puzzle, then a wiggle break.",
     ],
     whatToSay: [
       { instead: "“Pay attention!”", say: "“What’s the one thing you’re doing right now?”", why: "Naming a single target gives attention somewhere to land." },
-      { instead: "“Put that phone away or I’ll take it!”", say: "“Phone goes in the kitchen until your first task is done. I’ll put mine there too.”", why: "A shared, predictable rule beats a threat." },
+      { instead: "“Put that phone away or I’ll take it!”", say: "“Phone goes in the kitchen until your first task is done. I’ll put mine there too.”", why: "A shared, predictable rule beats a threat. Best for school-age kids and older." },
+      { instead: "“Stop wandering and finish your puzzle!”", say: "“Let’s turn the TV off, then it’s you and the puzzle. I’ll sit right here.”", why: "For a 3 to 5 year old, taking away the distraction and staying close works better than a command." },
     ],
     whenToTalk: "Talk to your pediatrician if trouble focusing shows up at home and at school and lasts for months, if it comes with big changes in sleep or mood, or if teachers raise the same worry. This page is a picture, not a diagnosis.",
     faqs: [
       { q: "Is norepinephrine a stress hormone?", a: "It’s both a stress hormone and a brain messenger. It rises when you need to be alert, which can feel like stress or like focus. Roughly speaking, a little helps you sharpen up, and a lot can make it hard to settle." },
       { q: "Why do kids focus better after they move?", a: "Movement wakes the body up and gives restless energy somewhere to go. We can’t say which chemicals are involved in your child’s case, but short bursts of activity before seated work are a simple habit to try." },
-      { q: "How long should my kid focus at a time?", a: "It grows with age and varies by kid, so there’s no single number. Start with short blocks, build up, and watch for the point where attention fades." },
+      { q: "How long should my kid focus at a time?", a: "It grows with age and varies by kid, so there’s no single number. Preschoolers do best with a few minutes of play-based focus at a time. Start with short blocks, build up, and watch for the point where attention fades." },
     ],
     sources: ["S33", "S12", "S10"],
     related: [

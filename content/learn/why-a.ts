@@ -48,7 +48,7 @@ export const WHY_A: LearnEntry[] = [
           "The goal is not a kid who never protests. It’s a stop that feels predictable and has somewhere soft to land. Pick the stopping point by content (“when this level ends”) rather than by the clock where you can, keep the ending the same every day, and say the feeling out loud: “Two things are true. Screen time is over, and you’re allowed to be upset.” Then hold the limit calmly.",
         ],
         bullets: [
-          "**Ages 4–6:** Use something they can see (a sand timer or a kitchen timer), give a hand on the shoulder before the words, and make the landing physical: a snack, a bath with a toy, a race to the door.",
+          "**Ages 3–6:** Use something they can see (a sand timer or a kitchen timer), give a hand on the shoulder before the words, keep the warning to one short sentence, and make the landing physical: a snack, a bath with a toy, a race to the door.",
           "**Ages 7–10:** Let them choose the stopping point within your limit (“Finish this level or this episode, then we stop”). Choice gives the planner in their brain something to do.",
           "**Ages 11–13:** Write the family media plan together at a calm time, not at the moment of conflict. A rule they helped build is easier to follow than one handed down mid-game.",
           "**Ages 14–17:** Frame it as a deal, not a countdown: agree on phone-free zones such as the table and the bedroom at night, and keep yours the same.",
@@ -148,7 +148,7 @@ export const WHY_A: LearnEntry[] = [
       {
         h2: "What changes by age?",
         paras: [
-          "**Ages 4–7:** Use a visible timer and stay close. Young kids can’t hold a rule in mind when a screen is lit up, so give the warning at their side, not from the kitchen.",
+          "**Ages 3–7:** Use a visible timer and stay close. Young kids can’t hold a rule in mind when a screen is lit up, so give the warning at their side, not from the kitchen. With a 3 or 4 year old, turn it off together and move straight to something physical.",
           "**Ages 8–12:** Bring them into the plan. Ask them to set the alarm and say what time it rings. Kids this age care about fairness, so explain that everyone, including you, has a phone-free time.",
           "**Teens:** Skip the countdown and agree the boundaries together: phone-free meals, charging outside the bedroom, notifications and autoplay off. Your own habits count more than your words.",
         ],
@@ -326,7 +326,7 @@ export const WHY_A: LearnEntry[] = [
         paras: ["Most of what drains the battery faster is well-meant. These are the usual suspects:"],
         bullets: [
           "An interview at the door: “What did you learn? Who did you play with? Where is your jacket?”",
-          "Starting homework the second the backpack hits the floor.",
+          "Starting homework the second the backpack hits the floor (or, for a 3 to 5 year old, a big job like clean-up right at the door).",
           "Going straight from school to an activity, with no gap in between.",
           "Praise or blame for how the day went before your child has landed.",
           "Strict “school voice” rules at home, such as sitting nicely, right when the battery is empty.",
@@ -348,6 +348,7 @@ export const WHY_A: LearnEntry[] = [
       {
         h2: "What changes by age?",
         paras: [
+          "**Ages 3–4:** Preschool or daycare days drain the battery too, and a young child has even fewer words for it. Expect a short fuse and clinging. A snack, a lap and a quiet few minutes with toys beat questions about the day.",
           "**Ages 5–7:** Starting full days of school is a big new load, and many families notice more tiredness at first. Plan a bigger buffer in the early weeks.",
           "**Ages 8–11:** Social effort grows. Friend drama, fairness and performance all draw on the battery. Movement before homework often helps more than more talk.",
           "**Tweens and teens:** The collapse can look like snapping, slamming doors, or going silent. Respect the closed door for a bit, leave a snack, and offer your presence without a question attached. Late school days and early starts make a teen’s battery run low sooner.",
@@ -363,13 +364,13 @@ export const WHY_A: LearnEntry[] = [
     ],
     tryTonight: [
       "Have a real snack waiting at the door, with no questions until it’s eaten.",
-      "Build a 20-minute buffer: quiet or movement, then connection, then homework.",
+      "Build a 20-minute buffer: quiet or movement, then connection, then homework (for school-age kids) or a calm dinner and bath routine (for a preschooler).",
       "Save “How was your day?” for dinner or the car. Try “Tell me one funny thing” instead.",
     ],
     whatToSay: [
       { instead: "“What happened at school today?”", say: "“I’m glad you’re home. Snack’s ready.”", why: "It answers the hunger bell first and lowers demands while the battery is low." },
       { instead: "“You were fine five minutes ago. Why are you screaming?”", say: "“It sounds like today was a lot. I’m right here.”", why: "It names the load without judging the reaction." },
-      { instead: "“Do your homework first, then you can relax.”", say: "“Take 20 minutes, then we’ll plan homework.”", why: "A short rest makes the work shorter later." },
+      { instead: "“Do your homework first, then you can relax.”", say: "“Take 20 minutes, then we’ll plan homework.”", why: "A short rest makes the work shorter later. This one is for school-age kids. With a 3 to 5 year old, try “First a snuggle, then we put the blocks away.”" },
     ],
     whenToTalk: "Talk to your pediatrician if after-school meltdowns are frequent, intense or dangerous, if your child seems persistently sad, worried or exhausted, or if school itself is becoming something they refuse or dread. If it’s new, persistent or the distress looks big, start with a check-up and share what the teacher sees too.",
     faqs: [
@@ -629,7 +630,7 @@ export const WHY_A: LearnEntry[] = [
           "The biggest win is moving decisions to the night before: clothes out, bag packed, shoes by the door. Then give the morning a shape. A picture checklist works well for younger kids, and for older kids, a simple list on the fridge. Instead of giving orders, ask “What’s next on your list?”, which puts the planning job with them.",
         ],
         bullets: [
-          "**Ages 4–7:** Picture checklist with 4 to 5 steps. Let them tick it off with a marker. Keep your voice low and close.",
+          "**Ages 3–7:** Picture checklist, with 2 or 3 steps for a 3 or 4 year old and 4 to 5 steps by age 6 or 7. Let them tick it off with a marker. Keep your voice low and close.",
           "**Ages 8–11:** They run the list, you stay on the sidelines. Praise the effort and strategy (“You did the bag before breakfast, nice plan”), not just speed.",
           "**Tweens and teens:** Let them own the alarm. Agree on the wake-up time together, charge the phone outside the bedroom, and have something ready to grab so breakfast can happen even on a late day.",
         ],
@@ -702,12 +703,12 @@ export const WHY_A: LearnEntry[] = [
       {
         h2: "When does the hangry hour hit?",
         paras: [
-          "The classic window is late afternoon, right before dinner, around 4:30 to 6 p.m. That’s when lunch was a long time ago, homework is on, you’re cooking and everyone is tired. Other pressure points: car rides after school, grocery store trips, long sports practices, early mornings with a skipped breakfast and school field trips.",
+          "The classic window is late afternoon, right before dinner, around 4:30 to 6 p.m. That’s when lunch was a long time ago, homework (for older kids) or clean-up time (for little ones) is on, you’re cooking and everyone is tired. Other pressure points: car rides after school, grocery store trips, long sports practices, early mornings with a skipped breakfast and school field trips.",
         ],
         bullets: [
           "Long gaps between meals, especially a small or skipped lunch.",
           "Only quick snacks and no real food.",
-          "Asking for hard things (homework, chores, tough talks) right at the peak.",
+          "Asking for hard things (homework for school-age kids, clean-up for little ones, chores, tough talks) right at the peak.",
           "Waiting for a late dinner without a bridge snack.",
           "Not noticing the signs: quiet, clumsy, whiny, suddenly furious over little things.",
         ],

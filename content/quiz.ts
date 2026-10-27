@@ -31,13 +31,13 @@ const SLEEP = {
 } satisfies Record<string, SleepRange>;
 
 /** Age buttons → the stage character, its Learn page and the sleep range. Ranges follow the site (Whyzi 3–6 … Seki 14–17). */
-export const AGES: { id: string; label: string; stage: CharKey; slug: string; teen: boolean; sleep: SleepRange }[] = [
-  { id: "4-5", label: "4–5", stage: "whyzi", slug: "brain-age-3-to-6", teen: false, sleep: SLEEP.preschool },
-  { id: "6-7", label: "6–7", stage: "skuli", slug: "brain-age-6-to-8", teen: false, sleep: SLEEP.school },
-  { id: "8-9", label: "8–9", stage: "ruli", slug: "brain-age-8-to-10", teen: false, sleep: SLEEP.school },
-  { id: "10-11", label: "10–11", stage: "tweeni", slug: "brain-age-10-to-12", teen: false, sleep: SLEEP.school },
-  { id: "12-13", label: "12–13", stage: "sprouti", slug: "brain-age-12-to-14", teen: true, sleep: SLEEP.bridge },
-  { id: "14-17", label: "14–17", stage: "seki", slug: "brain-age-14-to-17", teen: true, sleep: SLEEP.teen },
+export const AGES: { id: string; label: string; stage: CharKey; slug: string; teen: boolean; /** Under 6: no homework or phone examples. */ young: boolean; sleep: SleepRange }[] = [
+  { id: "3-5", label: "3–5", stage: "whyzi", slug: "brain-age-3-to-6", teen: false, young: true, sleep: SLEEP.preschool },
+  { id: "6-7", label: "6–7", stage: "skuli", slug: "brain-age-6-to-8", teen: false, young: false, sleep: SLEEP.school },
+  { id: "8-9", label: "8–9", stage: "ruli", slug: "brain-age-8-to-10", teen: false, young: false, sleep: SLEEP.school },
+  { id: "10-11", label: "10–11", stage: "tweeni", slug: "brain-age-10-to-12", teen: false, young: false, sleep: SLEEP.school },
+  { id: "12-13", label: "12–13", stage: "sprouti", slug: "brain-age-12-to-14", teen: true, young: false, sleep: SLEEP.bridge },
+  { id: "14-17", label: "14–17", stage: "seki", slug: "brain-age-14-to-17", teen: true, young: false, sleep: SLEEP.teen },
 ];
 
 export type MomentDef = {
@@ -55,11 +55,13 @@ export type MomentDef = {
   tip: number;
   /** Shown only for kids 12 and up. */
   teen?: boolean;
+  /** Wording for kids under 6, who have no homework. */
+  young?: { label: string };
 };
 
 export const MOMENTS: MomentDef[] = [
   { id: "screens", label: "Tears or yelling when screen time ends", line: "Dopa just lost its easy rewards. Villain: Lupi.", char: "dopa", villain: "lupi", entry: { section: "why", slug: "kid-cries-when-screen-time-ends" }, tip: 1 },
-  { id: "bored", label: "“I’m bored.” Won’t start homework.", line: "Nora’s spotlight won’t switch on. Villain: Pingi.", char: "nora", villain: "pingi", entry: { section: "why", slug: "kid-cant-focus-on-homework" }, tip: 0 },
+  { id: "bored", label: "“I’m bored.” Won’t start homework.", line: "Nora’s spotlight won’t switch on. Villain: Pingi.", char: "nora", villain: "pingi", entry: { section: "why", slug: "kid-cant-focus-on-homework" }, tip: 0, young: { label: "“I’m bored.” Won’t start a task or clean-up." } },
   { id: "explodes", label: "Explodes over small things", line: "Migo yelled “danger!” before Fronti had time to think.", char: "migo", entry: { section: "why", slug: "kid-explodes-over-small-things" }, tip: 0 },
   { id: "cant-wait", label: "Can’t wait: grabs, interrupts, blurts it out", line: "Fronti’s brakes are still under construction.", char: "fronti", entry: { section: "why", slug: "kid-cant-wait" }, tip: 1 },
   { id: "after-school", label: "Melts down the minute they’re home from school", line: "Greli is ringing the hunger bell, and Corti held it in all day.", char: "greli", entry: { section: "why", slug: "kid-melts-down-after-school" }, tip: 0 },
@@ -91,7 +93,7 @@ export const VILLAIN_CHECK: { villain: CharKey; label: string; slug: string; tip
   { villain: "bedi", label: "A phone or tablet sleeps in your kid’s room", slug: "phone-in-bed", tip: 0 },
   { villain: "glo", label: "Screens in the last hour before bed", slug: "screens-before-bed", tip: 1 },
   { villain: "lupi", label: "The next episode or video plays by itself", slug: "autoplay", tip: 0 },
-  { villain: "pingi", label: "A phone buzzes nearby during homework or play", slug: "notifications-and-homework", tip: 1 },
+  { villain: "pingi", label: "A phone buzzes nearby while your kid is trying to focus", slug: "notifications-and-homework", tip: 1 },
   { villain: "lati", label: "Bedtime moves by more than an hour from night to night", slug: "irregular-bedtimes", tip: 0 },
   { villain: "kafi", label: "Soda, iced tea or energy drinks after lunch", slug: "caffeine-and-kids", tip: 1 },
 ];

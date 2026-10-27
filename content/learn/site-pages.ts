@@ -8,14 +8,14 @@ export const SITE_PAGES: SitePage[] = [
     slug: "about",
     h1: "About Little Brain Crew",
     metaTitle: "About Little Brain Crew",
-    description: "Little Brain Crew turns the science of kids’ brains into a cartoon crew for parents of kids 4 to 17. What we make, why characters, and what we are not.",
+    description: "Little Brain Crew turns the science of kids’ brains into a cartoon crew for parents of kids 3 to 17. What we make, why characters, and what we are not.",
     dek: "Short cartoon explainers that turn the science of everyday kid behavior into something you can see, remember and use tonight.",
     updated: "2026-10-26",
     sections: [
       {
         h2: "What is Little Brain Crew?",
         paras: [
-          "Little Brain Crew makes short cartoon explainers and plain-language guides for parents of kids aged 4 to 17 in the United States. Meltdowns, bad sleep, “I’m bored,” the 5 p.m. hangry explosion, a teen who stopped talking: it can look like a dozen different problems. Often it is the same few brain messengers, hormones and brain parts, plus a handful of habits getting in their way.",
+          "Little Brain Crew makes short cartoon explainers and plain-language guides for parents of kids aged 3 to 17 in the United States. Meltdowns, bad sleep, “I’m bored,” the 5 p.m. hangry explosion, a teen who stopped talking: it can look like a dozen different problems. Often it is the same few brain messengers, hormones and brain parts, plus a handful of habits getting in their way.",
           "We turn that science into a cartoon crew, so you can see what is going on and know what to try tonight. Habits only: sleep, daylight, food, movement, play, closeness and smarter screen time.",
         ],
       },
@@ -144,7 +144,7 @@ export const SITE_PAGES: SitePage[] = [
         bullets: [
           "Your email address.",
           "For school and business inquiries, your name, your organization, the type and size of your group, and a message.",
-          "For the founding-parents form, an age range for your child (such as 4 to 7), and whether you would be open to recording a short video. We don’t ask for children’s names, birthdays, photos or schools.",
+          "For the founding-parents form, an age range for your child (such as 3 to 5), and whether you would be open to recording a short video. We don’t ask for children’s names, birthdays, photos or schools.",
           "For the “coming next” form, which topics and language you want.",
           "For gifts, your name, the recipient’s name and email, a short message and the date to send it.",
         ],

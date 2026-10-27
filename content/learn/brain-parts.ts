@@ -138,7 +138,7 @@ export const BRAIN_PARTS: LearnEntry[] = [
       {
         h2: "What throws Fronti off?",
         paras: [
-          "Tiredness, too many choices, stress and rushing. Picture 4:50 on a school day: your child is hungry, has been holding it together for hours and is now asked to pick a snack, find their shoes and answer a question about homework, all at once. Fronti runs out of fuel and the brakes slip.",
+          "Tiredness, too many choices, stress and rushing. Picture 4:50 on a busy day: your child is hungry, has been holding it together for hours and is now asked to pick a snack, find their shoes and answer a question about what they did today, all at once. Fronti runs out of fuel and the brakes slip.",
           "Sleep matters most. The American Academy of Sleep Medicine’s consensus statement links regularly getting the recommended hours with better attention, behavior, learning, memory and emotional regulation, so a well-rested Fronti has more to work with.",
         ],
       },

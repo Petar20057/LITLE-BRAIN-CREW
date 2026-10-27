@@ -3,7 +3,7 @@
 import { useEffect, useState, useSyncExternalStore, type FormEvent, type ReactNode } from "react";
 import { BEDTIMES, DISCLAIMER, DUO_LEAD, DUO_OPTIONS, DUO_QUESTION, MAX_MOMENTS, VARIANTS, WAKE_TIMES, type StepId } from "@/content/quiz";
 import type { QuizChar, QuizData, QuizSource } from "@/lib/quiz";
-import { crewOf, hoursLabel, quizResult, sleepCheck, type QuizAnswers } from "@/lib/quiz-plan";
+import { crewOf, forAge, hoursLabel, quizResult, sleepCheck, type QuizAnswers } from "@/lib/quiz-plan";
 import CrewArt from "@/components/funnel/CrewArt";
 import { START, getSession, markStep, onStep, save, subscribe, track, type Progress } from "./session";
 
@@ -58,7 +58,7 @@ export default function Quiz({ data }: { data: QuizData }) {
   };
 
   const age = data.ages.find((a) => a.id === p.age);
-  const moments = data.moments.filter((m) => !m.teen || !age || age.teen);
+  const moments = data.moments.filter((m) => !m.teen || !age || age.teen).map((m) => forAge(m, age));
   const result = quizResult(data, answersOf(p));
   const v = session ? VARIANTS[session.variant] : null;
 
@@ -68,7 +68,7 @@ export default function Quiz({ data }: { data: QuizData }) {
       screen = (
         <div className="q-intro">
           <div className="q-arts">{(["dopa", "migo", "mela", "toci"] as const).map((k) => <CrewArt key={k} k={k} mood="happy" />)}</div>
-          <p className="kick">free · for parents of kids 4–17</p>
+          <p className="kick">free · for parents of kids 3–17</p>
           <h1 className={v ? "" : "q-wait"}>{v?.headline ?? VARIANTS.a.headline}</h1>
           <p className="fx-sub">{v?.sub ?? VARIANTS.a.sub}</p>
           <button className="btn btn-main" type="button" disabled={!session} onClick={() => answer("start")}>Start →</button>
@@ -127,7 +127,8 @@ export default function Quiz({ data }: { data: QuizData }) {
     case "lesson-2":
     case "lesson-3": {
       const i = Number(step.slice(-1)) - 1;
-      const m = data.moments.find((x) => x.id === p.moments[i]);
+      const found = data.moments.find((x) => x.id === p.moments[i]);
+      const m = found && forAge(found, age);
       const guessed = p.guesses[i];
       const kick = `Moment ${i + 1} of ${p.moments.length}`;
       const pick = (key: string) => {
@@ -165,7 +166,7 @@ export default function Quiz({ data }: { data: QuizData }) {
       const check = bed != null && wake != null ? sleepCheck(data, p.age, { bed, wake }) : undefined;
       if (!checked || !check) {
         screen = (
-          <Ask kick="Sleep check" title="On school nights, when does your kid usually fall asleep and wake up?" sub="Your best guess is fine.">
+          <Ask kick="Sleep check" title={`${age?.young ? "On a typical night" : "On school nights"}, when does your kid usually fall asleep and wake up?`} sub="Your best guess is fine.">
             <div className="q-sleep">
               <label className="fx-field">
                 Falls asleep around

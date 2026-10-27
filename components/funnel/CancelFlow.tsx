@@ -136,7 +136,7 @@ function SaveOffer({ reason, onKeep }: { reason: Reason; onKeep: (what: string) 
       return (
         <div className="save-offer">
           <h3>The crew grows up too</h3>
-          <p>Switch your Club to your kid’s age group (4–7, 8–12 or 13–17 with Teo), and get next month free while you try it.</p>
+          <p>Switch your Club to your kid’s age group (3–5, 6–12 or 13–17 with Teo), and get next month free while you try it.</p>
           <button className="btn btn-main" type="button" onClick={() => onKeep("Your Club now follows your kid’s age group, and next month is free.")}>Switch my age group</button>
         </div>
       );

@@ -20,7 +20,7 @@ Cene i tekst svih ponuda menjaš na jednom mestu: [`lib/funnel.ts`](lib/funnel.t
 
 | | Odluka |
 |---|---|
-| **Jedan čitalac** | Roditelj deteta od 4–17 godina koji je umoran od pogađanja zašto se dete ponaša kako se ponaša. |
+| **Jedan čitalac** | Roditelj deteta od 3–17 godina koji je umoran od pogađanja zašto se dete ponaša kako se ponaša. |
 | **Jedna velika ideja** | Ponašanje tvog deteta ima **kod**. Iza većine problema stoji nekoliko istih svakodnevnih stvari (san, svetlo, kretanje, ekrani, stres, bliskost) i nekoliko moždanih hemikalija na koje one utiču, a mi smo ih pretvorili u likove. |
 | **Jedno obećanje** | Znaćeš šta se zaista dešava i šta da uradiš, za 10 minuta dnevno. |
 | **Jedna akcija** | „Choose your plan“: svako dugme na strani vodi na `#plans`. |
@@ -29,7 +29,7 @@ Ideja je namerno opšta: radi za svih 6 likova i za **svaki novi lik koji dodamo
 
 **Naslov:**
 
-> *for parents of kids 4–17*
+> *for parents of kids 3–17*
 > **Your kid didn’t come with a manual. Here’s the code.**
 
 Lede odmah nabraja bolne tačke („Meltdowns. Bad sleep. ‘I’m bored.’ Big moods out of nowhere. A teen who stopped talking.“), pa daje veliku ideju („It looks like a dozen different problems, but most of it comes back to the same few everyday things…“) i skida trud i prigovore („10 minutes a day. No pills. No lectures.“). Tate dobijaju svoju verziju kad kliknu „I’m a dad“.

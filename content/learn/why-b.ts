@@ -9,7 +9,7 @@ export const WHY_B: LearnEntry[] = [
     metaTitle: "Why Can’t My Child Focus on Homework? Nora’s Fix",
     description: "Homework focus is a spotlight problem: pings, too much sitting, tasks that look huge. How Nora’s spotlight works and what to try tonight.",
     kicker: "Why does my kid… · Homework",
-    answer: "Most kids struggle to focus on homework because the brain’s attention spotlight keeps getting knocked off target: a buzzing phone, a body that has sat all day, hunger, or a task that looks too big to start. Moving first, putting the phone in another room and working in short blocks with breaks usually helps.",
+    answer: "Most school-age kids struggle to focus on homework because the brain’s attention spotlight keeps getting knocked off target: a buzzing phone, a body that has sat all day, hunger, or a task that looks too big to start. Moving first, putting the phone in another room and working in short blocks with breaks usually helps.",
     char: "nora",
     charCaption: "Nora: switches on the spotlight when something matters",
     kidVersion: "Nora is the spotlight in your brain. When something matters, she switches it on. But Pingi keeps tapping her on the shoulder with pings, and a body that sat all day makes her sleepy. So let’s jump around first, park the phone in the kitchen, and give Nora one job at a time.",
@@ -20,6 +20,7 @@ export const WHY_B: LearnEntry[] = [
           "Picture 4:30 p.m. The worksheet is on the table, the pencil is in your kid’s hand, and ten minutes later the page is still blank. There is a small dog doodled in the margin. Nothing here says your kid doesn’t care. The spotlight just isn’t pointed at the page.",
           "In the crew, that spotlight is **Nora** (noradrenaline). Her job is to switch on alertness when something matters, so the brain notices what counts right now. Like every crew member, she is a picture of what a body does, not a number anyone can read off your child. The picture is still useful, because it points at what keeps Nora switched on: moving the body, one task at a time, a clear start signal and short breaks.",
           "A spotlight also has a built-in weakness. It can only point at one thing, and anything louder or more fun than a worksheet usually wins.",
+          "Homework is a school-age topic, so everything on this page is aimed at kids in school. For a 3 to 5 year old, the same idea is a short, one-step job like putting toys in the bin, with a visible finish line and you right beside them.",
         ],
       },
       {
@@ -33,7 +34,7 @@ export const WHY_B: LearnEntry[] = [
         h2: "Do movement breaks actually help kids focus?",
         paras: [
           "For attention, the evidence is encouraging. A Community Preventive Services Task Force review of classroom activity breaks (short bursts of movement, typically four to ten minutes, one to three times a school day) found that 10 of the 11 studies measuring classroom behavior, most of them observing time on task, reported better attention during lessons. The same review found the evidence on test scores inconsistent. So don’t expect better grades from jumping jacks. Expect an easier start.",
-          "That is school research, not a trial at your kitchen table, so take it as a good reason to try, not a promise. It also fits the CDC’s activity guidance, which calls for at least 60 minutes a day of moderate-to-vigorous activity for ages 6 to 17. A kid who sat in a classroom chair, then a bus seat, then a kitchen chair has often had very little of it.",
+          "That is school research, not a trial at your kitchen table, so take it as a good reason to try, not a promise. It also fits the CDC’s activity guidance, which calls for at least 60 minutes a day of moderate-to-vigorous activity for ages 6 to 17. A kid who sat in a classroom chair, then a bus seat, then a kitchen chair has often had very little of it. For a 3 to 5 year old, the CDC’s guidance is lighter: be active throughout the day, and join in the play.",
         ],
         bullets: [
           "Snack first if it has been a while. When Greli’s hunger bell is ringing, Nora can’t be heard.",
@@ -71,7 +72,7 @@ export const WHY_B: LearnEntry[] = [
       "Focuses better after play or a snack than at the table right after school",
     ],
     tryTonight: [
-      "Do 20 jumping jacks together, then start homework while the body is still warm.",
+      "Do 20 jumping jacks together, then start homework while the body is still warm. For a 3 to 5 year old, do the same before a one-step job like putting toys in the bin.",
       "Put every phone, including yours, in another room until the first task is done.",
       "Set a timer for 10 minutes of work and 2 minutes of break, then repeat once.",
     ],
@@ -335,7 +336,7 @@ export const WHY_B: LearnEntry[] = [
       {
         h2: "Where does Endo fit in?",
         paras: [
-          "**Endo** is the body’s own feel-good helper, and it shows up when kids run, get out of breath and giggle. Think of the 7:55 p.m. kid who sat inside all day and is now bouncing off the walls: Endo never got to run. Daily big movement is part of the answer. The CDC recommends at least 60 minutes a day of moderate-to-vigorous activity for ages 6 to 17, and the WHO guideline for ages 5 to 17 averages the same across the week. Many don’t get there: the WHO reports that about 81% of 11- to 17-year-olds worldwide don’t meet it.",
+          "**Endo** is the body’s own feel-good helper, and it shows up when kids run, get out of breath and giggle. Think of the 7:55 p.m. kid who sat inside all day and is now bouncing off the walls: Endo never got to run. Daily big movement is part of the answer. The CDC recommends at least 60 minutes a day of moderate-to-vigorous activity for ages 6 to 17, and the WHO guideline for ages 5 to 17 averages the same across the week. For ages 3 to 5, the CDC’s advice is simply active play throughout the day, with adults joining in. Many older kids don’t get there: the WHO reports that about 81% of 11- to 17-year-olds worldwide don’t meet it.",
           "So there are two pieces here. Endo wants the big, huffing-and-puffing, laughing kind of movement during the day. Vesti and Propi want the heavy, pushing, spinning, landing kind in the hour before things need to be calm. Do both and the couch tends to see less action.",
         ],
       },

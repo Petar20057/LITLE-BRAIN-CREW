@@ -11,7 +11,7 @@ export const HABITS: LearnEntry[] = [
     answer: "No. Phones are best kept out of kids’ bedrooms overnight. In a 2015 study of 2,048 fourth- and seventh-graders, kids who slept near a small screen reported about 20 fewer minutes of weekday sleep. The American Academy of Pediatrics’ 2026 policy advises keeping devices out of bedrooms and avoiding screens for the hour before bed.",
     char: "bedi",
     charCaption: "Bedi: the phone that sleeps in the bedroom and steals Mela’s night",
-    kidVersion: "Meet Bedi. Bedi is a sneaky phone that wants to sleep in your bedroom and whisper “just one more look.” Bedi makes Mela, the sleepy-time helper, sad. So tonight the phones sleep in the kitchen, and mine does too. Bedi can’t bother anybody from there.",
+    kidVersion: "Meet Bedi. Bedi is a sneaky phone that wants to sleep in your bedroom and whisper “just one more look.” Bedi makes Mela, the sleepy-time helper, sad. So tonight the phones and tablets sleep in the kitchen, and mine do too. Bedi can’t bother anybody from there.",
     sections: [
       {
         h2: "Is a phone in a kid’s bedroom really that bad for sleep?",
@@ -37,7 +37,7 @@ export const HABITS: LearnEntry[] = [
       {
         h2: "How do I get the phone out of the bedroom without a war?",
         paras: [
-          "Make it a family plan, not a punishment, and announce it in daylight, not at 10 p.m. Then:",
+          "Make it a family plan, not a punishment, and announce it in daylight, not at 10 p.m. This page is mainly for school-age kids and older, once phones and tablets start going to bed. Then:",
         ],
         bullets: [
           "Create one charging spot in the kitchen or hallway. Every phone goes there, yours included.",
@@ -45,6 +45,7 @@ export const HABITS: LearnEntry[] = [
           "Pick a time, such as 30 to 60 minutes before lights-out, when phones go to the charging spot.",
           "Expect pushback for the first week or two. A rule that stays steady usually gets less argument over time.",
           "Let older kids have a say in the details, such as the exact time or where the charger lives, while the bedroom rule itself holds.",
+          "For a 3 to 5 year old, the preschool version is simpler: tablets and TV stay out of the bedroom, and the last hour is for books, cuddles and quiet play.",
         ],
       },
       {
@@ -58,7 +59,7 @@ export const HABITS: LearnEntry[] = [
     atHome: [
       "“Lights out” at nine, but they’re awake until ten-thirty",
       "Tired mornings and hard wake-ups on school days",
-      "Reaching for the phone the moment they wake or during a night waking",
+      "School-age and older: reaching for the phone the moment they wake or during a night waking",
       "A second wind at bedtime, bright eyes when the house is quiet",
     ],
     tryTonight: [
@@ -305,7 +306,7 @@ export const HABITS: LearnEntry[] = [
     metaTitle: "Phone Notifications and Homework Focus for Kids",
     description: "Phone notifications pull kids off homework. Meet Pingi, see what the AAP says about pings, and set up a focus zone that works tonight.",
     kicker: "Habit villains · Pingi",
-    answer: "Yes, they can. Each buzz pulls a child’s attention off the task, and finding the place again takes effort. The American Academy of Pediatrics’ 2026 policy lists notifications that can disrupt school or sleep and suggests phone-free zones during homework. The simplest fix is putting the phone in another room until the task is done.",
+    answer: "Yes, they can. Each buzz pulls a school-age child’s attention off the task, and finding the place again takes effort. The American Academy of Pediatrics’ 2026 policy lists notifications that can disrupt school or sleep and suggests phone-free zones during homework. The simplest fix is putting the phone in another room until the task is done.",
     char: "pingi",
     charCaption: "Pingi: the ping that pulls the spotlight off homework",
     kidVersion: "Pingi is a tiny noise-maker that pops up in the middle of your homework and shouts “look over here!” Every time you look, Nora, your brain’s spotlight, swings away from your work. So let’s put Pingi in another room until you finish. Then you can visit.",
@@ -327,7 +328,7 @@ export const HABITS: LearnEntry[] = [
       {
         h2: "How do I set up a focus zone for homework?",
         paras: [
-          "Make the easy choice the focused one. Don’t rely on willpower. Fronti, the brakes, is still under construction, and a glowing phone is hard for anyone to ignore.",
+          "Make the easy choice the focused one. Don’t rely on willpower. Fronti, the brakes, is still under construction, and a glowing phone is hard for anyone to ignore. These steps are for school-age kids and older.",
         ],
         bullets: [
           "Phone goes in another room, not just face-down on the desk, until the first task is done.",
@@ -335,6 +336,7 @@ export const HABITS: LearnEntry[] = [
           "Move first. A few minutes of jumping jacks or a lap around the block helps Nora switch on.",
           "Work in short blocks with a clear start and a short break: 10 minutes of work, 2 minutes of break, repeat.",
           "Do one task at a time, and say which one it is before you start.",
+          "For a 3 to 5 year old, the preschool version is a screen-off, one-step job like a puzzle or putting toys away, with you close by.",
         ],
       },
       {
@@ -352,14 +354,14 @@ export const HABITS: LearnEntry[] = [
       },
     ],
     atHome: [
-      "Homework that takes three times as long because of constant checking",
+      "School-age: homework that takes three times as long because of constant checking",
       "Starting a task, then wandering off to “just see” a message",
       "Losing their place and not knowing where they left off",
       "Cranky, tired evenings after a long, interrupted homework session",
     ],
     tryTonight: [
-      "Before homework, do 20 jumping jacks together.",
-      "Phone goes in another room until the first task is done.",
+      "Before homework (or a puzzle, for a 3 to 5 year old), do 20 jumping jacks together.",
+      "For school-age kids and up, the phone goes in another room until the first task is done.",
       "Work 10 minutes, break 2, and repeat. Tell your kid exactly which task is first.",
     ],
     whenToTalk: "Talk to your pediatrician if focus trouble shows up everywhere (home, school and with friends) for months, not only when the phone is near, or if it is getting in the way of learning. Sleep that stays hard for weeks is worth mentioning too. A short log of when it happens helps.",
@@ -437,7 +439,7 @@ export const HABITS: LearnEntry[] = [
           "Count back the hours your child needs, then add 20 to 30 minutes for the wind-down.",
           "If bedtime is far off, move it earlier in small steps of about 15 minutes every few days.",
           "Run the routine in the same order every night, with a picture checklist for younger kids.",
-          "With two homes, agree on the “big three”: a bedtime range, no screens in bedrooms and a homework time. Say it out loud: different houses, different rules, both of us love you.",
+          "With two homes, agree on the “big three”: a bedtime range, no screens in bedrooms and, for school-age kids, a homework time. Say it out loud: different houses, different rules, both of us love you.",
         ],
       },
       {

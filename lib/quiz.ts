@@ -10,6 +10,8 @@ export type QuizSource = { title: string; url?: string };
 export type QuizMoment = {
   id: string;
   label: string;
+  /** Label for kids under 6 (see `forAge`). */
+  youngLabel?: string;
   line: string;
   char: QuizChar;
   villain?: QuizChar;
@@ -29,7 +31,7 @@ export type QuizMoment = {
 export type QuizVillain = { char: QuizChar; label: string; question: string; lesson: string; tip: string; source: QuizSource; path: string };
 
 export type QuizData = {
-  ages: { id: string; label: string; teen: boolean; stage: QuizChar; lesson: string; path: string; sleep: SleepRange }[];
+  ages: { id: string; label: string; teen: boolean; young: boolean; stage: QuizChar; lesson: string; path: string; sleep: SleepRange }[];
   moments: QuizMoment[];
   sleep: Record<SleepVerdict, { title: string; body: string; tip: string }> & { char: QuizChar; source: QuizSource; path: string };
   villains: QuizVillain[];
@@ -82,7 +84,7 @@ export function quizData(): QuizData {
   return {
     ages: AGES.map((a) => {
       const e = entry("ages", a.slug);
-      return { id: a.id, label: a.label, teen: a.teen, stage: char(a.stage), lesson: e.answer, path: pathOf(e), sleep: a.sleep };
+      return { id: a.id, label: a.label, teen: a.teen, young: a.young, stage: char(a.stage), lesson: e.answer, path: pathOf(e), sleep: a.sleep };
     }),
     sleep: {
       short: { title: SLEEP_VERDICT.short.title, body: SLEEP_VERDICT.short.body, tip: sleepTip("short") },
@@ -102,6 +104,7 @@ export function quizData(): QuizData {
       return {
         id: m.id,
         label: m.label,
+        youngLabel: m.young?.label,
         line: m.line,
         char: char(m.char),
         villain: m.villain ? char(m.villain) : undefined,

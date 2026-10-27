@@ -4,9 +4,9 @@ export const AGES: LearnEntry[] = [
   {
     section: "ages",
     slug: "brain-age-3-to-6",
-    h1: "What’s normal for a 4 or 5 year old? Brain and behavior at ages 3 to 6",
-    metaTitle: "4 and 5 Year Old Behavior: What’s Normal at 3 to 6",
-    description: "Why your 4 or 5 year old asks “why” all day, melts down over small things and fights bedtime, with sleep hours and what to try at home.",
+    h1: "What’s normal for a 3, 4 or 5 year old? Brain and behavior at ages 3 to 6",
+    metaTitle: "3, 4 and 5 Year Old Behavior: What’s Normal (Ages 3–6)",
+    description: "Why your 3, 4 or 5 year old asks “why” all day, melts down over small things and fights bedtime, with sleep hours and what to try at home.",
     kicker: "Ages & stages · 3 to 6 · Whyzi",
     answer: "At ages 3 to 6, a kid’s brain learns mostly through play, questions and copying you. Typical behavior includes nonstop “why?”, big imagination, “I do it myself!” and feelings that still need your calm. Waiting and following rules are only starting to grow, and naps fade out somewhere between 3 and 5.",
     char: "whyzi",
@@ -14,21 +14,21 @@ export const AGES: LearnEntry[] = [
     kidVersion: "This is Whyzi. Whyzi asks “why?” about everything, because every single day has something new to figure out. Your brain is growing super fast right now, and it learns best when you play, ask and try. When a big feeling shows up, you can borrow my calm until yours gets stronger.",
     sections: [
       {
-        h2: "What is going on in a 4 or 5 year old’s brain?",
+        h2: "What is going on in a 3, 4 or 5 year old’s brain?",
         paras: [
           "Between 3 and 6, kids go from toddler to schoolkid. Language explodes, pretend play gets elaborate, and they start to understand that other people have feelings and plans of their own. The brain is busy collecting a map of how the world works, and the quickest way to fill that map in is to ask, poke, copy and repeat.",
-          "The part that plans, waits and stops impulses (we call it Fronti) has barely started its long build. That is why a 4 year old can know the rule (“we don’t grab”) and still grab. Knowing a rule and being able to hold back are two different skills, and the second one needs years of practice and a lot of borrowed calm from you.",
+          "The part that plans, waits and stops impulses (we call it Fronti) has barely started its long build. That is why a 3 or 4 year old can know the rule (“we don’t grab”) and still grab. Knowing a rule and being able to hold back are two different skills, and the second one needs years of practice and a lot of borrowed calm from you.",
         ],
       },
       {
-        h2: "Why does my 4 year old ask “why?” all day?",
+        h2: "Why does my 3 or 4 year old ask “why?” all day?",
         paras: [
           "Because it works. Every answer is another piece of the map, and every question gets your attention. Many kids also use “why?” to keep a conversation going when they are not sure what to say next.",
           "You don’t need a perfect answer each time. “What do you think?” turns it into a game and shows you how they’re reasoning. “I don’t know, let’s find out” teaches something better than any fact. And when the fifteenth “why?” of the hour lands at 5:40 p.m., it is fine to say, “I love your questions. Let’s save the next one for dinner.”",
         ],
       },
       {
-        h2: "Is it normal for a 5 year old to melt down over small things?",
+        h2: "Is it normal for a 3, 4 or 5 year old to melt down over small things?",
         paras: [
           "Yes. At this age Migo, the smoke detector part of the brain, still yells long before Fronti can talk it down. Zero to Three notes that toddlers often know a rule but cannot reliably stop themselves until about 3½ to 4, and the skill keeps growing from there. A meltdown over the wrong color cup is usually a tired, hungry or overloaded brain, not a character flaw.",
           "The CDC’s 5-year checklist includes taking turns, following rules in games and paying attention for 5 to 10 minutes (screen time doesn’t count). Notice that the list says “in games.” Rules feel easier when they come with fun and a clear end.",
@@ -81,7 +81,7 @@ export const AGES: LearnEntry[] = [
     faqs: [
       { q: "When do kids stop having tantrums?", a: "Tantrums usually become less frequent as language and self-control grow, often through the preschool years, but there is no exact date. Big feelings do not vanish, they just come out in different ways. Staying calm and close helps the skill grow faster." },
       { q: "Is my 5 year old too old for a nap?", a: "Many kids drop naps between 3 and 5, and ranges overlap. If your child is cranky by late afternoon, an earlier bedtime and a quiet hour can stand in for the nap. The recommended total is still 10 to 13 hours per 24 hours." },
-      { q: "How long should a 4 year old be able to focus?", a: "The CDC’s checklist for 5 year olds lists paying attention for 5 to 10 minutes during activities, and it specifically says screen time doesn’t count. Younger kids often manage less. Short, playful tasks work better than long sit-down ones." },
+      { q: "How long should a 3, 4 or 5 year old be able to focus?", a: "The CDC’s checklist for 5 year olds lists paying attention for 5 to 10 minutes during activities, and it says screen time doesn’t count. A 3 or 4 year old usually manages less, and it varies a lot. Short, playful tasks work better than long sit-down ones." },
       { q: "Should I worry if my child is shy or very energetic?", a: "Temperament is real, and the same parents can have very different kids. Hold the same boundaries, but adjust the approach: give a slow-to-warm kid time to settle in, and give a bouncy kid movement before demands." },
     ],
     sources: ["S07", "S03", "S11", "S13"],

@@ -182,7 +182,7 @@ export const GUIDES: LearnEntry[] = [
           "Falls asleep in the car, in front of the TV or at school.",
           "More meltdowns, shorter fuse, big feelings over small things.",
           "Some kids get silly and wound up when overtired instead of yawning.",
-          "Trouble paying attention, remembering homework or switching tasks.",
+          "Trouble paying attention, remembering what they learned or switching tasks.",
           "Sleeping way later on weekends than on school days, by a couple of hours or more.",
         ],
       },

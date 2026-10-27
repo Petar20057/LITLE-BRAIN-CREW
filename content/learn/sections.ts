@@ -74,7 +74,7 @@ export const SECTIONS: Section[] = [
     kicker: "ages & stages",
     intro: "Six stages, six characters. Ranges overlap and every kid has their own pace.",
     pages: [
-      { slug: "brain-age-3-to-6", char: "whyzi", query: "4 year old / 5 year old brain development behavior" },
+      { slug: "brain-age-3-to-6", char: "whyzi", query: "3 year old / 4 year old / 5 year old brain development behavior" },
       { slug: "brain-age-6-to-8", char: "skuli", query: "7 year old behavior brain development" },
       { slug: "brain-age-8-to-10", char: "ruli", query: "9 year old behavior, 8 year old brain development" },
       { slug: "brain-age-10-to-12", char: "tweeni", query: "tween brain development 11 year old" },
