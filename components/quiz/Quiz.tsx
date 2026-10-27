@@ -313,7 +313,7 @@ export default function Quiz({ data }: { data: QuizData }) {
       break;
 
     case "result":
-      screen = result && session && <Result sid={session.sid} data={data} p={p} />;
+      screen = result && session && <Result data={data} p={p} />;
       break;
   }
 
@@ -429,11 +429,10 @@ function Gate({ sid, variant, p, crew, ageLabel, onDone }: { sid: string; varian
   );
 }
 
-function Result({ sid, data, p }: { sid: string; data: QuizData; p: Progress }) {
+function Result({ data, p }: { data: QuizData; p: Progress }) {
+  const click = (to: string) => () => track("click", "result", { to });
   const r = quizResult(data, answersOf(p));
   if (!r) return null;
-  const q = `src=quiz&qs=${sid}`;
-  const click = (to: string) => () => track("click", "result", { to });
 
   return (
     <div className="qstep q-result">
@@ -491,9 +490,8 @@ function Result({ sid, data, p }: { sid: string; data: QuizData; p: Progress }) 
         <div>
           <h2>Want all 12 moments decoded?</h2>
           <p>The Kid Brain Toolkit: all 12 crew members, the 12 hardest moments with the exact words to say, the 6 villains, and what’s normal at every age, Whyzi (3) to Seki (17). Read it in one evening.</p>
-          <a className="btn btn-main" href={`/checkout/guide?crew=${r.lead.char.key}&${q}`} onClick={click("guide")}>Get the Toolkit · $9</a>
-          <p className="fine">Starts with {r.lead.char.name}’s moments. In your inbox in a minute.</p>
-          <p className="fine"><a href={`/checkout/program?${q}`} onClick={click("program")}>Or run it as a 30-day protocol: the 30-Day Reset, $39 →</a></p>
+          <button className="btn btn-main" type="button" disabled>Coming soon</button>
+          <p className="fine">The Toolkit will start with {r.lead.char.name}’s moments. Opening soon.</p>
         </div>
       </div>
 

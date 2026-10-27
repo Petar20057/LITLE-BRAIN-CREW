@@ -96,8 +96,7 @@ export function quizResultEmail(r: QuizResult): Email {
   );
   if (r.lead.kid) blocks.push({ note: `Say it to your kid: ${r.lead.kid}` });
   blocks.push(
-    { p: "Want all 12 moments decoded? The Kid Brain Toolkit has all 12 crew members, the 12 hardest moments with the exact words to say, the 6 villains, and what’s normal at every age." },
-    { button: { label: `Get the Toolkit · ${usd(ITEMS.guide.price)}`, url: `/checkout/guide?crew=${r.lead.char.key}&src=quiz-email` } },
+    { p: "Want all 12 moments decoded? The Kid Brain Toolkit is coming soon: all 12 crew members, the 12 hardest moments with the exact words to say, the 6 villains, and what’s normal at every age. We’ll email you the day it opens." },
     { note: DISCLAIMER },
   );
   return renderEmail({

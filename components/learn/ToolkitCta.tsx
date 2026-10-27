@@ -10,7 +10,7 @@ export default function ToolkitCta() {
         Read it in one evening.
       </p>
       <a href="/#plans" className="btn btn-main btn-lg">See the plans</a>
-      <p className="fine" style={{ marginTop: 12 }}>The Toolkit is ${ITEMS.guide.price}, one payment. For learning only, not medical advice.</p>
+      <p className="fine" style={{ marginTop: 12 }}>The Toolkit is coming soon. For learning only, not medical advice.</p>
     </div>
   );
 }
