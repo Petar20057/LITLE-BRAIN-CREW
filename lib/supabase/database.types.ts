@@ -433,7 +433,7 @@ export type Database = {
     Functions: {
       has_club_access: { Args: Record<PropertyKey, never>; Returns: boolean };
       newsletter_subscribers: { Args: { forms: string[] }; Returns: number };
-      prune_old_data: { Args: never; Returns: undefined };
+      prune_old_data: { Args: Record<PropertyKey, never>; Returns: undefined };
       quiz_answers: {
         Args: { since: string };
         Returns: {

@@ -114,7 +114,7 @@ Public routes count requests per client IP in `rate_limits` (`lib/rate-limit.ts`
 
 - Schema lives in `supabase/migrations/`, applied in file order. Never edit an applied migration; add a new file.
 - **Apply a migration:** Supabase dashboard → SQL Editor → paste the file → Run (or `supabase db push` with the CLI linked to the project). Apply it **before** deploying code that needs it. Then `npm run db:types` and commit the regenerated `lib/supabase/database.types.ts`.
-- Pending as of 27 Oct 2026: `20261027120000_abuse_controls_consent.sql` (rate limits, double opt-in, webhook event order, retention). `database.types.ts` was edited by hand for it; regenerate after applying.
+- Applied migrations are listed by `npx supabase migration list --db-url "$POSTGRES_URL_NON_POOLING"` (with `.env.local` loaded). `20261027120000_abuse_controls_consent.sql` was applied on 27 Oct 2026 with pg_cron enabled; the `prune-old-data` job runs daily.
 - Admin account: `node scripts/create-admin.mjs <email>` (creates it or resets its password; prints it once).
 
 ## Retention and deletion
