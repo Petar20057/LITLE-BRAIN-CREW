@@ -10,6 +10,9 @@
 // True until Creem is connected (lib/payments.ts): buttons walk the funnel without charging.
 export const PREVIEW = true;
 
+// True until a payment processor is live: Support the crew shows "Coming soon". Keep in step with COMING_SOON in next.config.ts.
+export const COMING_SOON = true;
+
 export type CrewKey = "dopa" | "sero" | "endo" | "toci" | "corti" | "teo" | "nora" | "gabi" | "mela" | "greli" | "migo" | "fronti" | "plasti" | "duo";
 export const CREW_NAMES: Record<CrewKey, string> = {
   dopa: "Dopa", sero: "Sero", endo: "Endo", toci: "Toci", corti: "Corti", teo: "Teo",

@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
-import { usd } from "@/lib/funnel";
+import { COMING_SOON, usd } from "@/lib/funnel";
 import { saveOrder } from "@/lib/order";
 import { charge } from "@/lib/payments";
 import CrewArt from "./CrewArt";
@@ -33,6 +33,23 @@ export default function Support() {
       setError(err instanceof Error ? err.message : "That didn’t go through. Please try again.");
       setBusy(false);
     }
+  }
+
+  if (COMING_SOON) {
+    return (
+      <div className="fx-narrow" style={{ margin: "24px auto 0" }}>
+        <div className="fx-card">
+          <div className="oto">
+            <CrewArt k="toci" mood="happy" className="art" />
+            <h1>Support the crew</h1>
+            <p className="fx-sub">We’re a small team making free cartoons and tips for tired parents. Chipping in is coming soon. For now, the best way to help is to share a cartoon with a parent who needs it.</p>
+          </div>
+          <div className="pay">
+            <button className="btn btn-main btn-lg" type="button" disabled>Coming soon</button>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
