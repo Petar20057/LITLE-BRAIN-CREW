@@ -444,3 +444,61 @@ html.dad .top .logo .on-dark,html.dad .ad-top .logo .on-dark{display:block}
 @media(max-width:560px){.q-guess{gap:8px}.q-guess .opt > div{width:56px;height:56px}.q-guess b{font-size:16px}.q-sleep{grid-template-columns:1fr}}
 .q-big{font-size:20px;line-height:1.35}
 .q-row + .fine{margin-top:12px}
+
+/* ---------- phone layout: long stacked lists become swipe rows ----------
+   Layout only. Below 640px the long grids (12 moments, villains, ages, plans, more from the crew)
+   turn into horizontal snap rows that bleed to the screen edge, so the next card peeks in and
+   says "swipe". The crew roster becomes one swipe strip, so the card it opens sits right under it. */
+@media(max-width:640px){
+  .sec-head{margin-bottom:var(--s4)}
+  .center-head{margin-bottom:var(--s4)}
+
+  .decoder,.villains,.ages,#plans .plans,.more-row{display:grid;grid-auto-flow:column;grid-template-columns:none;gap:12px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scroll-padding-inline:20px;margin-inline:-20px;max-width:none;padding:6px 20px 18px;scrollbar-width:none}
+  :is(.decoder,.villains,.ages,#plans .plans,.more-row)::-webkit-scrollbar{display:none}
+  :is(.decoder,.villains,.ages,#plans .plans,.more-row) > *{scroll-snap-align:start;min-width:0}
+
+  /* 12 moments: two rows of cards */
+  .decoder{grid-template-rows:repeat(2,auto);grid-auto-columns:86%}
+  .decoder li{grid-template-columns:48px 1fr;gap:12px;padding:12px 14px 12px 10px}
+  .decoder svg{width:48px;height:48px}
+
+  /* villains: picture and name side by side, the rest full width */
+  .villains{grid-auto-columns:84%}
+  .villain{grid-template-columns:56px 1fr;column-gap:12px;row-gap:0;align-items:center;align-content:start;padding:var(--s2)}
+  .villain > div:last-child{display:contents}
+  .villain .v-art{grid-row:1/3}
+  .villain svg{width:56px;height:56px}
+  .villain h3{margin:0}
+  .villain p{grid-column:1/-1}
+  .villain p:first-of-type{margin-top:10px}
+
+  .ages{grid-auto-columns:64%}
+  .more-row{grid-auto-columns:70%}
+
+  /* plans: the Reset first, the other two peek in; room on top for the ribbon */
+  #plans .plans{grid-auto-columns:86%;padding-top:22px}
+  .plan{padding:var(--s3)}
+
+  /* crew roster: one swipe strip */
+  .crew-grid{gap:var(--s4)}
+  .roster{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:96px;gap:10px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;scroll-padding-inline:20px;margin-inline:-20px;padding:6px 20px 14px;scrollbar-width:none}
+  .roster::-webkit-scrollbar{display:none}
+  .mate{scroll-snap-align:start;padding:12px 4px 10px}
+  .mate svg{width:52px;height:52px}
+
+  /* two rules: picture next to the heading, text full width */
+  .rule{grid-template-columns:64px 1fr;column-gap:var(--s2);row-gap:0;align-items:center}
+  .rule > div:last-child{display:contents}
+  .rule > div:first-child{grid-row:1/3}
+  .rule svg{width:64px;height:64px}
+  .rule h3{margin:2px 0 0}
+  .rule p{grid-column:1/-1;margin-top:12px}
+
+  /* pricing: smaller week dots, so the text gets the width */
+  .stop .dot{width:64px;height:64px;box-shadow:var(--sh-1),0 0 0 4px #fff}
+  .stop .dot svg{width:48px;height:48px}
+  .journey::before{left:31px}
+  .stop .wk{display:block;line-height:1.4;margin-bottom:2px}
+  .value-stack li{padding:14px 16px 14px 52px}
+  .value-stack li::before{left:14px;top:15px;width:26px;height:26px;font-size:14px;line-height:26px}
+}
