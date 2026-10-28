@@ -8,10 +8,10 @@
 //   member's Creem referral link ──► home (Creem's cookie credits the member at its checkout, see AFFILIATE)
 
 // True until Creem is connected (lib/payments.ts): buttons walk the funnel without charging.
-export const PREVIEW = true;
+export const PREVIEW = false;
 
 // True until a payment processor is live: Support the crew shows "Coming soon". Keep in step with COMING_SOON in next.config.ts.
-export const COMING_SOON = true;
+export const COMING_SOON = false;
 
 export type CrewKey = "dopa" | "sero" | "endo" | "toci" | "corti" | "teo" | "nora" | "gabi" | "mela" | "greli" | "migo" | "fronti" | "plasti" | "duo";
 export const CREW_NAMES: Record<CrewKey, string> = {
@@ -44,7 +44,7 @@ export const ITEMS = {
 /* ---------- checkout pages ---------- */
 
 export type Product = {
-  slug: "guide" | "program" | "club";
+  slug: "guide" | "program" | "club" | "bedtime";
   title: string;
   sub: string;
   art: CrewKey;
@@ -58,14 +58,14 @@ export const PRODUCTS: Record<Product["slug"], Product> = {
   guide: {
     slug: "guide",
     title: "The Kid Brain Toolkit",
-    sub: "The science of your kid’s brain in one evening: the whole crew, the 12 hardest moments, the villains, and what’s normal at every age. Ages 3–17.",
+    sub: "What science really knows about sleep, focus, mood and energy in kids, and the daily habits that support them. A 72-page PDF in 10 chapters. Ages 4–17.",
     art: "fronti",
     get: [
-      "All 12 crew members: what each one does, what helps it, what throws it off",
-      "The 12 hardest moments decoded: who’s behind it, what to say, what to try tonight",
-      "The 6 villains (Bedi, Glo, Lupi, Pingi, Lati, Kafi), and how to beat each one",
-      "What’s normal at every age, from Whyzi (3–6) to Seki (14–17)",
-      "The research behind it, with sources",
+      "10 chapters: the growing brain, light, sleep, movement, food, screens, focus, stress, connection and the teen years",
+      "The whole toolkit on one page: 8 daily anchors, and the 3 to start with",
+      "A version of every habit for ages 4–7, 8–12 and 13–17",
+      "A four-week plan and printables: 7-day baseline, bedtime finder, habit tracker, family media plan, special-time log",
+      "When to talk to your pediatrician: all the signs in one place. Every claim sourced.",
       "Bonuses: 24 “Say This, Not That” cards, the 60-Second Meltdown Plan, the crew poster, crew cartoons to watch together",
     ],
     bump: {
@@ -73,7 +73,8 @@ export const PRODUCTS: Record<Product["slug"], Product> = {
       headline: "Yes! Add the Bedtime & Screen-Off Kit for just $7",
       text: "A crew bedtime audio story, plus the exact timer scripts for ending screen time without a fight. The two hardest moments of the day, covered. Only with this order.",
     },
-    next: "/offer/upgrade",
+    // Only the Toolkit (with or without the $7 bump) is sold today: straight to the thank-you page, no Reset upsell.
+    next: "/thank-you",
   },
   program: {
     slug: "program",
@@ -81,12 +82,13 @@ export const PRODUCTS: Record<Product["slug"], Product> = {
     sub: "The protocol: one 10-minute habit a day for 30 days, one part of the crew each week. Sleep, screens and focus, meltdowns and hunger, moving and connecting.",
     art: "endo",
     get: [
-      "Week 1, sleep: Mela and Corti vs. Glo and Bedi",
+      "Week 1, sleep: Mela and Corti vs. Glo, Bedi and Lati",
       "Week 2, screens and focus: Dopa and Nora vs. Lupi and Pingi",
       "Week 3, meltdowns and hunger: Migo, Fronti, Greli and Gabi",
       "Week 4, move and connect: Endo, Toci, Sero and you",
-      "A 3-minute cartoon and one habit a day, with the exact words, plus kid versions",
-      "Fridge tracker and a teen track with Teo (13–17)",
+      "One 10-minute habit a day, with the exact words to say and a line for your kid",
+      "A printable fridge tracker and a teen track with Teo (13–17)",
+      "Instant download: a 22-page guide and the tracker",
       "The Kid Brain Toolkit and all its bonuses, included",
     ],
     bump: {
@@ -94,7 +96,19 @@ export const PRODUCTS: Record<Product["slug"], Product> = {
       headline: "Yes! Add 30 printable Crew Habit Cards for just $7",
       text: "One card for every day of the reset, with its character. Your kid picks the card, you both tick it off. Only with this order.",
     },
-    next: "/offer/club",
+    next: "/thank-you",
+  },
+  // Bedtime & Screen-Off Kit on its own ($7). Also the $7 add-on on the Toolkit order (guide.bump).
+  bedtime: {
+    slug: "bedtime",
+    title: "The Bedtime & Screen-Off Kit",
+    sub: "A crew bedtime audio story, plus the exact timer scripts for ending screen time without a fight. Instant download.",
+    art: "mela",
+    get: [
+      "Mela and the Soft-Light Night: a crew bedtime audio story, about 5 minutes, plays in your browser",
+      "The Bedtime & Screen-Off Kit (PDF): the exact timer scripts for ending screen time without a fight",
+    ],
+    next: "/thank-you",
   },
   club: {
     slug: "club",
@@ -141,9 +155,9 @@ export const OFFERS: Record<string, Offer> = {
     step: "Upgrade",
     hand: "wait, your $9 counts",
     title: "Turn the code into a 30-day protocol, for $30 more",
-    sub: "The Toolkit shows you the crew. The 30-Day Reset runs it with you: one 10-minute habit a day, one part of the crew each week, short cartoons your kid watches with you. You already paid $9, so you only pay the difference.",
+    sub: "The Toolkit shows you the crew. The 30-Day Reset runs it with you: one 10-minute habit a day, one part of the crew each week, with the exact words and a line for your kid. You already paid $9, so you only pay the difference.",
     art: "endo",
-    stack: ["Week 1 sleep, week 2 screens and focus, week 3 meltdowns and hunger, week 4 move and connect", "A 3-minute cartoon and one habit a day, with the exact words", "Fridge tracker, plus a teen track with Teo"],
+    stack: ["Week 1 sleep, week 2 screens and focus, week 3 meltdowns and hunger, week 4 move and connect", "One 10-minute habit a day, with the exact words", "A printable fridge tracker, plus a teen track with Teo"],
     item: ITEMS.upgrade,
     price: "$30",
     was: "$39",

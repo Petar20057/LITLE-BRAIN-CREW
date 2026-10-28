@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { CREW_NAMES, per, total, usd } from "@/lib/funnel";
+import { per, total, usd } from "@/lib/funnel";
+import { downloadPath, ownedProducts, sectionsFor } from "@/lib/delivery-files";
 import { useOrder } from "@/lib/order";
 import CrewArt from "./CrewArt";
 import Steps from "./Steps";
@@ -9,9 +10,18 @@ import Steps from "./Steps";
 export default function ThankYou() {
   const order = useOrder();
   const [copied, setCopied] = useState(false);
+  const [skipBedtime, setSkipBedtime] = useState(false);
   const has = (id: string) => order.items.some((i) => i.id === id);
   const program = has("program") || has("upgrade") || has("screen-off-week");
   const club = order.items.some((i) => i.id.startsWith("club"));
+  const toolkit = has("guide");
+  const bedtime = has("bedtime-kit");
+
+  // The download token of the paid order that bought a product (kept in this tab by components/funnel/Checkout.tsx).
+  // A Reset order also owns the Toolkit it includes (lib/delivery-files.ts).
+  const tokenFor = (product: string) => order.deliveries?.find((d) => ownedProducts(d.items).includes(product))?.token;
+  const sections = sectionsFor(order.items.map((i) => i.id)).filter((s) => tokenFor(s.product));
+  const toolkitToken = tokenFor("guide");
 
   if (order.support) {
     return (
@@ -38,6 +48,9 @@ export default function ThankYou() {
         <div className="oto">
           <CrewArt k="endo" mood="happy" className="art" />
           <h1>You’re in. Welcome to the crew!</h1>
+          {toolkitToken && (
+            <a className="btn btn-main btn-lg" href={downloadPath(toolkitToken, "toolkit-pdf")}>Open the Toolkit now</a>
+          )}
           <p className="fx-sub">{order.gift ? `Your gift card goes to ${order.gift.to_email} on ${order.gift.send_on}.` : order.email ? `Your link is on its way to ${order.email}.` : "Your link is on its way to your inbox."}</p>
         </div>
 
@@ -53,19 +66,57 @@ export default function ThankYou() {
           </>
         )}
 
+        {sections.length > 0 && (
+          <>
+            <h2>Your files</h2>
+            <ul className="ty-files">
+              {sections.map((s) => {
+                const token = tokenFor(s.product)!;
+                if (s.files.length === 1) {
+                  return <li key={s.label}><a href={downloadPath(token, s.files[0].id)}>{s.label}</a></li>;
+                }
+                return (
+                  <li key={s.label}>
+                    <b>{s.label}</b>
+                    <ul>
+                      {s.files.map((f) => <li key={f.id}><a href={downloadPath(token, f.id)}>{f.name}</a></li>)}
+                    </ul>
+                  </li>
+                );
+              })}
+            </ul>
+          </>
+        )}
+
         <h2>Your next 3 steps</h2>
         <ol className="ty-next">
           <li>Open the email from Little Brain Crew (hello@littlebraincrew.com). Not there in 5 minutes? Check Promotions or Spam.</li>
-          <li>{program ? "Tonight: watch Day 1 with your kid. It takes 10 minutes." : `Tonight: read ${order.crew ? `${CREW_NAMES[order.crew]}’s moments` : "the moment you see most at home"} in The Kid Brain Toolkit. It takes 5 minutes.`}</li>
-          <li>Pick one small habit for tomorrow, and stick the poster on the fridge.</li>
+          <li>{program ? "Tonight: read Day 1 of the 30-Day Reset and choose your bedtime. It takes 10 minutes." : "Tonight: read the chapter for what’s hardest at home right now in The Kid Brain Toolkit. Start with The whole toolkit on one page (p. 5)."}</li>
+          <li>{program ? "Print the fridge tracker and stick it where the whole family can see it." : "Pick one small habit for tomorrow, and stick the poster on the fridge."}</li>
         </ol>
         {club && <p className="fine">Your Crew Club membership is in your account. Pause or cancel anytime there: <a href="/account">manage membership</a>.</p>}
+
+        {toolkit && !bedtime && !skipBedtime && (
+          <div className="fx-card" style={{ marginTop: 24 }}>
+            <h2>Bedtime still a battle?</h2>
+            <p>Add the Bedtime & Screen-Off Kit for $7: a crew bedtime story to play at lights-out, plus the exact timer scripts for ending screen time without a fight.</p>
+            <a className="btn btn-main" href="/checkout/bedtime">Add it for $7</a>
+            <button className="no-thanks" type="button" onClick={() => setSkipBedtime(true)}>No thanks</button>
+          </div>
+        )}
+
+        {toolkit && !program && (
+          <div className="fx-card" style={{ marginTop: 24 }}>
+            <h2>Want to turn the code into habits?</h2>
+            <p>The 30-Day Reset is open: one 10-minute habit a day for 30 days, with the exact words to say. Your $9 counts toward it: email hello@littlebraincrew.com and we’ll send you a $9 code.</p>
+            <a className="btn" href="/pricing">See the 30-Day Reset</a>
+          </div>
+        )}
 
         <div className="next-step" style={{ marginTop: 24 }}>
           <span>Know a parent who’s running on empty? <b>Send them the crew.</b></span>
           <button className="btn" type="button" onClick={shareSite}>{copied ? "Link copied ✓" : "Copy the link"}</button>
         </div>
-        <p className="fine" style={{ marginTop: 16 }}>Want to do more? <a href="/support">Support the crew</a> and help us make the next free cartoon.</p>
       </div>
     </div>
   );

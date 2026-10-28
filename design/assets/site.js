@@ -190,6 +190,10 @@ async function sent(f) {
     return false;
   }
   if (ok) ok.style.display = 'block';
+  try {
+    const visitor = localStorage.getItem('lbc-vid'), session = sessionStorage.getItem('lbc-sid');
+    if (visitor && session) navigator.sendBeacon('/api/event', JSON.stringify({ visitor, session, name: 'email_signup', place: f.dataset.form || null, path: location.pathname }));
+  } catch (err) { /* storage blocked: not counted */ }
   if (f.dataset.form === 'sticker-pack' && gi('st-dl')) gi('st-dl').classList.add('on');
   return false;
 }
@@ -340,3 +344,14 @@ if (sticky) {
   update();
 }
 })();
+
+/* ---------- funnel events: the same body as lib/track-event.ts, sent on click of any [data-track] ---------- */
+document.addEventListener('click', e => {
+  const el = e.target.closest && e.target.closest('[data-track]');
+  if (!el) return;
+  try {
+    const visitor = localStorage.getItem('lbc-vid'), session = sessionStorage.getItem('lbc-sid');
+    if (!visitor || !session) return;
+    navigator.sendBeacon('/api/event', JSON.stringify({ visitor, session, name: el.dataset.track, place: el.dataset.place || null, path: location.pathname }));
+  } catch (err) { /* storage blocked: the click isn't counted */ }
+});

@@ -35,20 +35,30 @@ export function clubWelcome(plan: "monthly" | "yearly"): Email {
 
 const ART: Record<string, string> = { guide: PRODUCTS.guide.art, program: PRODUCTS.program.art, upgrade: PRODUCTS.program.art, "screen-off-week": "dopa" };
 const TONIGHT: Record<string, string> = {
-  guide: "Tonight: read the moment you see most at home. 5 minutes.",
-  program: "Tonight: watch Day 1 with your kid. 10 minutes.",
-  upgrade: "Tonight: watch Day 1 with your kid. 10 minutes.",
+  guide: "Tonight: read the chapter for what’s hardest at home right now. Start with the whole toolkit on one page (p. 5).",
+  program: "Tonight: read Day 1 of the Reset and choose your bedtime. 10 minutes.",
+  upgrade: "Tonight: read Day 1 of the Reset and choose your bedtime. 10 minutes.",
   "screen-off-week": "Tonight: watch evening 1 with your kid before the screen goes off. 3 minutes.",
 };
 
-/** For one-time purchases. Needs the personal download links, so it's sent only once file delivery exists. */
-export function orderReceipt(items: Item[], downloads: { name: string; url: string }[]): Email {
+/** One group of download links in the receipt: `label` is the group's name, each file a button with its own link. */
+export type ReceiptSection = { label: string; files: { name: string; url: string }[] };
+
+/** For one-time purchases: the order, then one download link per file (lib/delivery.ts builds the links per buyer). */
+export function orderReceipt(items: Item[], sections: ReceiptSection[]): Email {
   const main = items.find((i) => ART[i.id]) ?? items[0];
   const blocks: Block[] = [
     { rows: items.map((i): [string, string] => [i.name, usd(i.price)]), total: ["Total", usd(total(items))] },
     { p: "Your files are ready. The links are personal, so please keep them to yourself." },
-    ...downloads.map((d): Block => ({ button: { label: `Download ${d.name}`, url: d.url } })),
   ];
+  for (const s of sections) {
+    if (s.files.length === 1) {
+      blocks.push({ button: { label: s.label, url: s.files[0].url } });
+    } else {
+      blocks.push({ note: s.label });
+      for (const f of s.files) blocks.push({ button: { label: f.name, url: f.url } });
+    }
+  }
   if (main && TONIGHT[main.id]) blocks.push({ note: TONIGHT[main.id] });
   blocks.push({ p: "Creem, our payment partner, sends your official payment receipt in a separate email." });
   return renderEmail({
@@ -97,7 +107,7 @@ export function quizResultEmail(r: QuizResult, { confirmTipsUrl }: { confirmTips
   );
   if (r.lead.kid) blocks.push({ note: `Say it to your kid: ${r.lead.kid}` });
   blocks.push(
-    { p: "Want all 12 moments decoded? The Kid Brain Toolkit is coming soon: all 12 crew members, the 12 hardest moments with the exact words to say, the 6 villains, and what’s normal at every age. We’ll email you the day it opens." },
+    { p: "Want the habits behind it? The Kid Brain Toolkit is open now: what science really knows about sleep, focus, mood and energy in kids, in 10 chapters with a version of every habit for ages 4–7, 8–12 and 13–17. $9, instant download at littlebraincrew.com." },
   );
   if (confirmTipsUrl) {
     blocks.push(

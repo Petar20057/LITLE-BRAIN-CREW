@@ -1,16 +1,23 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { CREW_NAMES, ITEMS, PRODUCTS, per, total, usd, type CrewKey, type Item, type Product } from "@/lib/funnel";
-import { saveOrder, useQueryParam, useStored } from "@/lib/order";
+import { saveOrder, useOrder, useQueryParam, useStored } from "@/lib/order";
 import { charge } from "@/lib/payments";
+import { trackEvent } from "@/lib/track-event";
 import CrewArt from "./CrewArt";
 import Steps from "./Steps";
 
 export default function Checkout({ slug }: { slug: Product["slug"] }) {
   const p = PRODUCTS[slug];
   const router = useRouter();
+  const order = useOrder();
+  // Where the visitor came from (utm_source), kept short and plain for the funnel numbers.
+  const source = (useQueryParam("utm_source") ?? "").replace(/[^A-Za-z0-9_.-]/g, "").slice(0, 20);
+  useEffect(() => {
+    trackEvent("checkout_view", source ? `${slug}:${source}` : slug);
+  }, [slug, source]);
   const crewParam = useQueryParam("crew");
   const crew = crewParam && crewParam in CREW_NAMES ? (crewParam as CrewKey) : undefined;
   // The /code quiz visit this order came from (?qs=), so /stats/quiz can count the purchase.
@@ -29,7 +36,8 @@ export default function Checkout({ slug }: { slug: Product["slug"] }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
-  const main: Item = slug === "club" ? (plan === "yearly" ? ITEMS.clubYearly : ITEMS.clubMonthly) : slug === "guide" ? ITEMS.guide : ITEMS.program;
+  const main: Item =
+    slug === "club" ? (plan === "yearly" ? ITEMS.clubYearly : ITEMS.clubMonthly) : slug === "guide" ? ITEMS.guide : slug === "bedtime" ? ITEMS.bedtimeKit : ITEMS.program;
   const items = [main, ...(bump && p.bump ? [p.bump.item] : [])];
   const recurring = items.some((i) => i.every);
 
@@ -41,7 +49,25 @@ export default function Checkout({ slug }: { slug: Product["slug"] }) {
     setBusy(true);
     try {
       const next = gift ? "/thank-you" : p.next;
-      await charge(items, email, { next, consent: recurring ? consent : undefined, crew, quiz, commit: () => saveOrder({ email, items, crew, gift }) });
+      // The Bedtime Kit page adds to the order already in this tab (the Toolkit bought before it); anything else starts fresh.
+      const prior = slug === "bedtime" ? order : undefined;
+      await charge(items, email, {
+        next,
+        consent: recurring ? consent : undefined,
+        crew,
+        quiz,
+        commit: (delivery) =>
+          saveOrder({
+            email,
+            crew,
+            gift,
+            items: prior ? [...prior.items, ...items.filter((i) => !prior.items.some((x) => x.id === i.id))] : items,
+            deliveries: [
+              ...(prior?.deliveries ?? []),
+              ...(delivery ? [{ token: delivery, items: items.map((i) => i.id) }] : []),
+            ],
+          }),
+      });
       router.push(next);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Payment didn’t go through. Please try again.");
@@ -84,7 +110,14 @@ export default function Checkout({ slug }: { slug: Product["slug"] }) {
 
           {p.bump && !gift && (
             <label className="bump">
-              <input type="checkbox" checked={bump} onChange={(e) => setBump(e.target.checked)} />
+              <input
+                type="checkbox"
+                checked={bump}
+                onChange={(e) => {
+                  setBump(e.target.checked);
+                  if (e.target.checked) trackEvent("bump_checked", slug);
+                }}
+              />
               <span><b>{p.bump.headline}</b>{p.bump.text}</span>
             </label>
           )}
@@ -121,7 +154,7 @@ export default function Checkout({ slug }: { slug: Product["slug"] }) {
             <h3>What happens next</h3>
             <ol>
               <li>Your link lands in your inbox within a minute.</li>
-              <li>{slug === "club" ? "Watch this week’s cartoon tonight." : slug === "program" ? "Tonight: watch Day 1 with your kid. 10 minutes." : "Tonight: read the moment you see most at home. 5 minutes."}</li>
+              <li>{slug === "club" ? "Watch this week’s cartoon tonight." : slug === "program" ? "Tonight: read Day 1 of the Reset and choose your bedtime. 10 minutes." : slug === "bedtime" ? "Tonight: play Mela and the Soft-Light Night at lights-out. 5 minutes." : "Tonight: read the chapter for what’s hardest at home right now. 5 minutes."}</li>
               <li>Try one small habit. That’s it.</li>
             </ol>
           </div>

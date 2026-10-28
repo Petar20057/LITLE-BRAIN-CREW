@@ -12,7 +12,29 @@
 .decoder svg{width:64px;height:64px}
 .decoder b{display:block;font:800 18px/1.3 var(--head)}
 .decoder span{color:var(--ink-soft);font-size:15px}
+/* the 12 moments: each card is a link, with a line saying what helps */
+.decoder .what{display:block;margin-top:6px;font:700 14px/1.3 var(--body);color:var(--ink)}
+.decoder-foot{text-align:center;color:var(--ink-soft);margin-top:-4px}
+.hero-small{font-size:15px;color:var(--ink-soft);margin-top:10px}
+/* a card with an article behind it: the whole card is the link */
+.decoder li{position:relative}
+.decoder b a{color:inherit;text-decoration:none}
+.decoder b a::after{content:"";position:absolute;inset:0;border-radius:inherit}
+.decoder b a:hover{text-decoration:underline}
+.decoder b a:focus-visible{outline:3px solid var(--c);outline-offset:3px;border-radius:4px}
 @media(max-width:760px){.decoder{grid-template-columns:1fr}}
+
+/* phones: the call to action sits right under the headline, above the lede, so it shows on the first screen */
+@media(max-width:640px){
+  .hero .wrap>div:first-child{display:flex;flex-direction:column}
+  .hero .lede{order:1}
+  .hero .trust-row{order:2}
+  .hero-cta{order:0;margin-bottom:var(--s3)}
+}
+
+/* waitlist forms where a button used to say "Coming soon" */
+.waitlist{margin-top:var(--s3)}
+.waitlist .btn{width:100%}
 
 /* ---------- home: how it works ---------- */
 .how3{list-style:none;counter-reset:h;display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s3)}

@@ -3,6 +3,7 @@ import { ITEMS } from "@/lib/funnel";
 import { keyForProduct, verifyWebhook, webhookConfigured } from "@/lib/creem";
 import { sendEmail } from "@/lib/email/send";
 import { clubWelcome } from "@/lib/email/templates";
+import { recordPaidOrder } from "@/lib/delivery";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { isSessionId } from "@/lib/quiz-track";
 import type { Database } from "@/lib/supabase/database.types";
@@ -10,7 +11,7 @@ import type { Database } from "@/lib/supabase/database.types";
 // Creem → us. Set this URL as the webhook in the Creem dashboard: <site>/api/creem/webhook.
 // Mirrors Crew Club subscriptions into Supabase (the source of truth stays Creem), so pages can check access with
 // has_club_access(), and sends the Crew Club welcome email the first time a subscription shows up. One-time products
-// (Toolkit, Reset, ...) are only logged: the receipt email (lib/email/templates.ts) needs file delivery, not built yet.
+// (Toolkit, Bedtime Kit) are saved to `orders` once, with their purchase event and receipt email (lib/delivery.ts).
 // Any failure answers 500 so Creem retries; writes are idempotent (one row per Creem subscription id).
 // Creem doesn't promise delivery order, so each row remembers the time of the newest event applied
 // (provider_event_at) and an older event arriving late is skipped instead of overwriting a newer status.
@@ -68,7 +69,7 @@ export async function POST(request: NextRequest) {
         // The checkout carries the product, customer and metadata; its subscription only has id and status.
         await syncSubscription({ ...sub, product: obj.product as Ref, customer: obj.customer as Ref, metadata: obj.metadata as CreemSubscription["metadata"] }, eventAt);
       } else {
-        console.info("[creem] one-time order", { event: event.id, product: idOf(obj.product as Ref), metadata: obj.metadata });
+        await oneTimeOrder(obj, event.id ?? "");
       }
     } else {
       console.info("[creem] ignored", { event: event.id, type });
@@ -78,6 +79,23 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Failed" }, { status: 500 });
   }
   return NextResponse.json({ received: true });
+}
+
+// A one-time order (Toolkit, Bedtime Kit): saved once, with its purchase event and receipt (lib/delivery.ts).
+async function oneTimeOrder(obj: Record<string, unknown>, eventId: string) {
+  const metadata = (obj.metadata ?? {}) as Record<string, unknown>;
+  const customer = obj.customer as Ref;
+  const email = typeof customer === "object" ? customer?.email : undefined;
+  const orderKey = typeof metadata.order === "string" ? metadata.order : "";
+  if (!orderKey || !email) {
+    console.error("[creem] one-time order without order key or email", { event: eventId });
+    return;
+  }
+  const checkoutId = typeof obj.id === "string" ? obj.id : undefined;
+  const orderId = (obj.order as { id?: string } | undefined)?.id ?? checkoutId ?? eventId;
+  const token = typeof metadata.delivery === "string" ? metadata.delivery : null;
+  const recorded = await recordPaidOrder({ providerOrderId: orderId, email, orderKey, token });
+  if (!recorded) console.info("[creem] one-time order not recognised", { event: eventId, orderKey });
 }
 
 async function syncSubscription(sub: CreemSubscription, eventAt: string | null) {

@@ -489,10 +489,10 @@ function Result({ data, p }: { data: QuizData; p: Progress }) {
       <div className="q-offer">
         <CrewArt k={r.lead.char.key} mood="happy" />
         <div>
-          <h2>Want all 12 moments decoded?</h2>
-          <p>The Kid Brain Toolkit: all 12 crew members, the 12 hardest moments with the exact words to say, the 6 villains, and what’s normal at every age, Whyzi (3) to Seki (17). Read it in one evening.</p>
-          <button className="btn btn-main" type="button" disabled>Coming soon</button>
-          <p className="fine">The Toolkit will start with {r.lead.char.name}’s moments. Opening soon.</p>
+          <h2>Want the habits behind it?</h2>
+          <p>The Kid Brain Toolkit: what science really knows about sleep, focus, mood and energy in kids, in 10 chapters, with a version of every habit for ages 4–7, 8–12 and 13–17.</p>
+          <a className="btn btn-main" href="/checkout/guide">Get the Toolkit · $9</a>
+          <p className="fine">Instant download. For learning only, not medical advice.</p>
         </div>
       </div>
 

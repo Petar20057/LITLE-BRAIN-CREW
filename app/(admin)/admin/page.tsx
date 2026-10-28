@@ -1,7 +1,8 @@
 import { AdminHeader, DailyBars, Tiles, TopTable } from "@/components/admin/Admin";
 import { NEWSLETTER_FORMS } from "@/lib/analytics";
-import { pct, rangeFrom, requireAdmin } from "@/lib/admin";
+import { num, pct, rangeFrom, requireAdmin } from "@/lib/admin";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { looseAdmin } from "@/lib/supabase/loose";
 
 // Traffic: who came to the site, from where, and what they looked at. Data: page_views
 // (supabase/migrations/20261026170000_admin_analytics.sql), filled by components/Track.tsx.
@@ -25,13 +26,15 @@ export default async function Page({ searchParams }: PageProps<"/admin">) {
   const { days, since } = rangeFrom((await searchParams).days);
 
   const db = createAdminClient();
-  const [totals, daily, top, subscribers, quiz] = await Promise.all([
+  const [totals, daily, top, subscribers, quiz, funnel] = await Promise.all([
     db.rpc("traffic_totals", { since }),
     db.rpc("traffic_daily", { since }),
     db.rpc("traffic_top", { since }),
     db.rpc("newsletter_subscribers", { forms: NEWSLETTER_FORMS }),
     db.from("quiz_sessions").select("id", { count: "exact", head: true }).gte("started_at", since),
+    looseAdmin().rpc("funnel_daily", { since }),
   ]);
+  if (funnel.error) console.error("[admin funnel]", funnel.error);
   const failed = totals.error ?? daily.error ?? top.error ?? subscribers.error;
   if (failed) {
     console.error("[admin traffic]", failed);
@@ -56,6 +59,32 @@ export default async function Page({ searchParams }: PageProps<"/admin">) {
         ]}
       />
       <DailyBars title={days > 90 ? "Visitors per day, last 90 days (UTC)" : "Visitors per day (UTC)"} days={Math.min(days, 90)} rows={(daily.data ?? []).map((d) => ({ day: d.day, value: Number(d.visitors) }))} />
+      <h2>Purchase funnel per day</h2>
+      {funnel.error ? (
+        <p className="fx-card">Couldn’t read the funnel numbers. Is supabase/migrations/20261028120000_orders_and_funnel_events.sql applied?</p>
+      ) : (
+        <div className="table-wrap">
+          <table className="learn-table">
+            <caption>Visits → buy clicks → checkouts → purchases (UTC), newest first</caption>
+            <thead>
+              <tr><th scope="col">Day</th><th scope="col">Visits</th><th scope="col">Buy clicks</th><th scope="col">Checkouts</th><th scope="col">Purchases</th><th scope="col">$7 bump</th></tr>
+            </thead>
+            <tbody>
+              {(funnel.data ?? []).length === 0 && <tr><td colSpan={6}>Nothing yet.</td></tr>}
+              {[...(funnel.data ?? [])].reverse().map((r) => (
+                <tr key={String(r.day)}>
+                  <th scope="row">{String(r.day)}</th>
+                  <td>{num(Number(r.visits))}</td>
+                  <td>{num(Number(r.buy_clicks))}</td>
+                  <td>{num(Number(r.checkouts))}</td>
+                  <td>{num(Number(r.purchases))}</td>
+                  <td>{pct(Number(r.bump_purchases), Number(r.purchases))}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
       <div className="adm-grid">
         {BREAKDOWNS.map((b) => (
           <TopTable key={b.kind} title={b.title} rows={rows(b.kind)} cols={"cols" in b ? [...b.cols] : undefined} />

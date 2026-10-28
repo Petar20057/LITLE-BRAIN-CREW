@@ -10,7 +10,14 @@ const SAMPLE_CONFIRM = "/confirm?t=00000000-0000-4000-8000-000000000000";
 export const SAMPLES: Record<string, () => Email> = {
   "club-welcome": () => clubWelcome("monthly"),
   "club-welcome-yearly": () => clubWelcome("yearly"),
-  "order-receipt": () => orderReceipt([ITEMS.guide, ITEMS.bedtimeKit], [{ name: "The Kid Brain Toolkit", url: "/account" }, { name: "the Bedtime & Screen-Off Kit", url: "/account" }]),
+  "order-receipt": () =>
+    orderReceipt(
+      [ITEMS.guide, ITEMS.bedtimeKit],
+      [
+        { label: "Start here: The Kid Brain Toolkit", files: [{ name: "Start here: The Kid Brain Toolkit", url: "https://www.littlebraincrew.com/api/download" }] },
+        { label: "Your Bedtime & Screen-Off Kit", files: [{ name: "Bedtime & Screen-Off Kit (PDF)", url: "https://www.littlebraincrew.com/api/download" }, { name: "Mela and the Soft-Light Night (listen in the browser)", url: "https://www.littlebraincrew.com/api/download" }] },
+      ],
+    ),
   "renewal-reminder": () => renewalReminder("November 26, 2026"),
   "quiz-result": () => quizResultEmail(quizResult(quizData(), { age: "6-7", moments: ["screens", "after-school", "wired"], sleep: { bed: 21 * 60 + 30, wake: 6 * 60 + 30 }, villains: ["bedi", "lupi"] })!),
   "quiz-result-tips": () =>

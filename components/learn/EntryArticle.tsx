@@ -89,7 +89,7 @@ export default function EntryArticle({ entry: e }: { entry: LearnEntry }) {
           ) : null}
 
           <PediatricianBox>{e.whenToTalk}</PediatricianBox>
-          <ToolkitCta />
+          <ToolkitCta path={pathOf(e)} />
 
           <section>
             <h2>Questions parents ask</h2>

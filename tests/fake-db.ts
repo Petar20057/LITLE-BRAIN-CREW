@@ -19,9 +19,11 @@ const DEFAULTS: Record<string, () => Row> = {
   quiz_events: () => ({ created_at: now() }),
   subscriptions: () => ({ id: randomUUID(), provider_event_at: null, current_period_start: null, current_period_end: null, canceled_at: null, created_at: now() }),
   members: () => ({ creem_customer_id: null, created_at: now() }),
+  orders: () => ({ id: randomUUID(), delivery_hash: null, download_until: "2999-01-01T00:00:00Z", created_at: now() }),
+  funnel_events: () => ({ id: randomUUID(), visitor_id: null, session_id: null, place: null, path: null, amount_cents: null, created_at: now() }),
 };
 
-const CONFLICT_KEYS: Record<string, string[]> = { signups: ["email", "form"], quiz_sessions: ["id"], quiz_leads: ["email"] };
+const CONFLICT_KEYS: Record<string, string[]> = { signups: ["email", "form"], quiz_sessions: ["id"], quiz_leads: ["email"], orders: ["provider_order_id"] };
 
 function compare(value: unknown, op: string, arg: string): boolean {
   if (op === "is") return arg === "null" ? value == null : String(value) === arg;

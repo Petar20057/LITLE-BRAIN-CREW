@@ -53,7 +53,7 @@ export default function AffiliatePanel() {
           </ul>
           <label className="bump" style={{ background: "#fff" }}>
             <input type="checkbox" checked={agree} onChange={(e) => setAgree(e.target.checked)} />
-            <span>I agree to these rules and the <a className="link" href="/terms">terms</a>. <span className="draft">affiliate terms: waiting for OK</span></span>
+            <span>I agree to these rules and the <a className="link" href="/terms">terms</a>.</span>
           </label>
           <button className="btn btn-main" type="button" disabled={!agree} onClick={() => setAsked(true)}>Send me my invite</button>
         </>

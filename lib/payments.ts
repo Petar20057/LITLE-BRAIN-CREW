@@ -17,8 +17,9 @@ type Options = {
   crew?: CrewKey;
   /** Quiz session id from /code, passed to Creem as metadata. */
   quiz?: string;
-  /** Saves what was bought for the next pages. Runs before we leave for Creem, or right away in preview. */
-  commit: () => void;
+  /** Saves what was bought for the next pages. Runs before we leave for Creem, or right away in preview.
+   *  Gets the buyer's download token for a one-time order (none for a membership or in preview). */
+  commit: (delivery?: string) => void;
 };
 
 export async function charge(items: Item[], email: string, { next, consent, crew, quiz, commit }: Options): Promise<void> {
@@ -33,9 +34,9 @@ export async function charge(items: Item[], email: string, { next, consent, crew
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ items: items.map((i) => i.id), email, next, consent, crew, quiz }),
   });
-  const data = (await res.json().catch(() => ({}))) as { url?: string; error?: string };
+  const data = (await res.json().catch(() => ({}))) as { url?: string; delivery?: string; error?: string };
   if (!res.ok || !data.url) throw new Error(data.error || "Payment couldn’t start. Please try again.");
-  commit();
+  commit(data.delivery);
   window.location.assign(data.url);
   // Leaving the page: keep the button busy instead of letting the caller continue.
   await new Promise(() => {});

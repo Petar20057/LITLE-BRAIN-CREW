@@ -11,6 +11,8 @@ export type Order = {
   crew?: CrewKey;
   gift?: Record<string, string>;
   support?: number;
+  /** Download tokens of the paid one-time orders in this tab, with the items each one bought (lib/delivery-files.ts). */
+  deliveries?: { token: string; items: string[] }[];
 };
 
 const KEY = "vlc-order";

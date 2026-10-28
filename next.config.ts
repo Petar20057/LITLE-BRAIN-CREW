@@ -1,8 +1,8 @@
 import type { NextConfig } from "next";
 
-// No payment processor is connected yet: the Toolkit, the 30-Day Reset and the Crew Club show "Coming soon" and the
-// checkout and offer pages send visitors back to the plans. Set to false once Creem is live (lib/funnel.ts PREVIEW too).
-const COMING_SOON = true;
+// Payments are live through Creem (2026-10-28). Set back to true to show "Coming soon" again and send the checkout and
+// offer pages back to the plans (lib/funnel.ts COMING_SOON and PREVIEW too).
+const COMING_SOON = false;
 
 // Sent with every response. Vercel adds HSTS itself. No script CSP yet: Next's inline bootstrap scripts would need a
 // nonce on every request, which turns the static pages dynamic. So this sticks to what can't break a page: no framing
@@ -34,8 +34,14 @@ const nextConfig: NextConfig = {
             { source: "/offer/:path*", destination: "/#plans", permanent: false },
           ]
         : []),
+      // The Toolkit and the 30-Day Reset are sold. The Club stays closed (waitlist on the plans) even when payments go live.
+      { source: "/checkout/club", destination: "/#plans", permanent: false },
       { source: "/quiz", destination: "/#plans", permanent: false },
       { source: "/offer/club-lite", destination: "/thank-you", permanent: false },
+      // The upsell and downsell offers aren't sold (the Toolkit and the Reset go straight to the thank-you page), and
+      // "Support the crew" waits until Creem confirms pay-what-you-want.
+      { source: "/offer/:path*", destination: "/#plans", permanent: false },
+      { source: "/support", destination: "/", permanent: false },
       // The quiz numbers moved into the admin panel.
       { source: "/stats/quiz", destination: "/admin/quiz", permanent: false },
     ];

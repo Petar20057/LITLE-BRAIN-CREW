@@ -2,7 +2,7 @@ import type { SitePage } from "./types.ts";
 
 // /about, /editorial-policy, /privacy, /terms
 // Authorship is brand-only: "Little Brain Crew editorial team". No named people, no invented credentials.
-// Pages marked draft wait for the owner's OK (legal review). Contact: hello@littlebraincrew.com; no company details are published.
+// Pages marked draft wait for the owner's OK (legal review); Privacy and Terms were approved on 2026-10-28. Contact: hello@littlebraincrew.com; no company details are published.
 export const SITE_PAGES: SitePage[] = [
   {
     slug: "about",
@@ -124,10 +124,9 @@ export const SITE_PAGES: SitePage[] = [
     slug: "privacy",
     h1: "Privacy policy",
     metaTitle: "Privacy Policy | Little Brain Crew",
-    description: "What Little Brain Crew collects, what stays in your browser, how forms and payments work, and why we never ask for kids’ names. Draft.",
-    dek: "Plain words about what this site collects and what it doesn’t. This is a draft and will be updated before launch.",
-    draft: true,
-    updated: "2026-10-27",
+    description: "What Little Brain Crew collects, what stays in your browser, how forms and payments work, and why we never ask for kids’ names.",
+    dek: "Plain words about what this site collects and what it doesn’t.",
+    updated: "2026-10-28",
     sections: [
       {
         h2: "The short version",
@@ -192,7 +191,7 @@ export const SITE_PAGES: SitePage[] = [
       {
         h2: "Payments",
         paras: [
-          "Payments are in preview today: the buttons walk through the checkout steps, and nothing is charged. Payments will be handled by Creem, our payment partner and the merchant of record, which processes your card, Apple Pay or Google Pay under its own privacy policy. We won’t see or store your card number. We will receive your email, what you bought and the payment status, so we can send your files and manage memberships.",
+          "Payments are handled by Creem, our payment partner and the merchant of record, which processes your card, Apple Pay or Google Pay under its own privacy policy. We never see or store your card number. We receive your email, what you bought and the payment status, so we can send your files and manage memberships.",
           "If we later add other tools, we will name them here first.",
         ],
       },
@@ -247,8 +246,7 @@ export const SITE_PAGES: SitePage[] = [
     h1: "Terms of use and sale",
     metaTitle: "Terms of Use and Sale | Little Brain Crew",
     description: "The rules for using Little Brain Crew and buying our digital products: educational use only, all sales final, Crew Club membership and US audience.",
-    dek: "What you can expect from us and what we ask of you. This is a draft and will be reviewed before launch.",
-    draft: true,
+    dek: "What you can expect from us and what we ask of you.",
     updated: "2026-10-26",
     sections: [
       {
@@ -289,13 +287,14 @@ export const SITE_PAGES: SitePage[] = [
         h2: "Affiliate program for Crew Club members",
         paras: [
           "Our affiliate program is run on Creem, our payment partner and the merchant of record, and is open by invitation to Crew Club members only. Members who join earn 20% of every payment made by people who buy through their link, figured after the 2% fee Creem keeps on affiliate sales. The link is remembered for 60 days. Payments to support the crew are not included. A member who later cancels their Club stays in the program.",
-          "Commissions wait 7 to 12 days, then Creem pays them on the 1st and 15th of the month once the balance reaches $50, by bank transfer or USDC, after an identity check. Creem charges its own payout fee. Members must say they earn a commission wherever they share the link, share only their own honest experience, make no medical claims or promises, and must not buy through their own link, use coupon sites, run ads on our name, send spam or aim posts at children. Creem’s affiliate terms also apply. Nothing is paid out while payments are in preview.",
+          "Commissions wait 7 to 12 days, then Creem pays them on the 1st and 15th of the month once the balance reaches $50, by bank transfer or USDC, after an identity check. Creem charges its own payout fee. Members must say they earn a commission wherever they share the link, share only their own honest experience, make no medical claims or promises, and must not buy through their own link, use coupon sites, run ads on our name, send spam or aim posts at children. Creem’s affiliate terms also apply. Nothing is paid out before the program opens.",
+          "The affiliate program opens together with the Crew Club.",
         ],
       },
       {
         h2: "How payments work",
         paras: [
-          "Payments are in preview today and nothing is charged. When they go live, Creem will be the merchant of record for your order: Creem is the seller on your receipt and handles the payment (card, Apple Pay or Google Pay), sales tax and invoices. By paying, you also agree to Creem’s terms.",
+          "Creem is the merchant of record for your order: Creem is the seller on your receipt and handles the payment (card, Apple Pay or Google Pay), sales tax and invoices. By paying, you also agree to Creem’s terms.",
         ],
       },
       {
@@ -308,7 +307,7 @@ export const SITE_PAGES: SitePage[] = [
         h2: "Limits and changes",
         paras: [
           "We try hard to keep our pages accurate and up to date, and we name our sources. We provide the site and our products “as is.” To the extent the law allows, we are not liable for indirect or consequential losses from using them. Nothing in these terms limits any rights you have that cannot be limited by law.",
-          "We may update these terms and will change the date on this page. Which state’s law applies will be published here before launch. Questions about these terms: hello@littlebraincrew.com.",
+          "We may update these terms and will change the date on this page. These terms are governed by the laws of the State of Florida, United States. Questions about these terms: hello@littlebraincrew.com.",
         ],
       },
     ],

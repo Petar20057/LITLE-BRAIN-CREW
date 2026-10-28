@@ -20,10 +20,11 @@ export const webhookConfigured = Boolean(WEBHOOK_SECRET);
 // Fill these from the Creem dashboard; the test and live stores have different ids. Empty = not for sale yet.
 // "Support the crew" (any amount) is missing on purpose until Creem confirms pay-what-you-want.
 const PRODUCTS: Record<string, { test: string; live: string }> = {
-  guide: { test: "", live: "" },
-  "guide+bedtime-kit": { test: "", live: "" },
-  program: { test: "", live: "" },
-  "program+cards": { test: "", live: "" },
+  guide: { test: "prod_6RLkxpWxFb7axxq5A2xo3N", live: "prod_3uRNXgUJ7KoJE2lw3Lk2Ym" },
+  "bedtime-kit": { test: "prod_1aPzq7XExzFTjsj2SmjXZY", live: "prod_6UNUaVPQLo8zhL20cWb7vp" },
+  "guide+bedtime-kit": { test: "prod_3wPWFIXUGHNSvHaaM8L4OT", live: "prod_1vCgpOUX7izA3p25ptKpoD" },
+  program: { test: "prod_28QdxP9IYPKap1RkguCJla", live: "prod_4ADqrO8Tr3QY7hXWwJ67id" },
+  "program+cards": { test: "prod_4zjcDzIb3Lf1QqC0EXlQBL", live: "prod_5XFZf5YtSV01F0FVLxfreg" },
   upgrade: { test: "", live: "" },
   "screen-off-week": { test: "", live: "" },
   "club-monthly": { test: "", live: "" },

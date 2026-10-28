@@ -1,0 +1,131 @@
+{
+  "bucket": "delivery",
+  "sections": [
+    {
+      "product": "program",
+      "label": "Start here: The 30-Day Reset",
+      "files": [
+        {
+          "id": "reset-pdf",
+          "path": "30-Day-Reset/The-30-Day-Reset.pdf",
+          "name": "The 30-Day Reset (start with Day 1)",
+          "kind": "pdf"
+        },
+        {
+          "id": "reset-tracker-pdf",
+          "path": "30-Day-Reset/The-30-Day-Reset-Fridge-Tracker.pdf",
+          "name": "The 30-day fridge tracker (print it)",
+          "kind": "pdf"
+        }
+      ]
+    },
+    {
+      "product": "cards",
+      "label": "Your 30 Crew Habit Cards",
+      "files": [
+        {
+          "id": "habit-cards-pdf",
+          "path": "Crew-Habit-Cards/30-Crew-Habit-Cards.pdf",
+          "name": "30 Crew Habit Cards (print and cut)",
+          "kind": "pdf"
+        }
+      ]
+    },
+    {
+      "product": "guide",
+      "label": "Start here: The Kid Brain Toolkit",
+      "files": [
+        {
+          "id": "toolkit-pdf",
+          "path": "Kid-Brain-Toolkit/The-Kid-Brain-Toolkit.pdf",
+          "name": "Start here: The Kid Brain Toolkit",
+          "kind": "pdf"
+        }
+      ]
+    },
+    {
+      "product": "guide",
+      "label": "Bonuses to print",
+      "files": [
+        {
+          "id": "script-cards-pdf",
+          "path": "Kid-Brain-Toolkit/Bonuses/24-Script-Cards.pdf",
+          "name": "24 Say This, Not That cards",
+          "kind": "pdf"
+        },
+        {
+          "id": "meltdown-plan-pdf",
+          "path": "Kid-Brain-Toolkit/Bonuses/The-60-Second-Meltdown-Plan.pdf",
+          "name": "The 60-Second Meltdown Plan",
+          "kind": "pdf"
+        },
+        {
+          "id": "poster-pdf",
+          "path": "Kid-Brain-Toolkit/Bonuses/Crew-Poster.pdf",
+          "name": "The crew poster",
+          "kind": "pdf"
+        }
+      ]
+    },
+    {
+      "product": "guide",
+      "label": "Crew cartoons: watch with your kid",
+      "files": [
+        {
+          "id": "cartoon-meet-mp4",
+          "path": "Kid-Brain-Toolkit/Bonuses/Crew-Cartoons/Meet-the-Little-Brain-Crew.mp4",
+          "name": "Meet the Little Brain Crew",
+          "kind": "video"
+        },
+        {
+          "id": "cartoon-dopa-mp4",
+          "path": "Kid-Brain-Toolkit/Bonuses/Crew-Cartoons/Dopa-and-the-Screen-That-Stopped.mp4",
+          "name": "Dopa and the Screen That Stopped",
+          "kind": "video"
+        },
+        {
+          "id": "cartoon-mela-mp4",
+          "path": "Kid-Brain-Toolkit/Bonuses/Crew-Cartoons/Melas-Soft-Light-Night.mp4",
+          "name": "Mela’s Soft-Light Night",
+          "kind": "video"
+        },
+        {
+          "id": "cartoon-migo-mp4",
+          "path": "Kid-Brain-Toolkit/Bonuses/Crew-Cartoons/Migo-Fronti-and-the-Big-Alarm.mp4",
+          "name": "Migo, Fronti and the Big Alarm",
+          "kind": "video"
+        }
+      ]
+    },
+    {
+      "product": "guide",
+      "label": "Download everything (ZIP)",
+      "files": [
+        {
+          "id": "toolkit-zip",
+          "path": "Kid-Brain-Toolkit.zip",
+          "name": "Download everything (ZIP)",
+          "kind": "zip"
+        }
+      ]
+    },
+    {
+      "product": "bedtime-kit",
+      "label": "Your Bedtime & Screen-Off Kit",
+      "files": [
+        {
+          "id": "bedtime-pdf",
+          "path": "Bedtime-and-Screen-Off-Kit/Bedtime-and-Screen-Off-Kit.pdf",
+          "name": "Bedtime & Screen-Off Kit (PDF)",
+          "kind": "pdf"
+        },
+        {
+          "id": "bedtime-audio",
+          "path": "Bedtime-and-Screen-Off-Kit/Mela-and-the-Soft-Light-Night.mp3",
+          "name": "Mela and the Soft-Light Night (listen in the browser)",
+          "kind": "audio"
+        }
+      ]
+    }
+  ]
+}

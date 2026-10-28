@@ -1,4 +1,4 @@
-import { createHmac } from "node:crypto";
+import { createHash, createHmac } from "node:crypto";
 import type { NextRequest } from "next/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { fake } from "./fake-db";
@@ -87,6 +87,61 @@ describe("Creem webhook", () => {
     const event = subscriptionEvent("evt_other", "active", T0, { product: { id: "prod_unknown" }, metadata: { renewal_consent_at: "x" } });
     expect((await deliver(event)).status).toBe(200);
     expect(fake.table("subscriptions")).toHaveLength(0);
+  });
+
+  it("a paid Toolkit + Bedtime Kit order is saved once, with its purchase event and a receipt with the download links", async () => {
+    const order = {
+      id: "evt_order",
+      eventType: "checkout.completed",
+      created_at: T0,
+      object: { id: "chk_1", customer: { id: "cust_2", email: "Mom@Example.com" }, metadata: { order: "guide+bedtime-kit", delivery: "tok-abc" } },
+    };
+    expect((await deliver(order)).status).toBe(200);
+    expect(fake.table("orders")).toMatchObject([
+      { provider_order_id: "chk_1", email: "mom@example.com", order_key: "guide+bedtime-kit", items: ["guide", "bedtime-kit"], amount_cents: 1600 },
+    ]);
+    expect(fake.table("orders")[0].delivery_hash).toBe(createHash("sha256").update("tok-abc").digest("hex"));
+    expect(fake.table("funnel_events")).toMatchObject([{ name: "purchase", place: "guide+bedtime-kit", amount_cents: 1600 }]);
+    expect(sendEmail).toHaveBeenCalledTimes(1);
+    const [to, email] = vi.mocked(sendEmail).mock.calls[0];
+    expect(to).toBe("mom@example.com");
+    expect(email.text).toContain("/api/download?t=tok-abc&f=toolkit-pdf");
+    expect(email.text).toContain("/api/download?t=tok-abc&f=bedtime-audio");
+  });
+
+  it("a retried order delivery changes nothing and sends no second receipt", async () => {
+    const order = {
+      id: "evt_order_retry",
+      eventType: "checkout.completed",
+      created_at: T0,
+      object: { id: "chk_2", customer: { email: "dad@example.com" }, metadata: { order: "guide", delivery: "tok-def" } },
+    };
+    await deliver(order);
+    await deliver(order);
+    expect(fake.table("orders")).toHaveLength(1);
+    expect(fake.table("funnel_events")).toHaveLength(1);
+    expect(sendEmail).toHaveBeenCalledTimes(1);
+  });
+
+  it("the Bedtime Kit bought on its own is a post-bump purchase, for $7", async () => {
+    await deliver({
+      id: "evt_bedtime",
+      eventType: "checkout.completed",
+      created_at: T0,
+      object: { id: "chk_3", customer: { email: "dad@example.com" }, metadata: { order: "bedtime-kit", delivery: "tok-ghi" } },
+    });
+    expect(fake.table("funnel_events")).toMatchObject([{ name: "post_bump_purchase", place: "bedtime-kit", amount_cents: 700 }]);
+  });
+
+  it("an order key we don't sell as a one-time product is not recorded", async () => {
+    await deliver({
+      id: "evt_unknown",
+      eventType: "checkout.completed",
+      created_at: T0,
+      object: { id: "chk_4", customer: { email: "dad@example.com" }, metadata: { order: "guide+cards-unknown" } },
+    });
+    expect(fake.table("orders")).toHaveLength(0);
+    expect(fake.table("funnel_events")).toHaveLength(0);
   });
 
   it("marks the /code quiz visit an order came from as bought", async () => {

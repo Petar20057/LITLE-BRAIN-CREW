@@ -21,6 +21,8 @@ export const LIMITS = {
   signup: { max: 10, windowSeconds: 3600 },
   /** Page views. */
   track: { max: 600, windowSeconds: 3600 },
+  /** Funnel clicks (buy buttons, checkout steps, moments), /api/event. Kept apart from page views. */
+  event: { max: 300, windowSeconds: 3600 },
   /** New Creem checkouts. */
   checkout: { max: 20, windowSeconds: 3600 },
 } as const;
