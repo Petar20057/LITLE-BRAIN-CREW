@@ -39,7 +39,7 @@ const nextConfig: NextConfig = {
       { source: "/quiz", destination: "/#plans", permanent: false },
       { source: "/offer/club-lite", destination: "/thank-you", permanent: false },
       // The upsell and downsell offers aren't sold (the Toolkit and the Reset go straight to the thank-you page), and
-      // "Support the crew" waits until Creem confirms pay-what-you-want.
+      // "Support the crew" is hidden: Creem doesn't allow payments with no product behind them.
       { source: "/offer/:path*", destination: "/#plans", permanent: false },
       { source: "/support", destination: "/", permanent: false },
       // The quiz numbers moved into the admin panel.

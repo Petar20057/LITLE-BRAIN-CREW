@@ -247,7 +247,7 @@ export const SITE_PAGES: SitePage[] = [
     metaTitle: "Terms of Use and Sale | Little Brain Crew",
     description: "The rules for using Little Brain Crew and buying our digital products: educational use only, all sales final, Crew Club membership and US audience.",
     dek: "What you can expect from us and what we ask of you.",
-    updated: "2026-10-26",
+    updated: "2026-10-28",
     sections: [
       {
         h2: "Using this site",
@@ -273,7 +273,6 @@ export const SITE_PAGES: SitePage[] = [
         h2: "All sales are final",
         paras: [
           "Because you get instant access to digital content, all sales are final. We do not offer refunds, money-back terms or guarantees of any kind, including any guarantee of results. If a link or a file doesn’t work, contact us and we will fix it or resend it.",
-          "A one-time “support” payment to Little Brain Crew is a payment to a company. It is not a charitable donation and is not tax-deductible.",
         ],
       },
       {
