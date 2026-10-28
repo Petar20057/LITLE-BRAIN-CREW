@@ -6,6 +6,11 @@ import "../public/assets/additions.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
+  verification: {
+    other: {
+      "msvalidate.01": "F195393389168270B5DD28097565A0B5",
+    },
+  },
   icons: {
     icon: [
       { url: "/favicon.svg", type: "image/svg+xml" },
