@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { preload } from "react-dom";
 import { SITE_URL } from "@/lib/design";
 import Track from "@/components/Track";
 import "../public/assets/site.css";
@@ -32,7 +33,17 @@ export const viewport: Viewport = {
   themeColor: "#FF5A36",
 };
 
+// Fonts the first phone screen needs (headline, body, buttons): fetch them with the HTML instead of after the CSS.
+const FIRST_SCREEN_FONTS = [
+  "bricolage-grotesque-latin-800-normal",
+  "figtree-latin-400-normal",
+  "figtree-latin-700-normal",
+];
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
+  for (const f of FIRST_SCREEN_FONTS) {
+    preload(`/assets/fonts/${f}.woff2`, { as: "font", type: "font/woff2", crossOrigin: "anonymous" });
+  }
   return (
     <html lang="en" data-scroll-behavior="smooth">
       <body>

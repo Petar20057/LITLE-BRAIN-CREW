@@ -129,10 +129,13 @@ if (gi('villains-grid')) gi('villains-grid').innerHTML = VILLAINS.map(([k, n, wh
     <div class="v-art" data-k="${k}">${svg(k)}</div>
     <div><span class="v-tag">${what}</span><h3>${n}</h3><p>${how}</p>
     <p class="v-beat"><b>Beat it:</b> ${beat}</p><p class="v-who">Bothers ${who}</p></div></article>`).join('');
-// Hover a villain to see it beaten.
+// Hover (or tap, on a phone) a villain to see it beaten.
 $$('.v-art').forEach(el => {
-  el.parentElement.addEventListener('mouseenter', () => { el.innerHTML = svg(el.dataset.k, 'tired'); });
-  el.parentElement.addEventListener('mouseleave', () => { el.innerHTML = svg(el.dataset.k); });
+  const card = el.parentElement;
+  const show = beaten => { card.classList.toggle('beaten', beaten); el.innerHTML = svg(el.dataset.k, beaten ? 'tired' : undefined); };
+  card.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') show(true); });
+  card.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse') show(false); });
+  card.addEventListener('pointerup', e => { if (e.pointerType !== 'mouse') show(!card.classList.contains('beaten')); });
 });
 
 /* ---------- ages & stages: what's normal now ---------- */

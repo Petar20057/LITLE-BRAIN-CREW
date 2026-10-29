@@ -526,3 +526,103 @@ html.dad .top .logo .on-dark,html.dad .ad-top .logo .on-dark{display:block}
   .value-stack li{padding:14px 16px 14px 52px}
   .value-stack li::before{left:14px;top:15px;width:26px;height:26px;font-size:14px;line-height:26px}
 }
+
+/* ---------- phone polish (most visitors are on a phone) ----------
+   One header row, thumb-sized links, cards that don't stretch, no hover-only hints. */
+@media(max-width:640px){
+  /* header: logo, Learn and mom/dad on one row (was two rows, ~126px), so the hero starts higher */
+  .top .wrap{position:relative;grid-template-columns:auto auto minmax(0,1fr);gap:8px;min-height:60px;padding-bottom:0}
+  .top .logo{grid-column:1;min-height:44px}
+  .top .logo .logo-img{height:44px;margin:-4px 0 -4px -8px}
+  .learn-menu{grid-column:2;grid-row:1;margin:0;position:static}
+  .learn-menu summary{padding:0 12px;gap:8px}
+  .top .top-right{grid-column:3;justify-self:end}
+  .toggle{padding:3px}
+  .toggle button{min-height:40px}
+  /* the Learn menu opens as a full-width sheet under the header */
+  .learn-pop{left:20px;right:20px;top:calc(100% + 4px);min-width:0;max-width:none}
+  .learn-pop a{min-height:48px;font-size:17px}
+  br.wide{display:none}
+  /* thumb-sized links: footer, breadcrumbs */
+  footer.site-foot nav a,footer.site-foot .foot-cols a{display:flex;align-items:center;min-height:44px;padding:0}
+  .crumbs a{display:inline-flex;align-items:center;min-height:44px}
+  .crumbs ol{margin-bottom:var(--s1)}
+  /* plan cards: each as tall as its own content, no empty gap above the button */
+  #plans .plans{align-items:start}
+  /* crew roster: readable labels */
+  .mate span{font-size:11px;letter-spacing:.02em}
+}
+@media(max-width:380px){
+  .top .logo .logo-img{height:40px}
+  .toggle button{min-width:48px;padding:0 10px}
+  .learn-menu summary{padding:0 10px}
+}
+
+/* ---------- phone: tighter vertical rhythm ----------
+   Desktop paddings made every block ~1.5x taller on a phone. Same content, less scrolling. */
+@media(max-width:640px){
+  :root{--sec:48px}
+  .sec-head,.center-head{margin-bottom:var(--s3)}
+  .nums{padding:var(--s4) 0}
+  .hero{padding-bottom:var(--s4)}
+  .hero .lede{min-height:0;font-size:17px;line-height:1.55}
+
+  /* how it works: the number sits beside the step, not on its own row */
+  .how3{gap:12px}
+  .how3 li{padding:16px 16px 16px 64px;border-radius:var(--r-m)}
+  .how3 li::before{top:16px;left:14px;width:36px;height:36px;font-size:18px;line-height:36px}
+  .how3 b{font-size:20px;margin-bottom:2px}
+  .how3 span{font-size:16px;line-height:1.5}
+
+  .rules{gap:12px}
+  .rule{padding:var(--s2) 18px;border-top-width:6px}
+  .rule{text-align:left}
+  .rule p{font-size:16px;line-height:1.5}
+
+  .fit{gap:12px}
+  .fit .surface{padding:20px}
+  .fit h3{font-size:22px;margin-bottom:12px}
+  .fit ul{gap:6px}
+  .fit li{font-size:16px;line-height:1.45}
+
+  details{padding:10px 0}
+  summary{font-size:18px}
+
+  /* plan cards: same list, about a third shorter */
+  #plans .plans{grid-auto-columns:88%}
+  .plan{padding:20px 18px;gap:8px}
+  .plan h3{font-size:26px}
+  .plan .big{font-size:46px}
+  .plan ul{margin:2px 0 6px}
+  .plan li{padding:3px 0 3px 22px;font-size:15.5px;line-height:1.45}
+  .plan li::before{top:9px;width:12px;height:12px}
+
+  /* crew card */
+  .card{padding:20px 18px}
+  .card-top{margin-bottom:var(--s2)}
+  .lists{gap:8px}
+  .lists div{padding:10px 12px}
+  .lists ul{font-size:15px}
+  .fix{font-size:15px;padding:12px 14px}
+  .disclaim{margin-top:var(--s3);font-size:14px}
+
+  .verdict{margin-top:var(--s4)}
+  .tips-cta{margin-top:var(--s4);padding:20px}
+  .club-line{margin-top:var(--s3);padding:18px}
+  .found,.chal{padding:20px}
+  .learn-block{margin-top:var(--s5)}
+
+  /* pricing: what's inside, the program path, the guide preview */
+  .value-stack{gap:8px}
+  .value-stack li{padding:12px 14px 12px 48px}
+  .value-stack li::before{left:12px;top:13px}
+  .value-stack b{font-size:17px}
+  .value-stack span{font-size:15.5px;line-height:1.45}
+  .stop{padding:6px 0}
+  .stop p{font-size:15px;line-height:1.45}
+  .fan{zoom:.78}
+  .toc{margin:var(--s2) 0}
+  .toc li{padding:7px 0;font-size:16px}
+  .per-day{margin-top:var(--s4)}
+  .compare{margin-top:var(--s4)}
+}
