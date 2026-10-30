@@ -362,7 +362,7 @@ Za druge kampanje promeni `utm_campaign` ili `k`, pa se vide odvojeno. „Commen
 - `page_views` dobija `utm_content` (koji video/post: u bio i opis linkova stavljati `?utm_source=tiktok&utm_content=dan-07-dopa`), `app` (Instagram/TikTok/Facebook in-app browser), vreme na strani i skrol (beacon kad se strana sakrije).
 - Novi događaji: `cta_click` (dugmad koja ne vode na checkout), `section_view` (koje sekcije je poseta videla), `ab_view` (koju verziju testa).
 - `/admin` Traffic: exit strane, videi, aplikacije. `/admin/journey`: funnel po izvoru/videu/aplikaciji/landing strani sa % pada po koraku i $ po poseti, vreme/skrol/exit po strani, dokle se stiže na strani. `/admin/tests`: A/B rezultati ($ po posetiocu, poverenje, „too early“ ispod 300 po verziji).
-- A/B: `lib/experiments.ts` (5 testova, svi `active: false` dok B tekst ne bude odobren). Obe verzije su u HTML-u (`data-ab="test" data-v="a|b"` u `design/*.html`, `<AB>` u React-u), skripta u `<head>` bira verziju pre prvog prikaza, bez kolačića. QA: `?ab=home-hero:b`. Brief za istraživanje teksta: `../LBC-COPY-BRIEF.md`.
+- A/B: `lib/experiments.ts` (5 testova). B tekst napisan iz Perplexity istraživanja (`../LBC-COPY-BRIEF.md`), Luka odobrio i uključio sve 2026-10-30. Obe verzije su u HTML-u (`data-ab="test" data-v="a|b"` u `design/*.html`, `<AB>` u React-u), skripta u `<head>` bira verziju pre prvog prikaza, bez kolačića. QA: `?ab=home-hero:b`. Brief za istraživanje teksta: `../LBC-COPY-BRIEF.md`.
 
 ---
 

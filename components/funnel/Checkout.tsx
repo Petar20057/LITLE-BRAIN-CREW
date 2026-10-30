@@ -153,7 +153,7 @@ export default function Checkout({ slug }: { slug: Product["slug"] }) {
           {error && <p className="fx-err" role="alert">{error}</p>}
 
           <ul className="fx-trust">
-            <li><AB test="checkout-button" a="Secure checkout by Creem, our payment partner: card, Apple Pay or Google Pay. We never see your card." b={copyB("checkout-button", "trust")} /></li>
+            <li><AB test="checkout-button" a="Secure checkout by Creem, our payment partner: card, Apple Pay or Google Pay. We never see your card." b={recurring ? undefined : copyB("checkout-button", "trust")} /></li>
             <li>{recurring ? "Pause or cancel yourself, anytime" : "One payment, yours to keep. Instant access by email."}</li>
           </ul>
           {!recurring && <p className="fine">Digital product with instant access, so all sales are final.</p>}

@@ -27,27 +27,29 @@ type Experiment = {
 export const EXPERIMENTS = {
   "home-hero": {
     label: "Home headline and intro (/)",
-    active: false,
+    active: true,
     weights: { a: 50, b: 50 },
   },
   "buy-button": {
     label: "Toolkit buy button (home hero, plans, sticky; /pricing; /dopa)",
-    active: false,
+    active: true,
     weights: { a: 50, b: 50 },
   },
   plans: {
     label: "Plans heading and Reset button (/#plans)",
-    active: false,
+    active: true,
     weights: { a: 50, b: 50 },
   },
   "checkout-button": {
-    label: "Checkout button and trust line (/checkout)",
-    active: false,
+    label: "Checkout trust line: where you pay, no subscription (/checkout)",
+    active: true,
     weights: { a: 50, b: 50 },
+    // The button keeps "Continue to payment": the click opens Creem's page, it doesn't charge yet.
+    b: { trust: "You pay on the next page, through Creem, our payment partner: card, Apple Pay or Google Pay. No subscription." },
   },
   "decoder-cta": {
     label: "Decoder pop-up button and page close (/)",
-    active: false,
+    active: true,
     weights: { a: 50, b: 50 },
   },
 } satisfies Record<string, Experiment>;
