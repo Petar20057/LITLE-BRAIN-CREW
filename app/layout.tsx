@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { preload } from "react-dom";
 import { SITE_URL } from "@/lib/design";
 import Track from "@/components/Track";
+import Clarity from "@/components/Clarity";
 import "../public/assets/site.css";
 import "../public/assets/additions.css";
 
@@ -49,6 +50,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body>
         {children}
         <Track />
+        <Clarity />
       </body>
     </html>
   );

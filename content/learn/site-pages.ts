@@ -126,12 +126,12 @@ export const SITE_PAGES: SitePage[] = [
     metaTitle: "Privacy Policy | Little Brain Crew",
     description: "What Little Brain Crew collects, what stays in your browser, how forms and payments work, and why we never ask for kids’ names.",
     dek: "Plain words about what this site collects and what it doesn’t.",
-    updated: "2026-10-28",
+    updated: "2026-10-30",
     sections: [
       {
         h2: "The short version",
         paras: [
-          "Little Brain Crew is for parents and other adults. We don’t collect children’s names, photos or other personal details. We use no advertising trackers and no third-party analytics tools. We keep our own simple count of page visits, without cookies (see below), and the parent quiz at /code counts which screens were seen and answered. We collect an email address and a few details only when you fill in a form or buy something, and we use them for the reason you gave us.",
+          "Little Brain Crew is for parents and other adults. We don’t collect children’s names, photos or other personal details. We use no advertising trackers. We keep our own simple count of page visits, without cookies, and use Microsoft Clarity to see how pages are used (both described below), and the parent quiz at /code counts which screens were seen and answered. We collect an email address and a few details only when you fill in a form or buy something, and we use them for the reason you gave us.",
           "Parts of this page describe features that are not switched on yet. We mark those as planned, and we will update this page when they go live.",
         ],
       },
@@ -204,7 +204,7 @@ export const SITE_PAGES: SitePage[] = [
       {
         h2: "Cookies, ads and tracking",
         paras: [
-          "We don’t use advertising cookies, tracking pixels or analytics tools today. We use two cookies of our own. The sign-in cookie for Crew Club accounts is described above. When you open a Crew Club member’s share link, Creem, our payment partner, sets a referral cookie for 60 days, so that if you buy, that member gets their share. It is used only for that, never for advertising. Like any website, our hosting provider, Vercel, keeps standard server logs, such as IP address and pages requested, to keep the site running and secure. If we add analytics later, we will describe them here first.",
+          "We don’t use advertising cookies or tracking pixels. To see where pages confuse parents, we use Microsoft Clarity: it records how you scroll, click and move on our pages and turns that into heatmaps and replays of visits. It hides what you type into forms, so we never see your email or answers in it. Clarity sets its own cookies (“_clck” for up to a year and “_clsk” for a day) so the pages of one visit can be grouped, and Microsoft processes this data under its own privacy statement. It never runs on our team pages. We also use two cookies of our own. The sign-in cookie for Crew Club accounts is described above. When you open a Crew Club member’s share link, Creem, our payment partner, sets a referral cookie for 60 days, so that if you buy, that member gets their share. It is used only for that, never for advertising. Like any website, our hosting provider, Vercel, keeps standard server logs, such as IP address and pages requested, to keep the site running and secure. If we add other analytics later, we will describe them here first.",
           "We don’t sell your personal information.",
         ],
       },
@@ -215,6 +215,7 @@ export const SITE_PAGES: SitePage[] = [
         ],
         bullets: [
           "Vercel hosts the website. It handles every page request, which includes your IP address, and tells us the country it comes from.",
+          "Microsoft Clarity records how visitors use our pages (scrolls, clicks, page changes, device type and approximate location) for heatmaps and visit replays, with form entries hidden.",
           "Supabase stores our database: form entries, quiz answers, visit counts and, later, Crew Club accounts.",
           "Amazon Web Services (Amazon SES) sends our emails, such as quiz results and confirmation links. It receives your email address and the email we send you.",
           "Hostinger runs our hello@littlebraincrew.com inbox, so it holds any email you write to us.",
