@@ -72,7 +72,7 @@ export default function Quiz({ data }: { data: QuizData }) {
           <h1 className={v ? "" : "q-wait"}>{v?.headline ?? VARIANTS.a.headline}</h1>
           <p className="fx-sub">{v?.sub ?? VARIANTS.a.sub}</p>
           <button className="btn btn-main" type="button" disabled={!session} onClick={() => answer("start")}>Start →</button>
-          <p className="fine">About 5 minutes · 12 moments · 6 villains · 2 rules that run every kid’s brain</p>
+          <p className="fine">About 3 minutes · 12 moments · 6 villains · 2 rules behind every habit</p>
         </div>
       );
       break;
@@ -492,7 +492,7 @@ function Result({ data, p }: { data: QuizData; p: Progress }) {
           <h2>Want the habits behind it?</h2>
           <p>The Kid Brain Toolkit: what science really knows about sleep, focus, mood and energy in kids, in 10 chapters, with a version of every habit for ages 4–7, 8–12 and 13–17.</p>
           <a className="btn btn-main" href="/checkout/guide">Get the Toolkit · $9</a>
-          <p className="fine">Instant download. For learning only, not medical advice.</p>
+          <p className="fine">Instant download. Educational only, not medical advice.</p>
         </div>
       </div>
 

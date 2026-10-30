@@ -1,14 +1,19 @@
 // Everything you sell, and the order people see it in. Change prices and offer copy here.
 //
-//   home / pricing / Dopa article ──► /checkout/guide ──► /offer/upgrade ──yes──► /offer/club ──► /thank-you
-//                                                              └─no──► /offer/screen-off-week ──► /offer/club
-//   home / pricing ──► /checkout/program ──────────────────────────────► /offer/club (same as above)
-//   home / pricing ──► /checkout/club ────────────────────────────────────────────────► /thank-you
+//   home / pricing / Dopa article ──► /checkout/guide ──► /offer/upgrade ($30) ──yes──────────────────► /thank-you
+//                                     (UPSELL_OPEN)            └─no──► /offer/bedtime ($7, skipped if bump taken) ─► /thank-you
+//   home / pricing ──► /checkout/program ──────────────────────────────────────────────────────► /thank-you
+//   Club, /offer/club and /offer/screen-off-week stay closed (next.config.ts redirects) until the Club opens.
 //   gift page ───► /checkout/<guide|program>?gift=1 ────────────────────────────────────► /thank-you
 //   member's Creem referral link ──► home (Creem's cookie credits the member at its checkout, see AFFILIATE)
 
 // True until Creem is connected (lib/payments.ts): buttons walk the funnel without charging.
 export const PREVIEW = false;
+
+// The offers after a Toolkit order: the $30 upgrade to the Reset, then the Bedtime Kit for $7 if the bump wasn't taken.
+// Off until the $30 "upgrade" product exists in Creem (lib/creem.ts PRODUCTS, test and live): with it off the Toolkit
+// goes straight to the thank-you page. Keep in step with UPSELL_OPEN in next.config.ts.
+export const UPSELL_OPEN = false;
 
 // True until a payment processor is live: Support the crew shows "Coming soon". Keep in step with COMING_SOON in next.config.ts.
 export const COMING_SOON = false;
@@ -17,6 +22,24 @@ export type CrewKey = "dopa" | "sero" | "endo" | "toci" | "corti" | "teo" | "nor
 export const CREW_NAMES: Record<CrewKey, string> = {
   dopa: "Dopa", sero: "Sero", endo: "Endo", toci: "Toci", corti: "Corti", teo: "Teo",
   nora: "Nora", gabi: "Gabi", mela: "Mela", greli: "Greli", migo: "Migo", fronti: "Fronti", plasti: "Plasti", duo: "Duo",
+};
+
+/** The 12 hard moments of the home page decoder (design/index.html, data-moment), with where each one's plan is in
+ *  The Kid Brain Toolkit PDF. A decoder card opens /checkout/guide?crew=…&moment=…, and the checkout names the moment
+ *  and its page. Pages checked against products/delivery/Kid-Brain-Toolkit/The-Kid-Brain-Toolkit.pdf (2026-10-29). */
+export const MOMENTS: Record<string, { title: string; page: number; plan: string }> = {
+  "screen-off": { title: "Tears when screen time ends", page: 36, plan: "Ch. 6 · the 4-move tablet-off" },
+  homework: { title: "“I’m bored” and homework that won’t start", page: 41, plan: "Ch. 7 · the focus checklist" },
+  explodes: { title: "Explodes over small things", page: 46, plan: "Ch. 8 · calm first, talk later" },
+  "cant-wait": { title: "Can’t wait: grabs, interrupts, blurts it out", page: 7, plan: "Ch. 1 · the brakes are installed last" },
+  "after-school": { title: "The after-school meltdown", page: 29, plan: "Ch. 5 · fuel and rhythm" },
+  "wired-bedtime": { title: "Wired at bedtime, grumpy at breakfast", page: 14, plan: "Ch. 2 · bright days, dim evenings" },
+  "cant-sleep": { title: "Can’t fall asleep, worries at night", page: 20, plan: "Ch. 3 · the same calm routine" },
+  "bedtime-energy": { title: "Bouncing off the walls at 9 p.m.", page: 25, plan: "Ch. 4 · the daily 60" },
+  "doesnt-listen": { title: "Doesn’t listen until you yell", page: 52, plan: "Ch. 9 · connection rituals and repair" },
+  siblings: { title: "Sibling fights, every day", page: 51, plan: "Ch. 9 · special time" },
+  routine: { title: "Cranky when the routine falls apart", page: 14, plan: "Ch. 2 · a steady wake-up time" },
+  "teen-energy": { title: "A teen with no energy", page: 56, plan: "Ch. 10 · the teen sleep deal" },
 };
 
 export type Item = {
@@ -60,21 +83,24 @@ export const PRODUCTS: Record<Product["slug"], Product> = {
     title: "The Kid Brain Toolkit",
     sub: "What science really knows about sleep, focus, mood and energy in kids, and the daily habits that support them. A 72-page PDF in 10 chapters. Ages 4–17.",
     art: "fronti",
+    // Moments first, then what's in the book for each (pages from the PDF, same as MOMENTS and the home page card).
     get: [
-      "10 chapters: the growing brain, light, sleep, movement, food, screens, focus, stress, connection and the teen years",
-      "The whole toolkit on one page: 8 daily anchors, and the 3 to start with",
-      "A version of every habit for ages 4–7, 8–12 and 13–17",
-      "A four-week plan and printables: 7-day baseline, bedtime finder, habit tracker, family media plan, special-time log",
-      "When to talk to your pediatrician: all the signs in one place. Every claim sourced.",
-      "Bonuses: 24 “Say This, Not That” cards, the 60-Second Meltdown Plan, the crew poster, crew cartoons to watch together",
+      "Screen time that ends in tears: the 4-move tablet-off, word for word (p. 36)",
+      "Bedtime that drags past 10: the bedtime finder for your kid’s age and a calm routine (p. 19)",
+      "The after-school meltdown: why it’s often hunger, and what to have ready (p. 29)",
+      "Homework that won’t start: the 6-point focus checklist (p. 41)",
+      "In the middle of a blow-up: calm first, talk later (p. 46), plus the 60-Second Meltdown Plan",
+      "When you don’t know what to say: 24 “Say This, Not That” cards",
+      "A version of every habit for ages 4–7, 8–12 and 13–17, every claim sourced, and when to call your pediatrician",
+      "Also inside: a four-week plan, printables, the crew poster and crew cartoons to watch together",
     ],
     bump: {
       item: ITEMS.bedtimeKit,
-      headline: "Yes! Add the Bedtime & Screen-Off Kit for just $7",
-      text: "A crew bedtime audio story, plus the exact timer scripts for ending screen time without a fight. The two hardest moments of the day, covered. Only with this order.",
+      headline: "Add the Bedtime & Screen-Off Kit, $7",
+      text: "For the two hardest moments of the day: a 5-minute crew bedtime story to play at lights-out, and the exact words for ending screen time without a fight. Only with this order.",
     },
-    // Only the Toolkit (with or without the $7 bump) is sold today: straight to the thank-you page, no Reset upsell.
-    next: "/thank-you",
+    // The $30 upgrade to the Reset once it's on sale in Creem (UPSELL_OPEN); until then straight to the thank-you page.
+    next: UPSELL_OPEN ? "/offer/upgrade" : "/thank-you",
   },
   program: {
     slug: "program",
@@ -88,13 +114,13 @@ export const PRODUCTS: Record<Product["slug"], Product> = {
       "Week 4, move and connect: Endo, Toci, Sero and you",
       "One 10-minute habit a day, with the exact words to say and a line for your kid",
       "A printable fridge tracker and a teen track with Teo (13–17)",
-      "Instant download: a 22-page guide and the tracker",
+      "Instant download: the 30-day guide (a short read each day) and the tracker",
       "The Kid Brain Toolkit and all its bonuses, included",
     ],
     bump: {
       item: ITEMS.cardsProgram,
-      headline: "Yes! Add 30 printable Crew Habit Cards for just $7",
-      text: "One card for every day of the reset, with its character. Your kid picks the card, you both tick it off. Only with this order.",
+      headline: "Add 30 printable Crew Habit Cards, $7",
+      text: "One card for every day of the Reset, with its character. Your kid picks the card, you both tick it off. Only with this order.",
     },
     next: "/thank-you",
   },
@@ -144,6 +170,8 @@ export type Offer = {
   yes: string;
   no: string;
   next: { yes: string; no: string };
+  /** Skip this offer (straight to next.no) when the order already has this item, e.g. the Bedtime Kit taken as the bump. */
+  skipIfOwned?: string;
   /** Recurring offers need a clear "I agree it renews" tick before the yes button works. */
   consent?: string;
   fine?: string;
@@ -164,8 +192,31 @@ export const OFFERS: Record<string, Offer> = {
     per: "one payment · quick checkout, your email is already filled in",
     yes: "Yes, upgrade me for $30",
     no: "No thanks, just the Toolkit",
-    next: { yes: "/offer/club", no: "/offer/screen-off-week" },
+    // The Club is still a waitlist, so a yes ends the funnel. A no gets the Bedtime Kit (it exists; Screen-Off Week's
+    // cartoons don't yet, so that downsell stays off).
+    next: { yes: "/thank-you", no: "/offer/bedtime" },
     fine: "This $30 price is only on this page. On its own, the 30-Day Reset is $39.",
+  },
+  // Downsell after a declined upgrade: the hardest hour of the day, for $7. Skipped when the bump already added it.
+  bedtime: {
+    slug: "bedtime",
+    step: "Upgrade",
+    hand: "just the hardest hour?",
+    title: "Then make tonight’s bedtime easier, for $7",
+    sub: "Bedtime and turning the screen off are where most evenings go wrong. This kit covers both: a crew bedtime story to play at lights-out, and the exact words for ending screen time without a fight.",
+    art: "mela",
+    stack: [
+      "Mela and the Soft-Light Night: a crew bedtime audio story, about 5 minutes",
+      "The exact timer scripts for ending screen time, with the words to say",
+      "Use it tonight, next to the Toolkit’s sleep and screens chapters",
+    ],
+    item: ITEMS.bedtimeKit,
+    price: "$7",
+    per: "one payment · quick checkout, your email is already filled in",
+    yes: "Yes, add the Bedtime Kit for $7",
+    no: "No thanks, take me to my order",
+    next: { yes: "/thank-you", no: "/thank-you" },
+    skipIfOwned: "bedtime-kit",
   },
   // Feature downsell: less work for less money, and it rolls into the full reset later.
   "screen-off-week": {

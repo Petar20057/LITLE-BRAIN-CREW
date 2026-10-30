@@ -4,6 +4,9 @@ import type { NextConfig } from "next";
 // offer pages back to the plans (lib/funnel.ts COMING_SOON and PREVIEW too).
 const COMING_SOON = false;
 
+// The offers after a Toolkit order (/offer/upgrade, then /offer/bedtime). Keep in step with UPSELL_OPEN in lib/funnel.ts.
+const UPSELL_OPEN = false;
+
 // Sent with every response. Vercel adds HSTS itself. No script CSP yet: Next's inline bootstrap scripts would need a
 // nonce on every request, which turns the static pages dynamic. So this sticks to what can't break a page: no framing
 // by other sites (clickjacking), no MIME sniffing, no plugins, forms only to us, no camera, microphone or location.
@@ -38,9 +41,12 @@ const nextConfig: NextConfig = {
       { source: "/checkout/club", destination: "/#plans", permanent: false },
       { source: "/quiz", destination: "/#plans", permanent: false },
       { source: "/offer/club-lite", destination: "/thank-you", permanent: false },
-      // The upsell and downsell offers aren't sold (the Toolkit and the Reset go straight to the thank-you page), and
+      // Until UPSELL_OPEN no offer is sold (the Toolkit and the Reset go straight to the thank-you page). After it, only
+      // the upgrade and the Bedtime Kit are: the Club offer and Screen-Off Week (no cartoons yet) still go to the order.
+      ...(UPSELL_OPEN
+        ? [{ source: "/offer/:slug(club|screen-off-week)", destination: "/thank-you", permanent: false }]
+        : [{ source: "/offer/:path*", destination: "/#plans", permanent: false }]),
       // "Support the crew" is hidden: Creem doesn't allow payments with no product behind them.
-      { source: "/offer/:path*", destination: "/#plans", permanent: false },
       { source: "/support", destination: "/", permanent: false },
       // The quiz numbers moved into the admin panel.
       { source: "/stats/quiz", destination: "/admin/quiz", permanent: false },

@@ -132,13 +132,13 @@ export const SITE_PAGES: SitePage[] = [
         h2: "The short version",
         paras: [
           "Little Brain Crew is for parents and other adults. We don’t collect children’s names, photos or other personal details. We use no advertising trackers. We keep our own simple count of page visits, without cookies, and use Microsoft Clarity to see how pages are used (both described below), and the parent quiz at /code counts which screens were seen and answered. We collect an email address and a few details only when you fill in a form or buy something, and we use them for the reason you gave us.",
-          "Parts of this page describe features that are not switched on yet. We mark those as planned, and we will update this page when they go live.",
+          "A few parts of this page describe features that are not live yet, such as Crew Club accounts and gifts. We mark those as planned, and we will update this page when they go live.",
         ],
       },
       {
         h2: "What we collect when you fill in a form",
         paras: [
-          "Several pages have forms: free tips and challenges, the sticker pack, the founding-parents program, “what’s coming next” and shop waitlists, school and business inquiries, and gift cards. Depending on the form, we ask for:",
+          "Several pages have forms: the free list, the sticker pack and the 5-day Screen-Off Challenge, the founding-parents program, “what’s coming next” and shop waitlists, school and business inquiries, and (planned) gift cards. Depending on the form, we ask for:",
         ],
         bullets: [
           "Your email address.",
@@ -153,13 +153,13 @@ export const SITE_PAGES: SitePage[] = [
         paras: [
           "Form entries are stored in our database at Supabase, together with the name of the form, the page you were on, the campaign tag of the link that brought you (if any) and the random visit id described below. Gift card details are not stored there: they stay in your browser until checkout.",
           "When you sign up for tips, the free list or the challenge, we first email you a link to confirm the address is yours. We send nothing more until you tap it, so nobody can sign you up without your say.",
-          "We use your information to answer you, send what you asked for, and, if you confirmed you want updates, send occasional emails. Every marketing email has an unsubscribe link, and one tap takes you off all our lists.",
+          "We use your information to answer you and send what you asked for. Once you confirm, the free list or the sticker pack arrives in one email, and the Screen-Off Challenge sends one email a day for five days, then stops. Every one of these emails has an unsubscribe link, and one tap takes you off all our lists.",
         ],
       },
       {
         h2: "How we count visits",
         paras: [
-          "To know which pages help parents and where visitors come from, our own script records each page you open: the page address, the site that linked to you (only its name, such as instagram.com), the campaign tags in the link, whether you are on a phone, tablet or computer, and the country your connection comes from. It sets no cookies and stores no IP address. Instead it keeps two random ids in your browser: one in local storage (key “lbc-vid”) that tells us a visitor came back, and one in session storage (keys “lbc-sid” and “lbc-origin”) that groups the pages of one visit and disappears when you close the tab. Clearing your browser data removes them. Bots and our own team pages are not counted. We keep these visit records for 13 months, then delete them automatically.",
+          "To know which pages help parents and where visitors come from, our own script records each page you open: the page address, the site that linked to you (only its name, such as instagram.com), the campaign tags in the link (including which of our videos or posts it came from), whether you are on a phone, tablet or computer, whether the page opened inside an app such as Instagram or TikTok, the country your connection comes from, how long each page was on screen and how far down you scrolled, which parts of a page you reached and which buttons you pressed. If you buy, the purchase is linked to these random ids, not to anything that names you, so we can see which pages and videos lead to orders. It sets no cookies and stores no IP address. Instead it keeps random ids in your browser: one in local storage (key “lbc-vid”) that tells us a visitor came back, and one in session storage (keys “lbc-sid” and “lbc-origin”) that groups the pages of one visit and disappears when you close the tab. When we test two versions of a page’s wording, local storage also remembers which version you see (key “lbc-ab”, and “lbc-ab-seen” in session storage), so it doesn’t change between visits. Clearing your browser data removes them all. Bots and our own team pages are not counted. We keep these visit records for 13 months, then delete them automatically.",
           "To stop scripts from flooding our forms, the quiz and our visit counter, we count requests from each connection for up to an hour. For that we keep a scrambled code made from your connection’s IP address with a secret key, never the address itself, and delete it within a day.",
         ],
       },
@@ -184,7 +184,7 @@ export const SITE_PAGES: SitePage[] = [
       {
         h2: "Crew Club accounts (planned)",
         paras: [
-          "Crew Club members will get an account. This is not switched on yet. When it is, checking out creates an account with your email address. The account may also hold a display name you choose, the age groups of your children (such as 3 to 6 or 10 to 12, never names or birthdays), your plan and its payment status, and, if you cancel, the reason you pick, so we can learn what to improve.",
+          "Crew Club members will get an account. The Crew Club hasn’t opened yet. When it does, checking out creates an account with your email address. The account may also hold a display name you choose, the age groups of your children (such as 3 to 5 or 13 to 17, never names or birthdays), your plan and its payment status, and, if you cancel, the reason you pick, so we can learn what to improve.",
           "Accounts will be stored with Supabase, the database and sign-in service we use. Signing in sets a cookie that keeps you signed in. That cookie is needed for the account to work, and it is not used for advertising.",
         ],
       },
@@ -204,7 +204,7 @@ export const SITE_PAGES: SitePage[] = [
       {
         h2: "Cookies, ads and tracking",
         paras: [
-          "We don’t use advertising cookies or tracking pixels. To see where pages confuse parents, we use Microsoft Clarity: it records how you scroll, click and move on our pages and turns that into heatmaps and replays of visits. It hides what you type into forms, so we never see your email or answers in it. Clarity sets its own cookies (“_clck” for up to a year and “_clsk” for a day) so the pages of one visit can be grouped, and Microsoft processes this data under its own privacy statement. It never runs on our team pages. We also use two cookies of our own. The sign-in cookie for Crew Club accounts is described above. When you open a Crew Club member’s share link, Creem, our payment partner, sets a referral cookie for 60 days, so that if you buy, that member gets their share. It is used only for that, never for advertising. Like any website, our hosting provider, Vercel, keeps standard server logs, such as IP address and pages requested, to keep the site running and secure. If we add other analytics later, we will describe them here first.",
+          "We don’t use advertising cookies or tracking pixels. To see where pages confuse parents, we use Microsoft Clarity: it records how you scroll, click and move on our pages and turns that into heatmaps and replays of visits. It hides what you type into forms, so we never see your email or answers in it. Clarity sets its own cookies (“_clck” for up to a year and “_clsk” for a day) so the pages of one visit can be grouped, and Microsoft processes this data under its own privacy statement. It never runs on our team pages. Two more cookies may be set. The sign-in cookie for Crew Club accounts (planned) is described above. When you open a Crew Club member’s share link, Creem, our payment partner, sets a referral cookie for 60 days, so that if you buy, that member gets their share. It is used only for that, never for advertising. Like any website, our hosting provider, Vercel, keeps standard server logs, such as IP address and pages requested, to keep the site running and secure. If we add other analytics later, we will describe them here first.",
           "We don’t sell your personal information.",
         ],
       },
@@ -219,7 +219,7 @@ export const SITE_PAGES: SitePage[] = [
           "Supabase stores our database: form entries, quiz answers, visit counts and, later, Crew Club accounts.",
           "Amazon Web Services (Amazon SES) sends our emails, such as quiz results and confirmation links. It receives your email address and the email we send you.",
           "Hostinger runs our hello@littlebraincrew.com inbox, so it holds any email you write to us.",
-          "Creem will handle payments once they are switched on (see Payments).",
+          "Creem handles payments (see Payments).",
         ],
       },
       {
@@ -248,7 +248,7 @@ export const SITE_PAGES: SitePage[] = [
     metaTitle: "Terms of Use and Sale | Little Brain Crew",
     description: "The rules for using Little Brain Crew and buying our digital products: educational use only, all sales final, Crew Club membership and US audience.",
     dek: "What you can expect from us and what we ask of you.",
-    updated: "2026-10-28",
+    updated: "2026-10-30",
     sections: [
       {
         h2: "Using this site",
@@ -267,7 +267,7 @@ export const SITE_PAGES: SitePage[] = [
         h2: "Digital products",
         paras: [
           "We sell digital products, such as the Kid Brain Toolkit and the 30-Day Reset, and may sell more over time. You get a link or files by email after you pay. A purchase gives you a personal, non-transferable license to use the content with your own family. Please don’t resell, share, copy or post it. Classroom, school and business use needs a separate license.",
-          "Prices and what is included are shown at checkout. Gifts are delivered by email to the recipient on the date you choose.",
+          "Prices and what is included are shown at checkout. The 30-Day Reset has a launch price of $39 until January 1, 2027; after that it costs $59.",
         ],
       },
       {
@@ -286,7 +286,7 @@ export const SITE_PAGES: SitePage[] = [
       {
         h2: "Affiliate program for Crew Club members",
         paras: [
-          "Our affiliate program is run on Creem, our payment partner and the merchant of record, and is open by invitation to Crew Club members only. Members who join earn 20% of every payment made by people who buy through their link, figured after the 2% fee Creem keeps on affiliate sales. The link is remembered for 60 days. Payments to support the crew are not included. A member who later cancels their Club stays in the program.",
+          "Our affiliate program is run on Creem, our payment partner and the merchant of record, and is open by invitation to Crew Club members only. Members who join earn 20% of every payment made by people who buy through their link, figured after the 2% fee Creem keeps on affiliate sales. The link is remembered for 60 days. A member who later cancels their Club stays in the program.",
           "Commissions wait 7 to 12 days, then Creem pays them on the 1st and 15th of the month once the balance reaches $50, by bank transfer or USDC, after an identity check. Creem charges its own payout fee. Members must say they earn a commission wherever they share the link, share only their own honest experience, make no medical claims or promises, and must not buy through their own link, use coupon sites, run ads on our name, send spam or aim posts at children. Creem’s affiliate terms also apply. Nothing is paid out before the program opens.",
           "The affiliate program opens together with the Crew Club.",
         ],

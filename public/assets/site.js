@@ -8,10 +8,11 @@ const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 // Web3Forms access key: once it's here, every form emails you. The form name goes in the subject.
 const W3F_KEY = '';
 // Checkout, upsells and downsells live in the Next.js app (/checkout/<product>, /offer/...). Prices: web/lib/funnel.ts.
-// Early-bird deadline. Timers, the old price and "early" wording stay HIDDEN until the owner confirms a real date.
-const EARLY_BIRD_CONFIRMED = false;
-const OPEN = new Date('2026-12-02T18:00:00+01:00'); // placeholder date
-if (EARLY_BIRD_CONFIRMED) document.documentElement.classList.add('early-on');
+// Launch price of the 30-Day Reset: $39 until this moment, then $59 (Luka, 2026-10-30). Until then the old price and the
+// "launch price" line ([data-early]) show; after it they hide by themselves. Raising the price itself is manual:
+// the Creem product, web/lib/funnel.ts ITEMS.program and the "$39" in design/index.html, pricing.html and dopa.html.
+const OPEN = new Date('2027-01-01T00:00:00-05:00');
+if (new Date() < OPEN) document.documentElement.classList.add('early-on');
 /* ========================================================================= */
 
 /* ---------- the crew ---------- */
@@ -348,13 +349,65 @@ if (sticky) {
 }
 })();
 
+/* ---------- decoder moments: a card opens its moment here instead of leaving for the article ---------- */
+const mm = document.getElementById('moment-modal');
+if (mm) {
+  let lastFocus = null;
+  const close = () => { mm.classList.remove('open'); mm.hidden = true; document.body.classList.remove('modal-open'); if (lastFocus) lastFocus.focus(); };
+  document.addEventListener('click', e => {
+    const a = e.target.closest && e.target.closest('.decoder li[data-moment] a');
+    if (!a) return;
+    e.preventDefault();
+    const li = a.closest('li'), d = li.dataset;
+    lastFocus = a;
+    mm.querySelector('#mm-title').textContent = a.textContent;
+    mm.querySelector('.mm-why').textContent = li.querySelector('b + span').textContent;
+    mm.querySelector('.mm-tonight p').textContent = d.tonight;
+    mm.querySelector('.mm-page').textContent = `p. ${d.page}, ${d.plan}`;
+    // Every version of the buy button (A/B test decoder-cta, lib/experiments.ts) gets the moment.
+    mm.querySelectorAll('.mm-buy').forEach(buy => {
+      buy.href = `/checkout/guide?crew=${encodeURIComponent(d.crew)}&moment=${encodeURIComponent(d.moment)}`;
+      buy.dataset.place = a.dataset.place;
+    });
+    mm.querySelector('.mm-sci').href = a.getAttribute('href');
+    mm.hidden = false; mm.classList.add('open'); document.body.classList.add('modal-open');
+    mm.querySelector('.mclose').focus();
+  });
+  mm.addEventListener('click', e => { if (e.target === mm || e.target.closest('.mclose')) close(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && mm.classList.contains('open')) close(); });
+}
+
 /* ---------- funnel events: the same body as lib/track-event.ts, sent on click of any [data-track] ---------- */
-document.addEventListener('click', e => {
-  const el = e.target.closest && e.target.closest('[data-track]');
-  if (!el) return;
+const sendEvent = (name, place) => {
   try {
     const visitor = localStorage.getItem('lbc-vid'), session = sessionStorage.getItem('lbc-sid');
     if (!visitor || !session) return;
-    navigator.sendBeacon('/api/event', JSON.stringify({ visitor, session, name: el.dataset.track, place: el.dataset.place || null, path: location.pathname }));
-  } catch (err) { /* storage blocked: the click isn't counted */ }
+    navigator.sendBeacon('/api/event', JSON.stringify({ visitor, session, name, place: place || null, path: location.pathname }));
+  } catch (err) { /* storage blocked: the event isn't counted */ }
+};
+document.addEventListener('click', e => {
+  const el = e.target.closest && e.target.closest('[data-track]');
+  if (el) sendEvent(el.dataset.track, el.dataset.place);
 });
+
+/* ---------- which sections of the page a visit saw (place = the section id, or sec-N), once each per page view ---------- */
+if ('IntersectionObserver' in window) {
+  const seen = new IntersectionObserver(entries => entries.forEach(en => {
+    if (!en.isIntersecting) return;
+    seen.unobserve(en.target);
+    sendEvent('section_view', en.target.dataset.sec);
+  }), { rootMargin: '0px 0px -40% 0px' });
+  document.querySelectorAll('main section').forEach((s, i) => { s.dataset.sec = s.id || 'sec-' + (i + 1); seen.observe(s); });
+}
+
+/* ---------- how far down the home page people get (25/50/75/100%), once each per page view ---------- */
+if (location.pathname === '/') {
+  const marks = [25, 50, 75, 100], sent = new Set();
+  const onDepth = () => {
+    const h = document.documentElement.scrollHeight - innerHeight;
+    const pct = h > 0 ? (scrollY / h) * 100 : 100;
+    marks.forEach(m => { if (pct >= m - 2 && !sent.has(m)) { sent.add(m); sendEvent('scroll_depth', String(m)); } });
+    if (sent.size === marks.length) removeEventListener('scroll', onDepth);
+  };
+  addEventListener('scroll', onDepth, { passive: true });
+}

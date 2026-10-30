@@ -31,3 +31,21 @@ export function rangeFrom(days: unknown) {
 
 export const pct = (n: number, of: number) => (of ? `${Math.round((n / of) * 100)}%` : "–");
 export const num = (n: number) => n.toLocaleString("en-US");
+
+/** Two-sided confidence (0–1) that two rates really differ: a two-proportion z-test, x of n against y of m.
+ *  Good enough to say "too early" or "probably real" on /admin/tests; not a substitute for waiting for enough visitors. */
+export function confidence(x: number, n: number, y: number, m: number): number | null {
+  if (n < 1 || m < 1) return null;
+  const p = (x + y) / (n + m);
+  const se = Math.sqrt(p * (1 - p) * (1 / n + 1 / m));
+  if (!se) return null;
+  const z = Math.abs(x / n - y / m) / se;
+  return 1 - 2 * (1 - normalCdf(z));
+}
+
+/** Standard normal CDF (Abramowitz–Stegun 7.1.26 erf approximation, error below 1.5e-7). */
+function normalCdf(z: number) {
+  const t = 1 / (1 + 0.3275911 * (z / Math.SQRT2));
+  const erf = 1 - (((((1.061405429 * t - 1.453152027) * t + 1.421413741) * t - 0.284496736) * t + 0.254829592) * t) * Math.exp(-(z * z) / 2);
+  return 0.5 * (1 + erf);
+}

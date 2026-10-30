@@ -89,6 +89,31 @@ describe("Creem webhook", () => {
     expect(fake.table("subscriptions")).toHaveLength(0);
   });
 
+  it("a paid order's purchase event carries the visit that bought, from the checkout metadata", async () => {
+    const visitor = "6f1c2a3b-4d5e-4f60-8a7b-9c0d1e2f3a4b";
+    const session = "0a1b2c3d-4e5f-4a6b-8c7d-9e0f1a2b3c4d";
+    const order = {
+      id: "evt_visit",
+      eventType: "checkout.completed",
+      created_at: T0,
+      object: { id: "chk_visit", customer: { id: "cust_3", email: "dad@example.com" }, metadata: { order: "guide", delivery: "tok-v", visitor, session } },
+    };
+    expect((await deliver(order)).status).toBe(200);
+    expect(fake.table("funnel_events")).toMatchObject([{ name: "purchase", place: "guide", amount_cents: 900, visitor_id: visitor, session_id: session }]);
+  });
+
+  it("ignores visit ids in the metadata that aren't ids", async () => {
+    const order = {
+      id: "evt_badvisit",
+      eventType: "checkout.completed",
+      created_at: T0,
+      object: { id: "chk_bad", customer: { id: "cust_4", email: "x@example.com" }, metadata: { order: "guide", delivery: "tok-b", visitor: "drop table", session: 7 } },
+    };
+    expect((await deliver(order)).status).toBe(200);
+    expect(fake.table("funnel_events")).toMatchObject([{ name: "purchase", visitor_id: null, session_id: null }]);
+    expect(fake.table("orders")).toHaveLength(1);
+  });
+
   it("a paid Toolkit + Bedtime Kit order is saved once, with its purchase event and a receipt with the download links", async () => {
     const order = {
       id: "evt_order",
@@ -131,6 +156,19 @@ describe("Creem webhook", () => {
       object: { id: "chk_3", customer: { email: "dad@example.com" }, metadata: { order: "bedtime-kit", delivery: "tok-ghi" } },
     });
     expect(fake.table("funnel_events")).toMatchObject([{ name: "post_bump_purchase", place: "bedtime-kit", amount_cents: 700 }]);
+  });
+
+  it("the $30 upgrade after the Toolkit is a post-bump purchase, and its receipt links the Reset and the Toolkit", async () => {
+    await deliver({
+      id: "evt_upgrade",
+      eventType: "checkout.completed",
+      created_at: T0,
+      object: { id: "chk_4", customer: { email: "mom@example.com" }, metadata: { order: "upgrade", delivery: "tok-up" } },
+    });
+    expect(fake.table("funnel_events")).toMatchObject([{ name: "post_bump_purchase", place: "upgrade", amount_cents: 3000 }]);
+    const receipt = vi.mocked(sendEmail).mock.calls[0][1] as { text: string };
+    expect(receipt.text).toContain("Start here: The 30-Day Reset");
+    expect(receipt.text).toContain("Start here: The Kid Brain Toolkit");
   });
 
   it("an order key we don't sell as a one-time product is not recorded", async () => {

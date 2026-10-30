@@ -23,7 +23,7 @@ export default function ToolkitCta({ path }: { path: string }) {
       <hr style={{ border: 0, borderTop: "1px solid var(--hair)", margin: "24px 0" }} />
       <p>Not ready? Get 15 free ways to end screen time without tears.</p>
       <FreeListForm />
-      <p className="fine" style={{ marginTop: 16 }}>For learning only, not medical advice.</p>
+      <p className="fine" style={{ marginTop: 16 }}>Educational only, not medical advice.</p>
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { per, total, usd } from "@/lib/funnel";
 import { downloadPath, ownedProducts, sectionsFor } from "@/lib/delivery-files";
 import { useOrder } from "@/lib/order";
+import { trackEvent } from "@/lib/track-event";
 import CrewArt from "./CrewArt";
 import Steps from "./Steps";
 
@@ -100,7 +101,7 @@ export default function ThankYou() {
           <div className="fx-card" style={{ marginTop: 24 }}>
             <h2>Bedtime still a battle?</h2>
             <p>Add the Bedtime & Screen-Off Kit for $7: a crew bedtime story to play at lights-out, plus the exact timer scripts for ending screen time without a fight.</p>
-            <a className="btn btn-main" href="/checkout/bedtime">Add it for $7</a>
+            <a className="btn btn-main" href="/checkout/bedtime" onClick={() => trackEvent("buy_click", "thank-you-bedtime")}>Add it for $7</a>
             <button className="no-thanks" type="button" onClick={() => setSkipBedtime(true)}>No thanks</button>
           </div>
         )}
@@ -109,7 +110,7 @@ export default function ThankYou() {
           <div className="fx-card" style={{ marginTop: 24 }}>
             <h2>Want to turn the code into habits?</h2>
             <p>The 30-Day Reset is open: one 10-minute habit a day for 30 days, with the exact words to say. Your $9 counts toward it: email hello@littlebraincrew.com and we’ll send you a $9 code.</p>
-            <a className="btn" href="/pricing">See the 30-Day Reset</a>
+            <a className="btn" href="/pricing" onClick={() => trackEvent("cta_click", "thank-you-reset")}>See the 30-Day Reset</a>
           </div>
         )}
 

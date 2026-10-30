@@ -20,6 +20,8 @@ const DEFAULTS: Record<string, () => Row> = {
   subscriptions: () => ({ id: randomUUID(), provider_event_at: null, current_period_start: null, current_period_end: null, canceled_at: null, created_at: now() }),
   members: () => ({ creem_customer_id: null, created_at: now() }),
   orders: () => ({ id: randomUUID(), delivery_hash: null, download_until: "2999-01-01T00:00:00Z", created_at: now() }),
+  checkout_starts: () => ({ id: Math.floor(Math.random() * 1e9), token: randomUUID(), crew: null, moment: null, reminded_at: null, unsubscribed_at: null, created_at: now() }),
+  page_views: () => ({ id: Math.floor(Math.random() * 1e9), view_id: null, utm_content: null, app: null, seconds: null, max_scroll: null, created_at: now() }),
   funnel_events: () => ({ id: randomUUID(), visitor_id: null, session_id: null, place: null, path: null, amount_cents: null, created_at: now() }),
 };
 

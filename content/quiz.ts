@@ -71,7 +71,7 @@ export const MOMENTS: MomentDef[] = [
   { id: "not-listening", label: "Doesn’t listen until you yell", line: "Toci needs a moment of connection before the instruction.", char: "toci", entry: { section: "why", slug: "kid-behaves-worse-with-parents" }, tip: 1 },
   { id: "siblings", label: "Sibling fights, every single day", line: "Toci feels there isn’t enough of you to go around.", char: "toci", entry: { section: "why", slug: "siblings-fight-all-the-time" }, tip: 0 },
   { id: "routine", label: "Cranky all week when the routine falls apart", line: "Sero likes days that look the same. Villain: Lati.", char: "sero", villain: "lati", entry: { section: "habits", slug: "irregular-bedtimes" }, tip: 0 },
-  { id: "teen", label: "A teen with no energy and no confidence", line: "Teo needs sleep, sport and daylight.", char: "teo", entry: { section: "brain-chemicals", slug: "testosterone-in-teens" }, tip: 0, teen: true },
+  { id: "teen", label: "A teen who sleeps late and drags all day", line: "Teo needs sleep, sport and daylight.", char: "teo", entry: { section: "ages", slug: "brain-age-14-to-17" }, tip: 0, teen: true },
 ];
 
 /** How many moments a parent can pick (one lesson screen each). */

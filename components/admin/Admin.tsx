@@ -6,6 +6,8 @@ import { RANGES, num } from "@/lib/admin";
 
 const TABS = [
   { href: "/admin", label: "Traffic" },
+  { href: "/admin/journey", label: "Journey" },
+  { href: "/admin/tests", label: "A/B tests" },
   { href: "/admin/newsletter", label: "Newsletter & forms" },
   { href: "/admin/quiz", label: "Quiz /code" },
   { href: "/admin/members", label: "Crew Club" },

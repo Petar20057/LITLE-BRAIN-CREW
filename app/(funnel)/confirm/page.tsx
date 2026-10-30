@@ -7,7 +7,7 @@ export const metadata = { title: "Confirm your email · Little Brain Crew" };
 export const instant = false;
 
 const DONE: Record<string, { title: string; text: string }> = {
-  done: { title: "You’re confirmed", text: "Thanks. We’ll send what you asked for, and nothing else. Every email has an unsubscribe link." },
+  done: { title: "You’re confirmed", text: "Thanks. What you asked for is on its way to your inbox. If it isn’t there in a few minutes, check Promotions or spam. Every email has an unsubscribe link." },
   already: { title: "Already confirmed", text: "This address was confirmed before. Nothing more to do." },
   unknown: { title: "This link doesn’t work", text: "It may be cut off or mistyped. Copy the whole link from the email, or sign up again on the site." },
 };

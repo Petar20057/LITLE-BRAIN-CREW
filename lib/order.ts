@@ -58,9 +58,14 @@ export function saveOrder(order: Order) {
   listeners.forEach((l) => l());
 }
 
-export function addItem(item: Item) {
+/** Adds a paid one-time offer and its download token, so the thank-you page can show its files. */
+export function addPaid(item: Item, delivery?: string) {
   const order = read();
-  if (!order.items.some((i) => i.id === item.id)) saveOrder({ ...order, items: [...order.items, item] });
+  saveOrder({
+    ...order,
+    items: order.items.some((i) => i.id === item.id) ? order.items : [...order.items, item],
+    deliveries: [...(order.deliveries ?? []), ...(delivery ? [{ token: delivery, items: [item.id] }] : [])],
+  });
 }
 
 /** A value from sessionStorage written by the design's scripts (e.g. the gift card details). */

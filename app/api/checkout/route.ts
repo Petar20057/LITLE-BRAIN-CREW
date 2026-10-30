@@ -5,11 +5,15 @@ import { SITE_URL } from "@/lib/design";
 import { isSessionId } from "@/lib/quiz-track";
 import { allow, tooMany } from "@/lib/rate-limit";
 import { newDeliveryToken } from "@/lib/delivery";
+import { recordCheckoutStart } from "@/lib/checkout-reminders";
 
 // Starts a Creem checkout for what the funnel page asks for and returns its URL (lib/payments.ts redirects there).
 // The browser only names item ids; prices and the Creem product come from the server. Access is granted later
 // by the webhook (app/api/creem/webhook), never by the redirect back.
-type Body = { items?: unknown; email?: unknown; next?: unknown; consent?: unknown; crew?: unknown; quiz?: unknown };
+type Body = {
+  items?: unknown; email?: unknown; next?: unknown; consent?: unknown; crew?: unknown; quiz?: unknown; moment?: unknown;
+  visitor?: unknown; session?: unknown;
+};
 
 const NEXT = /^\/[a-z0-9/-]*$/;
 
@@ -47,6 +51,9 @@ export async function POST(request: NextRequest) {
   if (typeof body.crew === "string" && body.crew in CREW_NAMES) metadata.crew = body.crew;
   // The webhook marks the /code quiz visit as bought (quiz_sessions.purchased_at).
   if (isSessionId(body.quiz)) metadata.quiz_session = body.quiz;
+  // The visit that bought (components/Track.tsx): the webhook writes it on the purchase event for /admin.
+  if (isSessionId(body.visitor)) metadata.visitor = body.visitor;
+  if (isSessionId(body.session)) metadata.session = body.session;
   // A one-time order gets the buyer's download token. Creem sends it back in the webhook (only its hash is stored),
   // and the browser keeps it for the thank-you page. Club subscriptions have no downloads.
   const delivery = recurring ? null : newDeliveryToken();
@@ -54,6 +61,8 @@ export async function POST(request: NextRequest) {
 
   try {
     const url = await createCheckout({ productId, email, successUrl: `${SITE_URL}${next}`, metadata });
+    // For the one abandoned-checkout reminder (lib/checkout-reminders.ts); never blocks the payment.
+    if (!recurring) await recordCheckoutStart({ email, orderKey: key, crew: metadata.crew, moment: typeof body.moment === "string" ? body.moment : undefined });
     return NextResponse.json({ url, delivery });
   } catch (err) {
     console.error(err);

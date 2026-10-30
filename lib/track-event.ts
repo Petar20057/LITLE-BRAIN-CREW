@@ -10,11 +10,19 @@ export const EVENT_NAMES = [
   "post_bump_purchase",
   "email_signup",
   "moment_click",
+  "checkout_submit",
+  "offer_view",
+  "offer_no",
+  "scroll_depth",
+  "cta_click",
+  "section_view",
+  "ab_view",
 ] as const;
 
 export type EventName = (typeof EVENT_NAMES)[number];
 
-/** `place` says where the event happened: "hero", "plans", "sticky", "article-A", "moment-3", "thank-you"… */
+/** `place` says where the event happened: "hero", "plans", "sticky", "article-A", "moment-3", "thank-you"…
+ *  For ab_view it is "test:variant" (lib/experiments.ts). */
 export function trackEvent(name: EventName, place?: string): void {
   try {
     const visitor = localStorage.getItem("lbc-vid");

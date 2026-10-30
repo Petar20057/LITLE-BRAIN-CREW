@@ -6,7 +6,7 @@ import { SITE_URL } from "@/lib/design";
 import { DELIVERY_BUCKET, downloadPath, sectionsFor } from "@/lib/delivery-files";
 import { sendEmail } from "@/lib/email/send";
 import { orderReceipt } from "@/lib/email/templates";
-import { recordServerEvent } from "@/lib/funnel-events";
+import { recordServerEvent, type Visit } from "@/lib/funnel-events";
 import { looseAdmin } from "@/lib/supabase/loose";
 
 // After a paid one-time order (Creem checkout.completed, app/api/creem/webhook/route.ts):
@@ -22,9 +22,18 @@ export const SIGNED_LINK_SECONDS = 15 * 60;
 export const newDeliveryToken = () => randomBytes(24).toString("base64url");
 export const tokenHash = (token: string) => createHash("sha256").update(token).digest("hex");
 
-export type PaidOrder = { providerOrderId: string; email: string; orderKey: string; token: string | null };
+export type PaidOrder = {
+  providerOrderId: string;
+  email: string;
+  orderKey: string;
+  token: string | null;
+  /** The visit that bought (Creem metadata from /api/checkout), for /admin's sources and A/B tests. */
+  visit?: Visit;
+};
 
 /** Records a paid one-time order. Returns false for an order key we don't sell as one-time (nothing written). */
+const POST_PURCHASE = new Set(["bedtime-kit", "upgrade", "screen-off-week"]);
+
 export async function recordPaidOrder(order: PaidOrder): Promise<boolean> {
   const ids = order.orderKey.split("+");
   const items = itemsFor(ids);
@@ -50,10 +59,11 @@ export async function recordPaidOrder(order: PaidOrder): Promise<boolean> {
   if (error) throw error;
   if (!data?.length) return true; // already recorded by an earlier delivery of this webhook
 
-  // Bedtime Kit on its own is a "post" purchase (the upsell, sold after the Toolkit); anything else is a purchase.
-  const name = order.orderKey === "bedtime-kit" ? "post_bump_purchase" : "purchase";
+  // Offers sold after the first order (the $30 upgrade, the Bedtime Kit on its own) are "post" purchases, so /admin can
+  // tell first orders from upsells; anything else is a purchase.
+  const name = POST_PURCHASE.has(order.orderKey) ? "post_bump_purchase" : "purchase";
   try {
-    await recordServerEvent(name, order.orderKey, amountCents);
+    await recordServerEvent(name, order.orderKey, amountCents, order.visit);
   } catch (err) {
     console.error("[funnel] purchase event not saved", { order: order.providerOrderId }, err);
   }

@@ -33,8 +33,12 @@ describe("funnel events route", () => {
   });
 
   it("accepts every browser step name", async () => {
-    for (const name of ["buy_click", "checkout_view", "bump_checked", "email_signup", "moment_click"]) await send(ok({ name }));
-    expect(fake.table("funnel_events").map((r) => r.name)).toEqual(["buy_click", "checkout_view", "bump_checked", "email_signup", "moment_click"]);
+    const names = [
+      "buy_click", "checkout_view", "bump_checked", "email_signup", "moment_click", "checkout_submit", "offer_view", "offer_no",
+      "scroll_depth", "cta_click", "section_view", "ab_view",
+    ];
+    for (const name of names) await send(ok({ name }));
+    expect(fake.table("funnel_events").map((r) => r.name)).toEqual(names);
   });
 
   it("never takes the purchase events from the browser", async () => {

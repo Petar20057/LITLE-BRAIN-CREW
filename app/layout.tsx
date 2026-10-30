@@ -3,6 +3,8 @@ import { preload } from "react-dom";
 import { SITE_URL } from "@/lib/design";
 import Track from "@/components/Track";
 import Clarity from "@/components/Clarity";
+import ABExposure from "@/components/ABExposure";
+import { abCss, abHeadScript } from "@/lib/experiments";
 import "../public/assets/site.css";
 import "../public/assets/additions.css";
 
@@ -45,11 +47,18 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   for (const f of FIRST_SCREEN_FONTS) {
     preload(`/assets/fonts/${f}.woff2`, { as: "font", type: "font/woff2", crossOrigin: "anonymous" });
   }
+  const abScript = abHeadScript();
   return (
-    <html lang="en" data-scroll-behavior="smooth">
+    // The A/B script sets data-ab-* on <html> before React hydrates (lib/experiments.ts), hence suppressHydrationWarning.
+    <html lang="en" data-scroll-behavior="smooth" suppressHydrationWarning>
+      <head>
+        <style dangerouslySetInnerHTML={{ __html: abCss() }} />
+        {abScript && <script dangerouslySetInnerHTML={{ __html: abScript }} />}
+      </head>
       <body>
         {children}
         <Track />
+        <ABExposure />
         <Clarity />
       </body>
     </html>

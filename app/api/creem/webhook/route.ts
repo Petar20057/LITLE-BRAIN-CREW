@@ -94,7 +94,8 @@ async function oneTimeOrder(obj: Record<string, unknown>, eventId: string) {
   const checkoutId = typeof obj.id === "string" ? obj.id : undefined;
   const orderId = (obj.order as { id?: string } | undefined)?.id ?? checkoutId ?? eventId;
   const token = typeof metadata.delivery === "string" ? metadata.delivery : null;
-  const recorded = await recordPaidOrder({ providerOrderId: orderId, email, orderKey, token });
+  const visit = { visitor: isSessionId(metadata.visitor) ? metadata.visitor : null, session: isSessionId(metadata.session) ? metadata.session : null };
+  const recorded = await recordPaidOrder({ providerOrderId: orderId, email, orderKey, token, visit });
   if (!recorded) console.info("[creem] one-time order not recognised", { event: eventId, orderKey });
 }
 

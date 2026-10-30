@@ -2,14 +2,21 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState, type FormEvent } from "react";
-import { CREW_NAMES, ITEMS, PRODUCTS, per, total, usd, type CrewKey, type Item, type Product } from "@/lib/funnel";
+import { CREW_NAMES, ITEMS, MOMENTS, PRODUCTS, per, total, usd, type CrewKey, type Item, type Product } from "@/lib/funnel";
 import { saveOrder, useOrder, useQueryParam, useStored } from "@/lib/order";
 import { charge } from "@/lib/payments";
 import { trackEvent } from "@/lib/track-event";
+import { copyB } from "@/lib/experiments";
+import AB from "@/components/AB";
 import CrewArt from "./CrewArt";
 import Steps from "./Steps";
 
+// Gifts are closed (design/gift.html): nothing sends the gift card yet, so ?gift=1 is ignored until it does.
+const GIFTS_OPEN = false;
+
 export default function Checkout({ slug }: { slug: Product["slug"] }) {
+  // A/B test checkout-button (lib/experiments.ts): the "b" label, with {price} for the total, once its copy is approved.
+  const buttonB = copyB("checkout-button", "button");
   const p = PRODUCTS[slug];
   const router = useRouter();
   const order = useOrder();
@@ -20,9 +27,13 @@ export default function Checkout({ slug }: { slug: Product["slug"] }) {
   }, [slug, source]);
   const crewParam = useQueryParam("crew");
   const crew = crewParam && crewParam in CREW_NAMES ? (crewParam as CrewKey) : undefined;
+  // The decoder card the visitor came from (home page), so the order names their moment and its page.
+  const momentParam = useQueryParam("moment");
+  const moment = slug === "guide" && momentParam && momentParam in MOMENTS ? MOMENTS[momentParam] : undefined;
   // The /code quiz visit this order came from (?qs=), so /stats/quiz can count the purchase.
   const quiz = useQueryParam("qs") ?? undefined;
-  const isGift = useQueryParam("gift") === "1";
+  const giftParam = useQueryParam("gift");
+  const isGift = GIFTS_OPEN && giftParam === "1";
   const giftRaw = useStored("vlc-gift");
   const gift = isGift ? parseGift(giftRaw) : undefined;
   const planParam = useQueryParam("plan");
@@ -47,6 +58,7 @@ export default function Checkout({ slug }: { slug: Product["slug"] }) {
     if (recurring && !consent) return setError("Please tick the box to confirm how the membership renews.");
     setError("");
     setBusy(true);
+    trackEvent("checkout_submit", items.map((i) => i.id).join("+"));
     try {
       const next = gift ? "/thank-you" : p.next;
       // The Bedtime Kit page adds to the order already in this tab (the Toolkit bought before it); anything else starts fresh.
@@ -56,6 +68,7 @@ export default function Checkout({ slug }: { slug: Product["slug"] }) {
         consent: recurring ? consent : undefined,
         crew,
         quiz,
+        moment: moment ? momentParam ?? undefined : undefined,
         commit: (delivery) =>
           saveOrder({
             email,
@@ -81,13 +94,11 @@ export default function Checkout({ slug }: { slug: Product["slug"] }) {
       <div className="fx-grid">
         <form className="fx-card" onSubmit={pay} noValidate>
           <h1>{gift ? `A gift for ${gift.to || "a friend"}` : "Your order"}</h1>
-          <p className="fx-sub">{p.sub}</p>
-
           <div className="fx-product">
             <CrewArt k={crew ?? p.art} mood="happy" />
             <div>
               <b>{p.title}</b>
-              <small>{crew && slug === "guide" ? `Starting with ${CREW_NAMES[crew]}’s moments` : gift ? `Sent to ${gift.to_email} on ${gift.send_on}` : "Instant access by email"}</small>
+              <small>{moment ? `${moment.title}: the plan is on p. ${moment.page} (${moment.plan})` : crew && slug === "guide" ? `Starting with ${CREW_NAMES[crew]}’s moments` : gift ? `Sent to ${gift.to_email} on ${gift.send_on}` : "Instant access by email"}</small>
             </div>
           </div>
 
@@ -98,15 +109,14 @@ export default function Checkout({ slug }: { slug: Product["slug"] }) {
             </div>
           )}
 
-          <ul className="stack" style={{ margin: "12px 0 8px" }}>
-            {p.get.map((g) => <li key={g}>{g}</li>)}
-          </ul>
-
-          <div style={{ marginTop: 16 }}>
-            {items.map((i) => (
-              <div className="line-item" key={i.id}><span>{i.name}</span><span>{per(i)}</span></div>
-            ))}
-          </div>
+          {/* One item is already named above and priced in the total; the lines only show once the bump adds a second. */}
+          {(items.length > 1 || recurring) && (
+            <div style={{ marginTop: 16 }}>
+              {items.map((i) => (
+                <div className="line-item" key={i.id}><span>{i.name}</span><span>{per(i)}</span></div>
+              ))}
+            </div>
+          )}
 
           {p.bump && !gift && (
             <label className="bump">
@@ -138,15 +148,24 @@ export default function Checkout({ slug }: { slug: Product["slug"] }) {
           )}
 
           <div className="pay">
-            <button className="btn btn-main btn-lg" type="submit" disabled={busy}>{busy ? "One moment…" : `Continue to payment · ${usd(total(items))}`}</button>
+            <button className="btn btn-main btn-lg" type="submit" disabled={busy}>{busy ? "One moment…" : <AB test="checkout-button" a={`Continue to payment · ${usd(total(items))}`} b={buttonB?.replace("{price}", usd(total(items)))} />}</button>
           </div>
           {error && <p className="fx-err" role="alert">{error}</p>}
 
           <ul className="fx-trust">
-            <li>Secure checkout by Creem, our payment partner: card, Apple Pay or Google Pay. We never see your card.</li>
-            <li>{recurring ? "Pause or cancel yourself, anytime" : "One payment, yours to keep"}</li>
-            {!recurring && <li>Digital product, instant access. All sales are final.</li>}
+            <li><AB test="checkout-button" a="Secure checkout by Creem, our payment partner: card, Apple Pay or Google Pay. We never see your card." b={copyB("checkout-button", "trust")} /></li>
+            <li>{recurring ? "Pause or cancel yourself, anytime" : "One payment, yours to keep. Instant access by email."}</li>
           </ul>
+          {!recurring && <p className="fine">Digital product with instant access, so all sales are final.</p>}
+
+          {/* What's inside sits below the button, so on a phone the email field and the button are on the first screen. */}
+          <details className="fx-inside">
+            <summary>What’s inside</summary>
+            <p className="fx-sub">{p.sub}</p>
+            <ul className="stack" style={{ margin: "12px 0 8px" }}>
+              {p.get.map((g) => <li key={g}>{g}</li>)}
+            </ul>
+          </details>
         </form>
 
         <aside className="fx-aside">
@@ -162,7 +181,7 @@ export default function Checkout({ slug }: { slug: Product["slug"] }) {
             <h3>{recurring ? "No traps" : "Instant access"}</h3>
             <p>{recurring ? "Cancel or pause yourself, in your account, in 2 clicks. We email you before every yearly renewal." : "Your files land in your inbox within a minute. If a link or file won’t open, email us and we’ll fix it fast."}</p>
           </div>
-          <p className="fine">For learning only. Not medical advice. If you are worried about your child, talk to your pediatrician.</p>
+          <p className="fine">Educational only, not medical advice. If you are worried about your child, talk to your pediatrician.</p>
         </aside>
       </div>
     </>

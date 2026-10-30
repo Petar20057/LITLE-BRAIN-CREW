@@ -1,10 +1,11 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { OFFERS } from "@/lib/funnel";
-import { addItem, useOrder } from "@/lib/order";
+import { addPaid, useOrder } from "@/lib/order";
 import { charge } from "@/lib/payments";
+import { trackEvent } from "@/lib/track-event";
 import CrewArt from "./CrewArt";
 import Steps from "./Steps";
 
@@ -16,18 +17,33 @@ export default function OneTimeOffer({ slug }: { slug: string }) {
   const [consent, setConsent] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const owned = Boolean(o.skipIfOwned && order.items.some((i) => i.id === o.skipIfOwned));
+
+  // Already in the order (the Bedtime Kit taken as the bump): don't offer it twice. Seen offers are counted for /admin;
+  // a yes is counted by the Creem webhook when it's paid.
+  useEffect(() => {
+    if (owned) router.replace(o.next.no);
+    else trackEvent("offer_view", slug);
+  }, [owned, o.next.no, router, slug]);
 
   async function yes() {
     if (o.consent && !consent) return setError("Please tick the box to confirm how it renews.");
     setBusy(true);
     try {
-      await charge([o.item], order.email, { next: o.next.yes, consent: o.consent ? consent : undefined, commit: () => addItem(o.item) });
+      await charge([o.item], order.email, { next: o.next.yes, consent: o.consent ? consent : undefined, commit: (delivery) => addPaid(o.item, delivery) });
       router.push(o.next.yes);
     } catch (err) {
       setError(err instanceof Error ? err.message : "That didn’t go through. Please try again.");
       setBusy(false);
     }
   }
+
+  function no() {
+    trackEvent("offer_no", slug);
+    router.push(o.next.no);
+  }
+
+  if (owned) return null;
 
   return (
     <div className="fx-narrow" style={{ margin: "0 auto" }}>
@@ -48,7 +64,7 @@ export default function OneTimeOffer({ slug }: { slug: string }) {
         )}
         <button className="btn btn-main" type="button" onClick={yes} disabled={busy}>{busy ? "One moment…" : o.yes}</button>
         {error && <p className="fx-err" role="alert">{error}</p>}
-        <button className="no-thanks" type="button" onClick={() => router.push(o.next.no)} disabled={busy}>{o.no}</button>
+        <button className="no-thanks" type="button" onClick={no} disabled={busy}>{o.no}</button>
         {o.fine && <p className="fine">{o.fine}</p>}
       </div>
     </div>

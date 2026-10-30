@@ -25,10 +25,16 @@ export type Message = {
   blocks: Block[];
   /** Why this person got this email (footer). */
   reason: string;
+  /** Mail people signed up for (lists, the challenge): the /unsubscribe?t= page, shown as a link in the footer. */
+  unsubscribe?: string;
 };
 
 // Public origin for links and images. Never localhost: an email link has to work from any inbox.
 export const EMAIL_BASE = (process.env.NEXT_PUBLIC_SITE_URL || "https://www.littlebraincrew.com").replace(/\/$/, "");
+
+// A physical mailing address in every email's footer: US law (CAN-SPAM) requires one in commercial and list email.
+// A PO box or virtual mailbox is fine. Empty = no address line (fine for receipts, not for the lists).
+export const POSTAL_ADDRESS = process.env.EMAIL_POSTAL_ADDRESS ?? "";
 
 const C = { paper: "#FFFBF4", white: "#FFFFFF", ink: "#1F1B2E", soft: "#57536A", hair: "#EDE4D6", cta: "#FF5A36", ctaEdge: "#C9401C", tick: "#A8E6C8", note: "#FFEEF2", link: "#2F4BC4" };
 const BODY = "Figtree,-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif";
@@ -105,8 +111,9 @@ export function renderEmail(m: Message, base = EMAIL_BASE): Email {
     </td></tr>
     <tr><td align="center" style="padding:24px 8px 0;font:400 13px/1.6 ${BODY};color:${C.soft}">
       <p style="margin:0 0 8px">${esc(m.reason)}</p>
-      <p style="margin:0 0 8px">For learning only. Not medical advice. If you are worried about your child, talk to your pediatrician.</p>
-      <p style="margin:0"><a href="${base}/" style="color:${C.soft}">Little Brain Crew</a> · <a href="${base}/privacy" style="color:${C.soft}">Privacy</a> · <a href="${base}/terms" style="color:${C.soft}">Terms</a></p>
+      <p style="margin:0 0 8px">Educational only, not medical advice. If you are worried about your child, talk to your pediatrician.</p>
+      <p style="margin:0"><a href="${base}/" style="color:${C.soft}">Little Brain Crew</a> · <a href="${base}/privacy" style="color:${C.soft}">Privacy</a> · <a href="${base}/terms" style="color:${C.soft}">Terms</a>${m.unsubscribe ? ` · <a href="${esc(abs(base, m.unsubscribe))}" style="color:${C.soft}">Unsubscribe</a>` : ""}</p>
+      ${POSTAL_ADDRESS ? `<p style="margin:8px 0 0">${esc(POSTAL_ADDRESS)}</p>` : ""}
     </td></tr>
   </table>
 </td></tr>
@@ -120,8 +127,10 @@ export function renderEmail(m: Message, base = EMAIL_BASE): Email {
     ...m.blocks.map((b) => `${blockText(b, base)}\n`),
     "--",
     m.reason,
-    "For learning only. Not medical advice. If you are worried about your child, talk to your pediatrician.",
+    "Educational only, not medical advice. If you are worried about your child, talk to your pediatrician.",
     `Little Brain Crew · ${base}`,
+    ...(m.unsubscribe ? [`Unsubscribe: ${abs(base, m.unsubscribe)}`] : []),
+    ...(POSTAL_ADDRESS ? [POSTAL_ADDRESS] : []),
   ].join("\n");
 
   return { subject: m.subject, preheader: m.preheader, html, text };

@@ -356,3 +356,35 @@ Za druge kampanje promeni `utm_campaign` ili `k`, pa se vide odvojeno. „Commen
 - Privacy stranica opisuje brojanje poseta i čuvanje formi.
 
 **Šta još fali:** unsubscribe ruta i slanje newslettera (za sada CSV), prodaje Toolkit-a i Reset-a su u Creem dashboard-u dok se ne upišu u bazu.
+
+**Dublja analitika i A/B testovi (2026-10-30, migracija `20261030120000_attribution_engagement_experiments.sql`):**
+- Kupovina nosi posetu: `lib/payments.ts` šalje `lbc-vid`/`lbc-sid` u `/api/checkout` → Creem metadata → webhook upisuje `visitor_id`/`session_id` na `purchase` događaj. Tabela `orders` se ne dira.
+- `page_views` dobija `utm_content` (koji video/post: u bio i opis linkova stavljati `?utm_source=tiktok&utm_content=dan-07-dopa`), `app` (Instagram/TikTok/Facebook in-app browser), vreme na strani i skrol (beacon kad se strana sakrije).
+- Novi događaji: `cta_click` (dugmad koja ne vode na checkout), `section_view` (koje sekcije je poseta videla), `ab_view` (koju verziju testa).
+- `/admin` Traffic: exit strane, videi, aplikacije. `/admin/journey`: funnel po izvoru/videu/aplikaciji/landing strani sa % pada po koraku i $ po poseti, vreme/skrol/exit po strani, dokle se stiže na strani. `/admin/tests`: A/B rezultati ($ po posetiocu, poverenje, „too early“ ispod 300 po verziji).
+- A/B: `lib/experiments.ts` (5 testova, svi `active: false` dok B tekst ne bude odobren). Obe verzije su u HTML-u (`data-ab="test" data-v="a|b"` u `design/*.html`, `<AB>` u React-u), skripta u `<head>` bira verziju pre prvog prikaza, bez kolačića. QA: `?ab=home-hero:b`. Brief za istraživanje teksta: `../LBC-COPY-BRIEF.md`.
+
+---
+
+## 14. Plan za konverziju (Hormozi, 2026-10-29)
+
+Ceo plan: `~/.claude/plans/nastavi-toasty-wilkinson.md`. Mera uspeha je **novac po poseti** (sa upsellima), ne stopa konverzije.
+
+**Urađeno 29.10. (nije commitovano):**
+- **Merenje:** novi događaji `checkout_submit` (klik na plaćanje), `offer_view` / `offer_no` (upsell stranice), `scroll_depth` (25/50/75/100% početne). Upsell plaćen = `post_bump_purchase` (sada i za `upgrade`). Admin Traffic tabela ima: pay clicks, upsell seen/bought, prihod i **$ po poseti**, plus tabelu dubine skrola. Migracija `supabase/migrations/20261029120000_funnel_offers_scroll.sql` mora u Supabase pre deploya.
+- **Upsell iza prekidača `UPSELL_OPEN`** (`lib/funnel.ts` i `next.config.ts`, oba `false`): Toolkit → `/offer/upgrade` (Reset $30) → ne → `/offer/bedtime` (Bedtime Kit $7, preskače se ako je uzet bump) → thank-you. Screen-Off Week ostaje ugašen (crtaći ne postoje). Popravljeno: posle upsella thank-you sada dobija token za fajlove (`addPaid` u `lib/order.ts`), a `upgrade` otključava Reset + Toolkit (`lib/delivery-files.ts`).
+- **Checkout:** „What's inside“ je ispod dugmeta (na telefonu email i dugme su na prvom ekranu), red sa jednom stavkom sklonjen, „All sales are final“ kao sitan tekst ispod dugmeta, bump kraći i o bolu.
+- **Početna:** Club više nije treća kartica; waitlist je jedan red ispod dve kartice koje se mogu kupiti.
+- „$59“ na Resetu se ne prikazuje (`data-early`, `EARLY_BIRD_CONFIRMED = false`), nije problem.
+
+**Da bi upsell proradio (Luka):** napravi Creem proizvod „Upgrade to The 30-Day Reset“ $30 u test i live store-u, upiši id-jeve u `lib/creem.ts` (`upgrade`), stavi `UPSELL_OPEN = true` na oba mesta, test kupovina na test store-u.
+
+**Sledeće iz plana:** decoder kartice se otvaraju na strani sa CTA (treba tačne strane u Toolkitu), stack Toolkita na ishode, „pogledaj unutra“ sa stranama PDF-a, ponuda odmah posle decodera (danas je na ~8000px skrola na telefonu), besplatna strana 5 kao lead magnet, email sekvenca od 5 mejlova.
+
+**Urađeno 29.10. (drugi deo):**
+- **Decoder prodaje:** klik na karticu otvara prozor na početnoj (zašto se dešava, „Try tonight“, strana u Toolkitu, dugme `/checkout/guide?crew=…&moment=…`, mali link na članak). Checkout tada piše „Tears when screen time ends: the plan is on p. 36 (Ch. 6 · the 4-move tablet-off)“. Strane su pročitane iz `products/delivery/Kid-Brain-Toolkit/The-Kid-Brain-Toolkit.pdf` i stoje u `MOMENTS` (`lib/funnel.ts`) i `data-*` kartica u `design/index.html` (moraju ostati iste). Ako se PDF promeni, proveriti strane.
+- **Toolkit stack na ishode** (kartica na početnoj i checkout): trenutak → šta je u knjizi → strana.
+- **Podsetnik za napušten checkout** (Luka: da): `checkout_starts` (migracija `20261029130000_checkout_reminders.sql`), jedan mejl 2–48 h posle, samo ako ta adresa nije platila, nije se odjavila ni sa čega i nije dobila podsetnik te nedelje; link vodi nazad na isti checkout i trenutak (`utm_source=reminder`); odjava radi i za sve liste. Cron jednom dnevno u 16:00 UTC (`vercel.json`; Vercel Hobby dozvoljava samo dnevni cron, na Pro može na svaki sat). **Ugašen dok `CHECKOUT_REMINDERS=true`** i dok nije postavljen `CRON_SECRET` u Vercel-u.
+- Pre paljenja podsetnika: (1) rečenica u Privacy policy da adresu sa checkouta koristimo za jedan podsetnik; (2) CAN-SPAM traži fizičku poštansku adresu u komercijalnom mejlu (važi i za newsletter): P.O. box ili adresa registrovanog agenta LLC-a.
+
+**Founding roditelji (Luka, 2026-10-29): za sada ne pozivamo nikoga.** Stranica `/founding` i kartica na početnoj ostaju kako jesu, a prijave i dalje stižu u admin (Newsletter & forms). Dok nema citata, dokaz na sajtu su prave strane iz PDF-a i besplatna strana 5.

@@ -1,11 +1,12 @@
 import { ITEMS } from "@/lib/funnel";
 import type { Email } from "./layout";
-import { clubWelcome, confirmSignup, orderReceipt, quizResultEmail, renewalReminder } from "./templates";
+import { challengeDay, clubWelcome, confirmSignup, freeScreenList, freeStickerPack, orderReceipt, quizResultEmail, renewalReminder } from "./templates";
 import { quizData } from "@/lib/quiz";
 import { quizResult } from "@/lib/quiz-plan";
 
 // Sample data for the /dev/emails previews. The receipt's download links point at the account page only because file delivery isn't built yet.
 const SAMPLE_CONFIRM = "/confirm?t=00000000-0000-4000-8000-000000000000";
+const SAMPLE_UNSUBSCRIBE = "/unsubscribe?t=00000000-0000-4000-8000-000000000000";
 
 export const SAMPLES: Record<string, () => Email> = {
   "club-welcome": () => clubWelcome("monthly"),
@@ -24,5 +25,8 @@ export const SAMPLES: Record<string, () => Email> = {
     quizResultEmail(quizResult(quizData(), { age: "8-9", moments: ["screens", "cant-sleep"], sleep: null, villains: null })!, { confirmTipsUrl: SAMPLE_CONFIRM }),
   "confirm-free-screen-list": () => confirmSignup("free-screen-list", SAMPLE_CONFIRM),
   "confirm-screen-off-challenge": () => confirmSignup("screen-off-challenge", SAMPLE_CONFIRM),
+  "free-screen-list": () => freeScreenList(SAMPLE_UNSUBSCRIBE),
+  "free-sticker-pack": () => freeStickerPack(SAMPLE_UNSUBSCRIBE),
+  ...Object.fromEntries([1, 2, 3, 4, 5].map((d) => [`challenge-day-${d}`, () => challengeDay(d, SAMPLE_UNSUBSCRIBE)])),
 };
 

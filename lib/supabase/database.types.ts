@@ -55,6 +55,77 @@ export type Database = {
           },
         ];
       };
+      checkout_starts: {
+        Row: {
+          created_at: string;
+          crew: string | null;
+          email: string;
+          id: number;
+          moment: string | null;
+          order_key: string;
+          reminded_at: string | null;
+          token: string;
+          unsubscribed_at: string | null;
+        };
+        ComputedFields: never;
+        Insert: {
+          created_at?: string;
+          crew?: string | null;
+          email: string;
+          id?: never;
+          moment?: string | null;
+          order_key: string;
+          reminded_at?: string | null;
+          token?: string;
+          unsubscribed_at?: string | null;
+        };
+        Update: {
+          created_at?: string;
+          crew?: string | null;
+          email?: string;
+          id?: never;
+          moment?: string | null;
+          order_key?: string;
+          reminded_at?: string | null;
+          token?: string;
+          unsubscribed_at?: string | null;
+        };
+        Relationships: [];
+      };
+      funnel_events: {
+        Row: {
+          amount_cents: number | null;
+          created_at: string;
+          id: number;
+          name: string;
+          path: string | null;
+          place: string | null;
+          session_id: string | null;
+          visitor_id: string | null;
+        };
+        ComputedFields: never;
+        Insert: {
+          amount_cents?: number | null;
+          created_at?: string;
+          id?: never;
+          name: string;
+          path?: string | null;
+          place?: string | null;
+          session_id?: string | null;
+          visitor_id?: string | null;
+        };
+        Update: {
+          amount_cents?: number | null;
+          created_at?: string;
+          id?: never;
+          name?: string;
+          path?: string | null;
+          place?: string | null;
+          session_id?: string | null;
+          visitor_id?: string | null;
+        };
+        Relationships: [];
+      };
       members: {
         Row: {
           age_groups: Database["public"]["Enums"]["age_group"][];
@@ -86,45 +157,97 @@ export type Database = {
         };
         Relationships: [];
       };
+      orders: {
+        Row: {
+          amount_cents: number;
+          created_at: string;
+          delivery_hash: string | null;
+          download_until: string;
+          email: string;
+          id: string;
+          items: string[];
+          order_key: string;
+          provider_order_id: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          amount_cents: number;
+          created_at?: string;
+          delivery_hash?: string | null;
+          download_until?: string;
+          email: string;
+          id?: string;
+          items: string[];
+          order_key: string;
+          provider_order_id: string;
+        };
+        Update: {
+          amount_cents?: number;
+          created_at?: string;
+          delivery_hash?: string | null;
+          download_until?: string;
+          email?: string;
+          id?: string;
+          items?: string[];
+          order_key?: string;
+          provider_order_id?: string;
+        };
+        Relationships: [];
+      };
       page_views: {
         Row: {
+          app: string | null;
           country: string | null;
           created_at: string;
           device: string | null;
           id: number;
+          max_scroll: number | null;
           path: string;
           referrer: string | null;
+          seconds: number | null;
           session_id: string;
           utm_campaign: string | null;
+          utm_content: string | null;
           utm_medium: string | null;
           utm_source: string | null;
+          view_id: string | null;
           visitor_id: string;
         };
         ComputedFields: never;
         Insert: {
+          app?: string | null;
           country?: string | null;
           created_at?: string;
           device?: string | null;
           id?: never;
+          max_scroll?: number | null;
           path: string;
           referrer?: string | null;
+          seconds?: number | null;
           session_id: string;
           utm_campaign?: string | null;
+          utm_content?: string | null;
           utm_medium?: string | null;
           utm_source?: string | null;
+          view_id?: string | null;
           visitor_id: string;
         };
         Update: {
+          app?: string | null;
           country?: string | null;
           created_at?: string;
           device?: string | null;
           id?: never;
+          max_scroll?: number | null;
           path?: string;
           referrer?: string | null;
+          seconds?: number | null;
           session_id?: string;
           utm_campaign?: string | null;
+          utm_content?: string | null;
           utm_medium?: string | null;
           utm_source?: string | null;
+          view_id?: string | null;
           visitor_id?: string;
         };
         Relationships: [];
@@ -307,6 +430,8 @@ export type Database = {
       };
       signups: {
         Row: {
+          challenge_day: number | null;
+          challenge_sent_at: string | null;
           confirm_sent_at: string | null;
           confirm_token: string;
           confirmed_at: string | null;
@@ -322,6 +447,8 @@ export type Database = {
         };
         ComputedFields: never;
         Insert: {
+          challenge_day?: number | null;
+          challenge_sent_at?: string | null;
           confirm_sent_at?: string | null;
           confirm_token?: string;
           confirmed_at?: string | null;
@@ -336,6 +463,8 @@ export type Database = {
           visitor_id?: string | null;
         };
         Update: {
+          challenge_day?: number | null;
+          challenge_sent_at?: string | null;
           confirm_sent_at?: string | null;
           confirm_token?: string;
           confirmed_at?: string | null;
@@ -431,8 +560,60 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      experiment_results: {
+        Args: { since: string };
+        Returns: {
+          buy_clickers: number;
+          checkouts: number;
+          pay_clickers: number;
+          purchasers: number;
+          purchases: number;
+          revenue_cents: number;
+          test: string;
+          variant: string;
+          visitors: number;
+        }[];
+      };
+      funnel_by: {
+        Args: { dim: string; since: string };
+        Returns: {
+          buy_clicks: number;
+          checkouts: number;
+          label: string;
+          pay_clicks: number;
+          purchases: number;
+          revenue_cents: number;
+          visits: number;
+        }[];
+      };
+      funnel_daily: {
+        Args: { since: string };
+        Returns: {
+          bump_purchases: number;
+          buy_clicks: number;
+          checkouts: number;
+          day: string;
+          offer_views: number;
+          pay_clicks: number;
+          post_purchases: number;
+          purchases: number;
+          revenue_cents: number;
+          visits: number;
+        }[];
+      };
       has_club_access: { Args: Record<PropertyKey, never>; Returns: boolean };
       newsletter_subscribers: { Args: { forms: string[] }; Returns: number };
+      page_engagement: {
+        Args: { since: string };
+        Returns: {
+          avg_scroll: number;
+          exits: number;
+          median_seconds: number;
+          path: string;
+          views: number;
+          visitors: number;
+        }[];
+      };
       prune_old_data: { Args: Record<PropertyKey, never>; Returns: undefined };
       quiz_answers: {
         Args: { since: string };
@@ -466,6 +647,22 @@ export type Database = {
       rate_limit_hit: {
         Args: { p_key: string; p_max: number; p_window_seconds: number };
         Returns: boolean;
+      };
+      scroll_depth: {
+        Args: { since: string };
+        Returns: {
+          mark: string;
+          visits: number;
+        }[];
+      };
+      section_reach: {
+        Args: { since: string };
+        Returns: {
+          page_visits: number;
+          path: string;
+          section: string;
+          visits: number;
+        }[];
       };
       signups_daily: {
         Args: { since: string };

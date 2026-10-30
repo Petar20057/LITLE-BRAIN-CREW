@@ -18,8 +18,13 @@ export const isBot = (ua: string) => BOT.test(ua);
 /** `place` says where it happened: "hero", "plans", "guide", "moment-3", "guide+bedtime-kit"… Anything else is dropped. */
 export const cleanPlace = (v: unknown) => (typeof v === "string" && /^[A-Za-z0-9:_+./-]{1,40}$/.test(v) ? v : null);
 
+/** The visitor and visit ids of components/Track.tsx, when the browser had them. */
+export type Visit = { visitor: string | null; session: string | null };
+
 /** Writes one server-side event. Throws on failure so the caller decides (the webhook logs it). */
-export async function recordServerEvent(name: (typeof SERVER_EVENTS)[number], place: string, amountCents: number) {
-  const { error } = await looseAdmin().from("funnel_events").insert({ name, place, amount_cents: amountCents });
+export async function recordServerEvent(name: (typeof SERVER_EVENTS)[number], place: string, amountCents: number, visit?: Visit) {
+  const { error } = await looseAdmin()
+    .from("funnel_events")
+    .insert({ name, place, amount_cents: amountCents, visitor_id: visit?.visitor ?? null, session_id: visit?.session ?? null });
   if (error) throw error;
 }

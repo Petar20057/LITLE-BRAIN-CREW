@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { looseAdmin } from "@/lib/supabase/loose";
 import { supabaseConfigured } from "@/lib/supabase/env";
-import { UNTRACKED } from "@/lib/analytics";
+import { UNTRACKED, inAppBrowser } from "@/lib/analytics";
 import { isSessionId } from "@/lib/quiz-track";
 import { SITE_URL } from "@/lib/design";
 import { allow } from "@/lib/rate-limit";
@@ -10,6 +10,9 @@ import { allow } from "@/lib/rate-limit";
 // 204 and is only logged. Bots are skipped, values are capped, and only the referrer's host is kept. No IP address
 // or user agent is stored: the country comes from Vercel's header, the device type from the user agent.
 // Rate-limited per IP (lib/rate-limit.ts), so a script can't fill the table or the numbers.
+// Two kinds of body: a page view ({visitor, session, view, path, referrer, utm_*}), and "leave" ({kind: "leave",
+// session, view, seconds, scroll}), which fills in time on page and scroll depth on that page view's row.
+// looseAdmin until npm run db:types knows the columns of 20261030120000_attribution_engagement_experiments.sql.
 
 const BOT = /bot|crawl|spider|slurp|preview|facebookexternalhit|headless|lighthouse|pingdom|uptime|monitor|curl|wget|python|axios|node-fetch/i;
 const SITE_HOST = new URL(SITE_URL).hostname.replace(/^www\./, "");
@@ -44,22 +47,29 @@ export async function POST(request: NextRequest) {
   } catch {
     return done;
   }
+  if (body.kind === "leave") {
+    await leave(body, request);
+    return done;
+  }
   const { visitor, session, path } = body;
   if (!isSessionId(visitor) || !isSessionId(session)) return done;
   if (typeof path !== "string" || !path.startsWith("/") || path.length > 200 || UNTRACKED.test(path)) return done;
   if (!(await allow("track", request))) return done;
 
   try {
-    const { error } = await createAdminClient()
+    const { error } = await looseAdmin()
       .from("page_views")
       .insert({
         visitor_id: visitor,
         session_id: session,
+        view_id: isSessionId(body.view) ? body.view : null,
         path,
         referrer: referrerHost(body.referrer),
         utm_source: text(body.utm_source)?.toLowerCase() ?? null,
         utm_medium: text(body.utm_medium)?.toLowerCase() ?? null,
         utm_campaign: text(body.utm_campaign),
+        utm_content: text(body.utm_content)?.toLowerCase() ?? null,
+        app: inAppBrowser(ua),
         device: device(ua),
         country: text(request.headers.get("x-vercel-ip-country"), 2),
       });
@@ -68,4 +78,26 @@ export async function POST(request: NextRequest) {
     console.error("[track] page view not saved", err);
   }
   return done;
+}
+
+const whole = (v: unknown, max: number) => (typeof v === "number" && Number.isFinite(v) ? Math.max(0, Math.min(max, Math.round(v))) : null);
+
+/** Time on page and scroll depth for one page view, matched by its view id and visit id. */
+async function leave(body: Record<string, unknown>, request: NextRequest) {
+  const { session, view } = body;
+  if (!isSessionId(session) || !isSessionId(view)) return;
+  const seconds = whole(body.seconds, 3600);
+  const scroll = whole(body.scroll, 100);
+  if (seconds === null && scroll === null) return;
+  if (!(await allow("track", request))) return;
+  try {
+    const { error } = await looseAdmin()
+      .from("page_views")
+      .update({ seconds, max_scroll: scroll })
+      .eq("view_id", view)
+      .eq("session_id", session);
+    if (error) throw error;
+  } catch (err) {
+    console.error("[track] time on page not saved", err);
+  }
 }
