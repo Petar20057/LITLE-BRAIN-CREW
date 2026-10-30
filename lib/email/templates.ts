@@ -184,7 +184,8 @@ export function confirmSignup(form: string, url: string): Email {
 
 // ---------- Free offers on /free, sent once the address is confirmed (lib/free-offers.ts) ----------
 
-const FOLLOW = "The crew posts a short cartoon explainer most days: instagram.com/littlebraincrew and tiktok.com/@little.brain.crew.";
+// No other domains in list emails (README: Email): links or bare domains of other sites are a spam signal.
+const FOLLOW = "The crew posts a short cartoon explainer most days. Find us as Little Brain Crew on Instagram and TikTok.";
 
 /** The free printable: 15 ways to end screen time without tears (public/downloads, built by products/build.mjs). */
 export function freeScreenList(unsubscribe: string): Email {
