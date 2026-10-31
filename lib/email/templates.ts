@@ -260,7 +260,7 @@ export function freeScreenList(unsubscribe: string): Email {
     art: "dopa",
     blocks: [
       { p: "Thanks for confirming. Here’s your list: two pages, made to print and keep on the fridge." },
-      { button: { label: "Open the list (PDF)", url: "/downloads/15-ways-to-end-screen-time.pdf" } },
+      { button: { label: "Open your list", url: "/downloads/15-ways-to-end-screen-time.pdf" } },
       { p: "If you only try one thing this week, try number 5: warn twice, at 5 minutes and at 1 minute, with a timer your kid can see. Surprise endings are the hardest ones." },
       { p: `Want the exact words for the moment it goes wrong? Page ${SCREEN_OFF.page} of the Kid Brain Toolkit has it, word for word (${SCREEN_OFF.plan}).` },
       { link: { label: `See page ${SCREEN_OFF.page} in the Toolkit · ${usd(ITEMS.guide.price)}`, url: SCREEN_OFF_CHECKOUT } },
@@ -283,7 +283,7 @@ export function freeStickerPack(unsubscribe: string): Email {
     art: "toci",
     blocks: [
       { p: "Thanks for confirming. Here are the 12 crew stickers, 512 × 512 px." },
-      { button: { label: "Download the stickers (ZIP)", url: "/downloads/crew-stickers.zip" } },
+      { button: { label: "Get your 12 stickers", url: "/downloads/crew-stickers.zip" } },
       {
         list: [
           "iMessage and Telegram: open the png folder and send them like any picture.",

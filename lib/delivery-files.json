@@ -99,30 +99,30 @@
     },
     {
       "product": "guide",
-      "label": "Download everything (ZIP)",
+      "label": "Get everything in one download",
       "files": [
         {
           "id": "toolkit-zip",
           "path": "Kid-Brain-Toolkit.zip",
-          "name": "Download everything (ZIP)",
+          "name": "Get everything in one download",
           "kind": "zip"
         }
       ]
     },
     {
       "product": "bedtime-kit",
-      "label": "Your Bedtime & Screen-Off Kit",
+      "label": "For tonight: a calmer bedtime and screen-off",
       "files": [
         {
           "id": "bedtime-pdf",
           "path": "Bedtime-and-Screen-Off-Kit/Bedtime-and-Screen-Off-Kit.pdf",
-          "name": "Bedtime & Screen-Off Kit (PDF)",
+          "name": "The words and routine for lights-out and screen-off",
           "kind": "pdf"
         },
         {
           "id": "bedtime-audio",
           "path": "Bedtime-and-Screen-Off-Kit/Mela-and-the-Soft-Light-Night.mp3",
-          "name": "Mela and the Soft-Light Night (listen in the browser)",
+          "name": "Listen: Mela and the Soft-Light Night",
           "kind": "audio"
         }
       ]

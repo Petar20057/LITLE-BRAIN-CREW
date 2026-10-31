@@ -16,7 +16,7 @@ export const SAMPLES: Record<string, () => Email> = {
       [ITEMS.guide, ITEMS.bedtimeKit],
       [
         { label: "Start here: The Kid Brain Toolkit", files: [{ name: "Start here: The Kid Brain Toolkit", url: "https://www.littlebraincrew.com/api/download" }] },
-        { label: "Your Bedtime & Screen-Off Kit", files: [{ name: "Bedtime & Screen-Off Kit (PDF)", url: "https://www.littlebraincrew.com/api/download" }, { name: "Mela and the Soft-Light Night (listen in the browser)", url: "https://www.littlebraincrew.com/api/download" }] },
+        { label: "For tonight: a calmer bedtime and screen-off", files: [{ name: "The words and routine for lights-out and screen-off", url: "https://www.littlebraincrew.com/api/download" }, { name: "Listen: Mela and the Soft-Light Night", url: "https://www.littlebraincrew.com/api/download" }] },
       ],
     ),
   "renewal-reminder": () => renewalReminder("November 26, 2026"),
