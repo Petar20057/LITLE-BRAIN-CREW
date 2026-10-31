@@ -3,8 +3,10 @@
 import { useEffect, useState, useSyncExternalStore, type FormEvent, type ReactNode } from "react";
 import { BEDTIMES, DISCLAIMER, DUO_LEAD, DUO_OPTIONS, DUO_QUESTION, MAX_MOMENTS, VARIANTS, WAKE_TIMES, type StepId } from "@/content/quiz";
 import type { QuizChar, QuizData, QuizSource } from "@/lib/quiz";
-import { crewOf, forAge, hoursLabel, quizResult, sleepCheck, type QuizAnswers } from "@/lib/quiz-plan";
+import { crewOf, forAge, hoursLabel, offerLinks, quizResult, sleepCheck, type QuizAnswers } from "@/lib/quiz-plan";
+import { ITEMS, MOMENTS } from "@/lib/funnel";
 import CrewArt from "@/components/funnel/CrewArt";
+import FreeListForm from "@/components/learn/FreeListForm";
 import { START, getSession, markStep, onStep, save, subscribe, track, type Progress } from "./session";
 
 // The /code quiz: a 5-minute walk through everything the site teaches (age stages, the 12 moments with a
@@ -15,6 +17,8 @@ import { START, getSession, markStep, onStep, save, subscribe, track, type Progr
 export default function Quiz({ data }: { data: QuizData }) {
   const session = useSyncExternalStore(subscribe, getSession, () => null);
   const p = session?.progress ?? START;
+  // The address given at the gate, to fill the free challenge form on the result. Not saved: after a reload it's empty.
+  const [email, setEmail] = useState("");
 
   const lessons = Math.max(1, p.moments.length);
   const order: StepId[] = [
@@ -310,11 +314,11 @@ export default function Quiz({ data }: { data: QuizData }) {
       break;
 
     case "gate":
-      screen = result && session && <Gate sid={session.sid} variant={session.variant} p={p} crew={crewOf(result)} ageLabel={result.age.label} onDone={(consent) => answer({ consent }, { emailed: true })} />;
+      screen = result && session && <Gate sid={session.sid} variant={session.variant} p={p} crew={crewOf(result)} ageLabel={result.age.label} onDone={(consent, address) => { setEmail(address); answer({ consent }, { emailed: true }); }} />;
       break;
 
     case "result":
-      screen = result && session && <Result data={data} p={p} />;
+      screen = result && session && <Result data={data} p={p} sid={session.sid} email={email} />;
       break;
   }
 
@@ -375,7 +379,7 @@ function Source({ s }: { s: QuizSource }) {
 /** A pale version of a crew color for card backgrounds. */
 const tint = (hex: string) => `color-mix(in srgb, ${hex} 30%, #fff)`;
 
-function Gate({ sid, variant, p, crew, ageLabel, onDone }: { sid: string; variant: string; p: Progress; crew: QuizChar[]; ageLabel: string; onDone: (consent: boolean) => void }) {
+function Gate({ sid, variant, p, crew, ageLabel, onDone }: { sid: string; variant: string; p: Progress; crew: QuizChar[]; ageLabel: string; onDone: (consent: boolean, email: string) => void }) {
   const [email, setEmail] = useState("");
   const [consent, setConsent] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -398,7 +402,7 @@ function Gate({ sid, variant, p, crew, ageLabel, onDone }: { sid: string; varian
       }
     } catch {}
     // Saving can fail (offline, database down): the parent still gets the result on screen.
-    onDone(consent);
+    onDone(consent, email.trim());
   };
 
   return (
@@ -430,10 +434,13 @@ function Gate({ sid, variant, p, crew, ageLabel, onDone }: { sid: string; varian
   );
 }
 
-function Result({ data, p }: { data: QuizData; p: Progress }) {
+function Result({ data, p, sid, email }: { data: QuizData; p: Progress; sid: string; email: string }) {
+  // "guide" and "program" mark the visit as a checkout click on /admin/quiz (app/api/quiz/event CHECKOUTS).
   const click = (to: string) => () => track("click", "result", { to });
   const r = quizResult(data, answersOf(p));
   if (!r) return null;
+  const links = offerLinks(r, sid);
+  const page = MOMENTS[r.lead.toolkit];
 
   return (
     <div className="qstep q-result">
@@ -491,9 +498,27 @@ function Result({ data, p }: { data: QuizData; p: Progress }) {
         <div>
           <h2>Want the habits behind it?</h2>
           <p>The Kid Brain Toolkit: what science really knows about sleep, focus, mood and energy in kids, in 10 chapters, with a version of every habit for ages 4–7, 8–12 and 13–17.</p>
-          <a className="btn btn-main" href="/checkout/guide">Get the Toolkit · $9</a>
+          {page && <p className="q-page">“{page.title}”: the plan is on page {page.page} ({page.plan}).</p>}
+          <a className="btn btn-main" href={links.guide} onClick={click("guide")}>Get the Toolkit · ${ITEMS.guide.price}</a>
           <p className="fine">Instant download. Educational only, not medical advice.</p>
         </div>
+      </div>
+
+      <div className="q-offer q-offer-2">
+        <CrewArt k="endo" mood="happy" />
+        <div>
+          <h2>Want it to stick?</h2>
+          <p>The 30-Day Reset: one 10-minute habit a day for 30 days, one part of the crew each week. Sleep, screens and focus, meltdowns and hunger, moving and connecting. The exact words to say, a fridge tracker, and the Toolkit included.</p>
+          <a className="btn" href={links.program} onClick={click("program")}>Start the 30-Day Reset · ${ITEMS.program.price}</a>
+          <p className="fine">Instant download. About ${(ITEMS.program.price / 30).toFixed(2)} a day.</p>
+        </div>
+      </div>
+
+      <div className="q-free">
+        <h3>Not ready to buy? Start free</h3>
+        <p>The 5-day Screen-Off Challenge: one short email and one small step a day, to end screen time without a meltdown.</p>
+        <FreeListForm form="screen-off-challenge" button="Start the free challenge" sentText="Almost in: tap the link in the email we just sent ✓" email={email} primary={false} />
+        <p className="fine">Or get the free screen-time list and the crew stickers on <a href="/free" target="_blank" rel="noopener" onClick={click("/free")}>our free page</a>.</p>
       </div>
 
       <h3>Read more, free</h3>

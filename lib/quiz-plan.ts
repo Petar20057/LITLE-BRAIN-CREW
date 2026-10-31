@@ -66,3 +66,13 @@ export const crewOf = (r: QuizResult) => r.picks.map((m) => m.char).filter((c, i
 
 /** "9.5" → "9½". */
 export const hoursLabel = (h: number) => `${Math.floor(h)}${h % 1 ? "½" : ""}`;
+
+/** The two offers after the result. The Toolkit opens on the first moment picked (its page and crew member), and both
+ *  carry the quiz visit (?qs=), so the checkout click and the purchase count on /admin/quiz. */
+export function offerLinks(r: QuizResult, sid?: string | null) {
+  const qs = sid ? `&qs=${encodeURIComponent(sid)}` : "";
+  return {
+    guide: `/checkout/guide?crew=${r.lead.char.key}&moment=${r.lead.toolkit}${qs}`,
+    program: `/checkout/program?crew=${r.lead.char.key}${qs}`,
+  };
+}

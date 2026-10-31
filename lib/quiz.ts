@@ -9,6 +9,8 @@ export type QuizSource = { title: string; url?: string };
 
 export type QuizMoment = {
   id: string;
+  /** The home page decoder's key for this moment (MOMENTS in lib/funnel.ts). */
+  toolkit: string;
   label: string;
   /** Label for kids under 6 (see `forAge`). */
   youngLabel?: string;
@@ -103,6 +105,7 @@ export function quizData(): QuizData {
       const tips = e.tryTonight ?? [];
       return {
         id: m.id,
+        toolkit: m.toolkit,
         label: m.label,
         youngLabel: m.young?.label,
         line: m.line,

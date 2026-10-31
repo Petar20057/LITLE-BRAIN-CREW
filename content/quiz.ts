@@ -42,6 +42,8 @@ export const AGES: { id: string; label: string; stage: CharKey; slug: string; te
 
 export type MomentDef = {
   id: string;
+  /** The same moment on the home page decoder (MOMENTS in lib/funnel.ts): the checkout names its page in the Toolkit. */
+  toolkit: string;
   /** The decoder card's bold line. */
   label: string;
   /** The decoder card's small line. */
@@ -60,18 +62,18 @@ export type MomentDef = {
 };
 
 export const MOMENTS: MomentDef[] = [
-  { id: "screens", label: "Tears or yelling when screen time ends", line: "Dopa just lost its easy rewards. Villain: Lupi.", char: "dopa", villain: "lupi", entry: { section: "why", slug: "kid-cries-when-screen-time-ends" }, tip: 1 },
-  { id: "bored", label: "“I’m bored.” Won’t start homework.", line: "Nora’s spotlight won’t switch on. Villain: Pingi.", char: "nora", villain: "pingi", entry: { section: "why", slug: "kid-cant-focus-on-homework" }, tip: 0, young: { label: "“I’m bored.” Won’t start a task or clean-up." } },
-  { id: "explodes", label: "Explodes over small things", line: "Migo yelled “danger!” before Fronti had time to think.", char: "migo", entry: { section: "why", slug: "kid-explodes-over-small-things" }, tip: 0 },
-  { id: "cant-wait", label: "Can’t wait: grabs, interrupts, blurts it out", line: "Fronti’s brakes are still under construction.", char: "fronti", entry: { section: "why", slug: "kid-cant-wait" }, tip: 1 },
-  { id: "after-school", label: "Melts down the minute they’re home from school", line: "Greli is ringing the hunger bell, and Corti held it in all day.", char: "greli", entry: { section: "why", slug: "kid-melts-down-after-school" }, tip: 0 },
-  { id: "wired", label: "Wired at bedtime, grumpy at breakfast", line: "Mela showed up late. Villains: Glo and Bedi.", char: "mela", villain: "glo", entry: { section: "why", slug: "second-wind-at-bedtime" }, tip: 0 },
-  { id: "cant-sleep", label: "Can’t fall asleep, worries at night", line: "Gabi can’t find the brake while Corti is still on.", char: "gabi", villain: "bedi", entry: { section: "why", slug: "kid-cant-fall-asleep" }, tip: 1 },
-  { id: "bouncing", label: "Bouncing off the walls at 9 p.m.", line: "Endo never got to run today.", char: "endo", entry: { section: "why", slug: "kid-always-jumping-and-crashing" }, tip: 0 },
-  { id: "not-listening", label: "Doesn’t listen until you yell", line: "Toci needs a moment of connection before the instruction.", char: "toci", entry: { section: "why", slug: "kid-behaves-worse-with-parents" }, tip: 1 },
-  { id: "siblings", label: "Sibling fights, every single day", line: "Toci feels there isn’t enough of you to go around.", char: "toci", entry: { section: "why", slug: "siblings-fight-all-the-time" }, tip: 0 },
-  { id: "routine", label: "Cranky all week when the routine falls apart", line: "Sero likes days that look the same. Villain: Lati.", char: "sero", villain: "lati", entry: { section: "habits", slug: "irregular-bedtimes" }, tip: 0 },
-  { id: "teen", label: "A teen who sleeps late and drags all day", line: "Teo needs sleep, sport and daylight.", char: "teo", entry: { section: "ages", slug: "brain-age-14-to-17" }, tip: 0, teen: true },
+  { id: "screens", toolkit: "screen-off", label: "Tears or yelling when screen time ends", line: "Dopa just lost its easy rewards. Villain: Lupi.", char: "dopa", villain: "lupi", entry: { section: "why", slug: "kid-cries-when-screen-time-ends" }, tip: 1 },
+  { id: "bored", toolkit: "homework", label: "“I’m bored.” Won’t start homework.", line: "Nora’s spotlight won’t switch on. Villain: Pingi.", char: "nora", villain: "pingi", entry: { section: "why", slug: "kid-cant-focus-on-homework" }, tip: 0, young: { label: "“I’m bored.” Won’t start a task or clean-up." } },
+  { id: "explodes", toolkit: "explodes", label: "Explodes over small things", line: "Migo yelled “danger!” before Fronti had time to think.", char: "migo", entry: { section: "why", slug: "kid-explodes-over-small-things" }, tip: 0 },
+  { id: "cant-wait", toolkit: "cant-wait", label: "Can’t wait: grabs, interrupts, blurts it out", line: "Fronti’s brakes are still under construction.", char: "fronti", entry: { section: "why", slug: "kid-cant-wait" }, tip: 1 },
+  { id: "after-school", toolkit: "after-school", label: "Melts down the minute they’re home from school", line: "Greli is ringing the hunger bell, and Corti held it in all day.", char: "greli", entry: { section: "why", slug: "kid-melts-down-after-school" }, tip: 0 },
+  { id: "wired", toolkit: "wired-bedtime", label: "Wired at bedtime, grumpy at breakfast", line: "Mela showed up late. Villains: Glo and Bedi.", char: "mela", villain: "glo", entry: { section: "why", slug: "second-wind-at-bedtime" }, tip: 0 },
+  { id: "cant-sleep", toolkit: "cant-sleep", label: "Can’t fall asleep, worries at night", line: "Gabi can’t find the brake while Corti is still on.", char: "gabi", villain: "bedi", entry: { section: "why", slug: "kid-cant-fall-asleep" }, tip: 1 },
+  { id: "bouncing", toolkit: "bedtime-energy", label: "Bouncing off the walls at 9 p.m.", line: "Endo never got to run today.", char: "endo", entry: { section: "why", slug: "kid-always-jumping-and-crashing" }, tip: 0 },
+  { id: "not-listening", toolkit: "doesnt-listen", label: "Doesn’t listen until you yell", line: "Toci needs a moment of connection before the instruction.", char: "toci", entry: { section: "why", slug: "kid-behaves-worse-with-parents" }, tip: 1 },
+  { id: "siblings", toolkit: "siblings", label: "Sibling fights, every single day", line: "Toci feels there isn’t enough of you to go around.", char: "toci", entry: { section: "why", slug: "siblings-fight-all-the-time" }, tip: 0 },
+  { id: "routine", toolkit: "routine", label: "Cranky all week when the routine falls apart", line: "Sero likes days that look the same. Villain: Lati.", char: "sero", villain: "lati", entry: { section: "habits", slug: "irregular-bedtimes" }, tip: 0 },
+  { id: "teen", toolkit: "teen-energy", label: "A teen who sleeps late and drags all day", line: "Teo needs sleep, sport and daylight.", char: "teo", entry: { section: "ages", slug: "brain-age-14-to-17" }, tip: 0, teen: true },
 ];
 
 /** How many moments a parent can pick (one lesson screen each). */

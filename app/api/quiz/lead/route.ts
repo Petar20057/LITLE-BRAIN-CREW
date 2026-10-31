@@ -42,6 +42,8 @@ export async function POST(request: NextRequest) {
   // Without Supabase (local preview) there is nothing to check against: send, if SES is configured at all.
   let send = !supabaseConfigured;
   let tipsUrl: string | undefined;
+  // The visit the email's buy links carry (?qs=): only one we saw, so a purchase from the email counts on /admin/quiz.
+  let visit: string | null = null;
   if (supabaseConfigured) {
     try {
       const db = createAdminClient();
@@ -53,6 +55,7 @@ export async function POST(request: NextRequest) {
         : { data: [], error: null };
       if (claimError) throw claimError;
       const session = Boolean(claimed?.length);
+      if (session) visit = sid;
 
       const { data: known, error: knownError } = await db.from("quiz_leads").select("tips_consent").eq("email", email).maybeSingle();
       if (knownError) throw knownError;
@@ -82,7 +85,7 @@ export async function POST(request: NextRequest) {
 
   if (result && send) {
     try {
-      await sendEmail(email, quizResultEmail(result, { confirmTipsUrl: tipsUrl }), { tag: "quiz-result" });
+      await sendEmail(email, quizResultEmail(result, { confirmTipsUrl: tipsUrl, sid: visit }), { tag: "quiz-result" });
     } catch (err) {
       console.error("[quiz] result email failed", err);
     }

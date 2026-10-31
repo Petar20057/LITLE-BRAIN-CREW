@@ -2,10 +2,24 @@
 
 import { useState, type FormEvent } from "react";
 
-// The free-tips email form, the same one as /free (form "free-screen-list"). It posts what design/assets/site.js post()
-// sends, so the email is stored and the confirmation email goes out. A failed try keeps what was typed.
-export default function FreeListForm() {
-  const [email, setEmail] = useState("");
+// A free email form, the same ones as /free (by default "free-screen-list"; the /code result uses the challenge). It posts
+// what design/assets/site.js post() sends, so the email is stored and the confirmation email goes out. A failed try keeps
+// what was typed. `email` fills the field in advance (the address the parent just gave the quiz).
+export default function FreeListForm({
+  form = "free-screen-list",
+  button = "Send me the list",
+  sentText = "Almost done: tap the link in the email we just sent ✓",
+  email: initial = "",
+  primary = true,
+}: {
+  form?: "free-screen-list" | "sticker-pack" | "screen-off-challenge";
+  button?: string;
+  sentText?: string;
+  email?: string;
+  /** false: a white button, for a form under a paid offer that keeps the coral one. */
+  primary?: boolean;
+}) {
+  const [email, setEmail] = useState(initial);
   const [busy, setBusy] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState("");
@@ -27,7 +41,7 @@ export default function FreeListForm() {
       res = await fetch("/api/signup", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ form: "free-screen-list", email: email.trim(), page: window.location.pathname, details: {}, visitor, utm_source: utm }),
+        body: JSON.stringify({ form, email: email.trim(), page: window.location.pathname, details: {}, visitor, utm_source: utm }),
       });
     } catch {
       return fail("That didn’t go through. Please check your connection and try again.");
@@ -56,9 +70,9 @@ export default function FreeListForm() {
         aria-label="Your email"
         autoComplete="email"
       />
-      <button className="btn btn-main" type="submit" disabled={busy || sent}>Send me the list</button>
+      <button className={primary ? "btn btn-main" : "btn"} type="submit" disabled={busy || sent}>{button}</button>
       {error ? <p className="form-err" role="alert">{error}</p> : null}
-      {sent ? <span className="ok" role="status" style={{ display: "block" }}>Almost done: tap the link in the email we just sent ✓</span> : null}
+      {sent ? <span className="ok" role="status" style={{ display: "block" }}>{sentText}</span> : null}
     </form>
   );
 }

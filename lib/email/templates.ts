@@ -1,6 +1,6 @@
-import { ITEMS, PRODUCTS, per, total, usd, type Item } from "@/lib/funnel";
+import { ITEMS, MOMENTS, PRODUCTS, per, total, usd, type Item } from "@/lib/funnel";
 import { EMAIL_BASE, renderEmail, type Block, type Email } from "./layout";
-import { hoursLabel, type QuizResult } from "@/lib/quiz-plan";
+import { hoursLabel, offerLinks, type QuizResult } from "@/lib/quiz-plan";
 import { DISCLAIMER } from "@/content/quiz";
 
 // Every email we send. Copy follows the site (English, calm, no hype, no promises about a child): words like
@@ -90,9 +90,12 @@ export function renewalReminder(renewsOn: string): Email {
   });
 }
 
-/** The /code quiz result, sent when a parent leaves their email at the gate. Same result as the screen (lib/quiz-plan.ts).
- *  confirmTipsUrl: the parent ticked the weekly tips; nothing is sent until they confirm with this link (double opt-in). */
-export function quizResultEmail(r: QuizResult, { confirmTipsUrl }: { confirmTipsUrl?: string } = {}): Email {
+/** The /code quiz result, sent when a parent leaves their email at the gate. Same result and offers as the screen
+ *  (lib/quiz-plan.ts). confirmTipsUrl: the parent ticked the weekly tips; nothing is sent until they confirm with this link
+ *  (double opt-in). sid: the quiz visit, so a purchase from this email counts on /admin/quiz. */
+export function quizResultEmail(r: QuizResult, { confirmTipsUrl, sid }: { confirmTipsUrl?: string; sid?: string | null } = {}): Email {
+  const links = offerLinks(r, sid);
+  const page = MOMENTS[r.lead.toolkit];
   const blocks: Block[] = [
     { p: "Here’s what you saw in the quiz, to keep. These are the crew members behind the moments you picked:" },
     { list: r.picks.map((m) => `${m.label}: ${m.line}`) },
@@ -107,7 +110,11 @@ export function quizResultEmail(r: QuizResult, { confirmTipsUrl }: { confirmTips
   );
   if (r.lead.kid) blocks.push({ note: `Say it to your kid: ${r.lead.kid}` });
   blocks.push(
-    { p: "Want the habits behind it? The Kid Brain Toolkit is open now: what science really knows about sleep, focus, mood and energy in kids, in 10 chapters with a version of every habit for ages 4–7, 8–12 and 13–17. $9, instant download at littlebraincrew.com." },
+    { p: `Want the habits behind it? The Kid Brain Toolkit: what science really knows about sleep, focus, mood and energy in kids, in 10 chapters with a version of every habit for ages 4–7, 8–12 and 13–17.${page ? ` “${page.title}”: the plan is on page ${page.page}.` : ""}` },
+    { button: { label: `Get the Toolkit · ${usd(ITEMS.guide.price)}`, url: links.guide } },
+    { p: "Want it to stick? The 30-Day Reset is one 10-minute habit a day for 30 days, with the exact words to say, a fridge tracker and the Toolkit included." },
+    { button: { label: `Start the 30-Day Reset · ${usd(ITEMS.program.price)}`, url: links.program } },
+    { p: "Not ready to buy? The 5-day Screen-Off Challenge is free: one short email and one small step a day. Join it at littlebraincrew.com/free." },
   );
   if (confirmTipsUrl) {
     blocks.push(

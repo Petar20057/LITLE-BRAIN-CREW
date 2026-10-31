@@ -83,10 +83,28 @@ describe("/code email gate", () => {
     expect(await confirmToken(row.token)).toBe("unknown");
   });
 
+  it("the email offers the Toolkit on the first moment and the Reset, both carrying the quiz visit", async () => {
+    await lead({ sid: SID_A, email: "parent@example.com" });
+    const { html, text } = sent()[0][1];
+    // ANSWERS starts with "screens": Dopa, and the decoder's "screen-off" page in the Toolkit.
+    expect(text).toContain(`/checkout/guide?crew=dopa&moment=screen-off&qs=${SID_A}`);
+    expect(text).toContain(`/checkout/program?crew=dopa&qs=${SID_A}`);
+    expect(html).toContain("Start the 30-Day Reset");
+    expect(text).toContain("littlebraincrew.com/free");
+  });
+
   it("refuses a bad address and too many tries from one connection", async () => {
     expect((await lead({ sid: SID_A, email: "not-an-email" })).status).toBe(400);
     const statuses = [];
     for (let i = 0; i < 6; i++) statuses.push((await lead({ email: `p${i}@example.com` }, "198.51.100.7")).status);
     expect(statuses).toEqual([200, 200, 200, 200, 200, 429]);
+  });
+});
+
+describe("/code moments", () => {
+  it("every moment opens a Toolkit page the checkout knows", async () => {
+    const { MOMENTS: QUIZ } = await import("@/content/quiz");
+    const { MOMENTS: DECODER } = await import("@/lib/funnel");
+    expect(QUIZ.filter((m) => !(m.toolkit in DECODER)).map((m) => m.id)).toEqual([]);
   });
 });
