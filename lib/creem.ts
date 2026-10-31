@@ -14,6 +14,28 @@ const BASE = CREEM_LIVE ? "https://api.creem.io" : "https://test-api.creem.io";
 
 export const creemConfigured = Boolean(API_KEY);
 export const webhookConfigured = Boolean(WEBHOOK_SECRET);
+const DISCOUNTS_API_KEY = process.env.CREEM_DISCOUNTS_API_KEY || API_KEY;
+export const discountsConfigured = Boolean(DISCOUNTS_API_KEY);
+
+export class CreemError extends Error {
+  constructor(public status: number) {
+    super(`Creem request failed (${status}).`);
+  }
+}
+
+/** Server-side management requests. Never include a provider response or API key in an error shown to an admin. */
+export async function creemRequest<T>(path: string, method = "GET", body?: unknown): Promise<T> {
+  if (!discountsConfigured) throw new CreemError(503);
+  const response = await fetch(`${BASE}/v1/${path}`, {
+    method,
+    headers: { "x-api-key": DISCOUNTS_API_KEY, "Content-Type": "application/json" },
+    ...(body === undefined ? {} : { body: JSON.stringify(body) }),
+    cache: "no-store",
+    signal: AbortSignal.timeout(20_000),
+  });
+  if (!response.ok) throw new CreemError(response.status);
+  return response.json() as Promise<T>;
+}
 
 // Creem product id for everything we sell, keyed by the item ids in lib/funnel.ts. Creem has no order bump, so an
 // order with a bump is its own combined product ("guide+bedtime-kit" = Toolkit + Bedtime Kit, $16).
@@ -45,6 +67,14 @@ export function itemsFor(itemIds: string[]): Item[] | null {
 export function productIdFor(key: string): string {
   const p = PRODUCTS[key];
   return (p && (CREEM_LIVE ? p.live : p.test)) || "";
+}
+
+/** Includes combined products, so an order bump cannot accidentally lose its discount. */
+export function discountProducts() {
+  return Object.keys(PRODUCTS).flatMap((key) => {
+    const id = productIdFor(key);
+    return id ? [{ id, name: itemsFor(key.split("+"))!.map((item) => item.name).join(" + ") }] : [];
+  });
 }
 
 /** Which of our items a Creem product id is (for webhooks), or undefined for a product we don't know. */

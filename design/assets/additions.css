@@ -458,6 +458,15 @@ html.dad .top .logo .on-dark,html.dad .ad-top .logo .on-dark{display:block}
 .adm-top tbody th{position:relative;z-index:0;word-break:break-word;font-weight:600}
 .adm-top tbody th::before{content:"";position:absolute;z-index:-1;left:0;top:6px;bottom:6px;width:var(--w,0);background:var(--teo-t);border-radius:0 6px 6px 0}
 .adm-actions{margin:0 0 var(--s3)}
+.adm-discount-form{margin:var(--s3) 0}
+.adm-discount-fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));gap:16px;margin:16px 0}
+.adm-discount-products{border:2px solid var(--hair);border-radius:var(--r-s);padding:12px 16px;margin:16px 0}
+.adm-discount-products legend{font-weight:700;padding:0 6px}
+.adm-discount-products label{display:flex;gap:10px;align-items:baseline;margin:8px 0}
+.adm-discount-form .adm-error,.adm-discount-success{margin:16px 0 0;padding:12px}
+.adm-discount-success{background:var(--teo-t);border-radius:var(--r-s);font-weight:700}
+.adm-discount-name{display:block;font-weight:400}
+.adm-discount-pages{display:flex;justify-content:space-between;gap:16px}
 .adm-list{font-size:14px}
 .adm-list td,.adm-list th{word-break:break-word}
 .adm-list td:first-child{white-space:nowrap}

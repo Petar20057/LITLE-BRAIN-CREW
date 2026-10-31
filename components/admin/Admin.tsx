@@ -11,6 +11,7 @@ const TABS = [
   { href: "/admin/newsletter", label: "Newsletter & forms" },
   { href: "/admin/quiz", label: "Quiz /code" },
   { href: "/admin/members", label: "Crew Club" },
+  { href: "/admin/discounts", label: "Discount codes" },
 ] as const;
 
 export function AdminHeader({ tab, days, email, query = "" }: { tab: (typeof TABS)[number]["href"]; days?: number; email: string; query?: string }) {

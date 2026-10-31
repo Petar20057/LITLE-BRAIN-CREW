@@ -133,6 +133,8 @@ Public routes count requests per client IP in `rate_limits` (`lib/rate-limit.ts`
 
 ## Operations
 
+- **Discount codes:** `/admin/discounts` creates percentage codes (1–100%) with a required total usage limit, product selection and optional UTC expiry. Customers enter the code on Creem's payment checkout. Counts come directly from Creem; its `max_redemptions` applies across all customers and products. Codes apply once per purchase. Combined products must be selected to cover order bumps. Set `CREEM_DISCOUNTS_API_KEY` to a key with only `discounts:read` and `discounts:write`, in the same test/live store as `CREEM_LIVE`. If omitted, `CREEM_API_KEY` needs those scopes. No database migration is needed.
+
 - **Deploy:** push to `main` → Vercel builds and deploys production. Preview deployments must not get production keys (Vercel → Settings → Environment Variables: scope Supabase, SES and Creem keys to Production; give Preview a separate Supabase project).
 - **Rollback:** Vercel → Deployments → pick the last good one → Promote to Production (no rebuild). The database doesn't roll back with it: migrations only add, so older code keeps working on the newer schema. A migration that removes or renames something needs its reverse SQL written before it's applied.
 - **Backups:** depend on the Supabase plan (Database → Backups). Check that daily backups exist and how long they're kept. Before payments go live, rehearse a restore into a *new* project (never over production): restore, point a local `.env.local` at it, run `npm run dev` and open `/admin`. Write the date and result here.
