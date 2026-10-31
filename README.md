@@ -80,6 +80,14 @@ Sending goes through Amazon SES in `eu-north-1`, where `littlebraincrew.com` is 
 - Preview in dev: `/dev/emails` (404 in production). Send yourself one: `curl -X POST "localhost:3000/dev/emails/club-welcome?to=you@example.com"`.
 - Crew images for email are PNGs in `public/email/crew/` (`npm run email:art` re-renders them from the site's art, macOS).
 
+**Design, opens and clicks** (`lib/email/layout.ts`, copy in `templates.ts`, checked by `tests/email.test.ts`):
+- The hero band and the notes take the crew member's own color (`CHARS` in `lib/learn.ts`), the Day N of 5 bar uses it too. One layout for every email; add a block type there, not a new HTML in a template.
+- One coral button per email (the thing to do); a white outlined `secondary` button for a second choice; a bold `link` for a soft offer. The test fails on a second coral button.
+- Dark mode: Apple Mail, iOS and Outlook.com get a dark card and `public/email/logo-white.png`; Gmail does its own inversion. The crew art stays on a white disc because the PNGs have an opaque white background.
+- Subject at most 62 characters with the point in the first 40 (a phone cuts there), preheader 30 to 120 characters that adds something the subject doesn't. The quiz result names the crew, the receipt names the product, the confirmation says what is waiting.
+- Links to our site get `utm_source=email&utm_medium=lifecycle&utm_campaign=<email>&utm_content=<button>` (`tag()` in layout.ts; not on confirm, unsubscribe, download or legal links, and a link that already has `utm_source` keeps it). `/admin/journey` then shows clicks and sales per email and per button, with no tracking redirect. Opens can't be trusted (Apple Mail Privacy Protection loads every pixel), so clicks are the number to watch.
+- Free offers and Day 1 of the challenge invite a reply and ask for a contact (`hello@littlebraincrew.com`): replies and contacts are what keep the rest out of Promotions.
+
 **Keys.** In AWS IAM, create a user (e.g. `littlebraincrew-ses`) with only this inline policy, create an access key for it, and put it in `.env.local` and Vercel as `SES_ACCESS_KEY_ID` / `SES_SECRET_ACCESS_KEY`:
 
 ```json
@@ -96,6 +104,7 @@ Sending goes through Amazon SES in `eu-north-1`, where `littlebraincrew.com` is 
 - Every email has a text part, alt text on images, real links only to our own domain, no link shorteners, and stays far under Gmail's 102 KB clipping.
 - Copy stays calm: no "free!!!", no all caps, no promises (also the brand rule).
 - Mail people signed up for (newsletters, challenges) must pass `unsubscribeUrl` to `sendEmail`, which adds one-click `List-Unsubscribe` headers that Gmail and Yahoo require from bulk senders. Receipts and account emails don't.
+- SES rewrites every link through `*.awstrack.me` while click tracking is on for the identity's configuration set (SES console → Configuration sets). That's a third-party domain in every link. Our own UTM tags measure clicks, so turn click and open tracking off there, or set a custom tracking domain on our own domain with HTTPS.
 - SES drops addresses that bounced or complained (account suppression list). Keep bounces under 2% and complaints under 0.1%.
 - To do: after a few weeks of clean sending, move DMARC from `p=none` to `p=quarantine`, and add a `rua=` report address. Start with low volume and only ever mail people who asked.
 

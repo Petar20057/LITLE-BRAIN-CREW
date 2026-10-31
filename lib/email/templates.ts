@@ -1,10 +1,25 @@
 import { ITEMS, MOMENTS, PRODUCTS, per, total, usd, type Item } from "@/lib/funnel";
-import { EMAIL_BASE, renderEmail, type Block, type Email } from "./layout";
+import { renderEmail, type Block, type Email } from "./layout";
 import { hoursLabel, offerLinks, type QuizResult } from "@/lib/quiz-plan";
 import { DISCLAIMER } from "@/content/quiz";
 
 // Every email we send. Copy follows the site (English, calm, no hype, no promises about a child): words like
 // "free", "guaranteed", ALL CAPS and piles of exclamation marks are spam signals as much as they're off-brand.
+//
+// What each one is tuned for (tests/email.test.ts keeps the numbers honest):
+//  - open rate: a subject that says what's inside, front-loaded (a phone shows about 40 characters), and a preheader that
+//    adds something the subject doesn't; the quiz result and the order receipt name the crew or the product.
+//  - click rate: one coral button per email, a white one for a second choice, a bold text link for a soft offer; links to
+//    the Toolkit land on the page for the moment the reader came for.
+//  - delivery: replies are invited (a reply is the strongest "wanted" signal a mailbox sees) and the first list email asks
+//    for a contact, so the rest stay out of Promotions. Every link to our site carries UTM tags (layout.ts tag()).
+
+/** The address every email comes from (lib/email/send.ts). */
+const HELLO = "hello@littlebraincrew.com";
+
+/** The Toolkit, opened on the screen-endings page: where the free list and the challenge point, because that's what they're about. */
+const SCREEN_OFF = MOMENTS["screen-off"];
+const SCREEN_OFF_CHECKOUT = "/checkout/guide?crew=dopa&moment=screen-off";
 
 /** Sent once, when a parent's Crew Club subscription first shows up in the Creem webhook. */
 export function clubWelcome(plan: "monthly" | "yearly"): Email {
@@ -30,6 +45,7 @@ export function clubWelcome(plan: "monthly" | "yearly"): Email {
       },
     ],
     reason: "You’re getting this email because you joined the Crew Club at littlebraincrew.com.",
+    campaign: "club-welcome",
   });
 }
 
@@ -51,24 +67,32 @@ export function orderReceipt(items: Item[], sections: ReceiptSection[]): Email {
     { rows: items.map((i): [string, string] => [i.name, usd(i.price)]), total: ["Total", usd(total(items))] },
     { p: "Your files are ready. The links are personal, so please keep them to yourself." },
   ];
+  // The first file is the coral button (where to start); the rest are white ones, so a long list doesn't shout.
+  let first = true;
+  const file = (label: string, url: string): Block => {
+    const button = { label, url, ...(first ? {} : { secondary: true }) };
+    first = false;
+    return { button };
+  };
   for (const s of sections) {
     if (s.files.length === 1) {
-      blocks.push({ button: { label: s.label, url: s.files[0].url } });
+      blocks.push(file(s.label, s.files[0].url));
     } else {
       blocks.push({ note: s.label });
-      for (const f of s.files) blocks.push({ button: { label: f.name, url: f.url } });
+      for (const f of s.files) blocks.push(file(f.name, f.url));
     }
   }
   if (main && TONIGHT[main.id]) blocks.push({ note: TONIGHT[main.id] });
-  blocks.push({ p: "Creem, our payment partner, sends your official payment receipt in a separate email." });
+  blocks.push({ p: "Trouble with a download? Just reply to this email and we’ll fix it. Creem, our payment partner, sends your official payment receipt in a separate email." });
   return renderEmail({
-    subject: "Your Little Brain Crew order",
-    preheader: "Your download links, and one small thing to try tonight.",
+    subject: `${main?.name ?? "Your order"}: your download links`,
+    preheader: "Your files are ready, plus one small thing to try tonight.",
     kick: "thank you",
     title: "Your order is ready",
     art: main ? ART[main.id] : undefined,
     blocks,
     reason: "You’re getting this email because you bought from littlebraincrew.com.",
+    campaign: "order-receipt",
   });
 }
 
@@ -87,6 +111,7 @@ export function renewalReminder(renewsOn: string): Email {
       { note: "Want to pause or cancel? Do it in your account, in 2 clicks, before that date and you won’t be charged." },
     ],
     reason: "You’re getting this email because you have a yearly Crew Club membership. We send it before every renewal.",
+    campaign: "renewal-reminder",
   });
 }
 
@@ -96,6 +121,9 @@ export function renewalReminder(renewsOn: string): Email {
 export function quizResultEmail(r: QuizResult, { confirmTipsUrl, sid }: { confirmTipsUrl?: string; sid?: string | null } = {}): Email {
   const links = offerLinks(r, sid);
   const page = MOMENTS[r.lead.toolkit];
+  // The crew behind the moments they picked, up front: a name in the subject is what makes this one stand out in an inbox.
+  const names = [...new Set(r.picks.map((m) => m.char.name))];
+  const who = names.length === 1 ? names[0] : names.length === 2 ? `${names[0]} and ${names[1]}` : `${names[0]}, ${names[1]} and more`;
   const blocks: Block[] = [
     { p: "Here’s what you saw in the quiz, to keep. These are the crew members behind the moments you picked:" },
     { list: r.picks.map((m) => `${m.label}: ${m.line}`) },
@@ -113,24 +141,26 @@ export function quizResultEmail(r: QuizResult, { confirmTipsUrl, sid }: { confir
     { p: `Want the habits behind it? The Kid Brain Toolkit: what science really knows about sleep, focus, mood and energy in kids, in 10 chapters with a version of every habit for ages 4–7, 8–12 and 13–17.${page ? ` “${page.title}”: the plan is on page ${page.page}.` : ""}` },
     { button: { label: `Get the Toolkit · ${usd(ITEMS.guide.price)}`, url: links.guide } },
     { p: "Want it to stick? The 30-Day Reset is one 10-minute habit a day for 30 days, with the exact words to say, a fridge tracker and the Toolkit included." },
-    { button: { label: `Start the 30-Day Reset · ${usd(ITEMS.program.price)}`, url: links.program } },
-    { p: "Not ready to buy? The 5-day Screen-Off Challenge is free: one short email and one small step a day. Join it at littlebraincrew.com/free." },
+    { button: { label: `Start the 30-Day Reset · ${usd(ITEMS.program.price)}`, url: links.program, secondary: true } },
+    { p: "Not ready to buy? The 5-day Screen-Off Challenge is free: one short email and one small step a day." },
+    { link: { label: "Join the free challenge", url: "/free" } },
   );
   if (confirmTipsUrl) {
     blocks.push(
       { p: "You also asked for one short crew tip a week. Tap below to confirm it’s you. Until you do, we won’t send any." },
-      { button: { label: "Yes, send me the weekly tip", url: confirmTipsUrl } },
+      { button: { label: "Yes, send me the weekly tip", url: confirmTipsUrl, secondary: true } },
     );
   }
   blocks.push({ note: DISCLAIMER });
   return renderEmail({
-    subject: "Your kid’s crew and 3-night plan",
-    preheader: `${r.lead.char.name} and the crew behind your hard moments, plus what to try tonight.`,
+    subject: `${who}: your kid’s crew and 3-night plan`,
+    preheader: `Who’s behind “${r.lead.label}”, and what to try tonight.`,
     kick: "your quiz results",
     title: "Meet the crew behind your hard moments",
     art: r.lead.char.key,
     blocks,
     reason: "You’re getting this email because you asked for your quiz results at littlebraincrew.com/code.",
+    campaign: "quiz-result",
   });
 }
 
@@ -150,42 +180,68 @@ export function checkoutReminder(
   blocks.push(
     { button: { label: "Finish my order", url: checkoutUrl } },
     { p: "If the payment page gave you trouble, just reply to this email and we’ll sort it out." },
-    { note: `This is the only reminder we send about this order. Don’t want emails like this? Unsubscribe here: ${EMAIL_BASE}${unsubscribeUrl}` },
+    { note: "This is the only reminder we send about this order." },
   );
   return renderEmail({
-    subject: `Your ${main.name} is one step away`,
+    subject: `Pick up where you left off: ${main.name}`,
     preheader: "You didn’t finish paying, so nothing was charged. Your order is still here.",
     kick: "still here",
     title: "You were one step away",
     art: ART[main.id] ?? "duo",
     blocks,
     reason: "You’re getting this email because you entered this address at checkout on littlebraincrew.com.",
+    unsubscribe: unsubscribeUrl,
+    campaign: "checkout-reminder",
   });
 }
 
 /** What each newsletter form promised, for its confirmation email (lib/analytics.ts NEWSLETTER_FORMS). */
-const CONFIRM_FOR: Record<string, { what: string; art: string }> = {
-  "free-screen-list": { what: "the free list: 15 ways to end screen time without tears", art: "dopa" },
-  "sticker-pack": { what: "the free crew sticker pack and a few tips", art: "toci" },
-  "screen-off-challenge": { what: "the 5-day Screen-Off Challenge with Dopa", art: "dopa" },
+type Confirm = { what: string; art: string; subject: string; preheader: string; title: string; button: string };
+const CONFIRM_FOR: Record<string, Confirm> = {
+  "free-screen-list": {
+    what: "the free list: 15 ways to end screen time without tears",
+    art: "dopa",
+    subject: "One tap to get your screen-time list",
+    preheader: "Tap confirm and your two-page list arrives right away.",
+    title: "Your list is one tap away",
+    button: "Confirm and get the list",
+  },
+  "sticker-pack": {
+    what: "the free crew sticker pack and a few tips",
+    art: "toci",
+    subject: "One tap to get your crew stickers",
+    preheader: "Tap confirm and the 12 stickers arrive right away.",
+    title: "Your stickers are one tap away",
+    button: "Confirm and get the stickers",
+  },
+  "screen-off-challenge": {
+    what: "the 5-day Screen-Off Challenge with Dopa",
+    art: "dopa",
+    subject: "One tap to start your 5-day challenge",
+    preheader: "Tap confirm and Day 1 arrives right away. About 5 minutes a day.",
+    title: "Ready for Day 1?",
+    button: "Confirm and start Day 1",
+  },
 };
+const CONFIRM_ANY: Confirm = { what: "crew tips by email", art: "duo", subject: "One tap to confirm your email", preheader: "Tap confirm so we know it’s really you.", title: "One tap to confirm", button: "Confirm my email" };
 
 /** Double opt-in: sent when someone signs up on a newsletter form. Nothing else is sent until they tap the button. */
 export function confirmSignup(form: string, url: string): Email {
-  const c = CONFIRM_FOR[form] ?? { what: "crew tips by email", art: "duo" };
+  const c = CONFIRM_FOR[form] ?? CONFIRM_ANY;
   return renderEmail({
-    subject: "Please confirm your email",
-    preheader: "One tap, so we know it’s really you.",
+    subject: c.subject,
+    preheader: c.preheader,
     kick: "one tap",
-    title: "Is this you?",
+    title: c.title,
     art: c.art,
     blocks: [
-      { p: `Someone, hopefully you, asked littlebraincrew.com for ${c.what}.` },
-      { p: "Tap the button to confirm. Until you do, we won’t send anything else." },
-      { button: { label: "Yes, that’s me", url } },
+      { p: `You asked littlebraincrew.com for ${c.what}.` },
+      { p: "Tap the button to confirm it’s you, and it lands in your inbox right away. Until you do, we won’t send anything else." },
+      { button: { label: c.button, url } },
       { note: "Didn’t ask for this? Just ignore this email and we won’t write again." },
     ],
     reason: "You’re getting this email because this address was entered in a form at littlebraincrew.com.",
+    campaign: "confirm",
   });
 }
 
@@ -206,17 +262,21 @@ export function freeScreenList(unsubscribe: string): Email {
       { p: "Thanks for confirming. Here’s your list: two pages, made to print and keep on the fridge." },
       { button: { label: "Open the list (PDF)", url: "/downloads/15-ways-to-end-screen-time.pdf" } },
       { p: "If you only try one thing this week, try number 5: warn twice, at 5 minutes and at 1 minute, with a timer your kid can see. Surprise endings are the hardest ones." },
+      { p: `Want the exact words for the moment it goes wrong? Page ${SCREEN_OFF.page} of the Kid Brain Toolkit has it, word for word (${SCREEN_OFF.plan}).` },
+      { link: { label: `See page ${SCREEN_OFF.page} in the Toolkit · ${usd(ITEMS.guide.price)}`, url: SCREEN_OFF_CHECKOUT } },
+      { note: `One small favor: add ${HELLO} to your contacts so the next ones land in your inbox, not Promotions. And hit reply any time: we read every email.` },
       { p: FOLLOW },
     ],
     reason: "You’re getting this email because you asked for the free list at littlebraincrew.com/free.",
     unsubscribe,
+    campaign: "free-list",
   });
 }
 
 /** The free crew sticker pack (public/downloads/crew-stickers.zip, built by scripts/build-sticker-zip.mjs). */
 export function freeStickerPack(unsubscribe: string): Email {
   return renderEmail({
-    subject: "Your crew sticker pack",
+    subject: "Your 12 crew stickers are here",
     preheader: "12 stickers for your family chats: “5 more min?”, “Hug?” and more.",
     kick: "for your chats",
     title: "Your crew sticker pack",
@@ -231,10 +291,14 @@ export function freeStickerPack(unsubscribe: string): Email {
           "On a phone, open the email on the device you chat from.",
         ],
       },
+      { p: "Want something for the tough moments too? The 5-day Screen-Off Challenge is free: one short email and one small step a day." },
+      { link: { label: "Join the free challenge", url: "/free" } },
+      { note: `One small favor: add ${HELLO} to your contacts so the next ones land in your inbox, not Promotions. And hit reply any time: we read every email.` },
       { p: FOLLOW },
     ],
     reason: "You’re getting this email because you asked for the free sticker pack at littlebraincrew.com/free.",
     unsubscribe,
+    campaign: "free-stickers",
   });
 }
 
@@ -295,6 +359,24 @@ export const CHALLENGE_DAYS = [
   },
 ];
 
+/** What goes after a day's own blocks: the contact favor on Day 1 (Days 2 to 5 have to reach the inbox), the page that has
+ *  the exact words on Day 4, and the two ways forward on Day 5, when the reader has just finished the challenge. */
+function challengeExtras(day: number): Block[] {
+  if (day === 1) {
+    return [{ p: `One small favor: add ${HELLO} to your contacts so tomorrow’s email lands in your inbox, not Promotions. And if you’d like to tell us your kid’s age, or how screen endings go at your house, just hit reply.` }];
+  }
+  if (day === 4) {
+    return [{ link: { label: `The exact words, step by step: Toolkit p. ${SCREEN_OFF.page}`, url: SCREEN_OFF_CHECKOUT } }];
+  }
+  if (day === 5) {
+    return [
+      { button: { label: `Get the Toolkit · ${usd(ITEMS.guide.price)}`, url: SCREEN_OFF_CHECKOUT } },
+      { button: { label: `Start the 30-Day Reset · ${usd(ITEMS.program.price)}`, url: "/checkout/program?crew=dopa", secondary: true } },
+    ];
+  }
+  return [];
+}
+
 export function challengeDay(day: number, unsubscribe: string): Email {
   const d = CHALLENGE_DAYS[day - 1];
   return renderEmail({
@@ -304,11 +386,13 @@ export function challengeDay(day: number, unsubscribe: string): Email {
     title: `Day ${day}: ${d.name}`,
     art: "dopa",
     blocks: [
+      { steps: { current: day, total: CHALLENGE_DAYS.length, label: `Day ${day} of ${CHALLENGE_DAYS.length}` } },
       ...d.blocks,
-      ...(day === 5 ? [{ button: { label: "See the Toolkit", url: "/#plans" } }] : []),
+      ...challengeExtras(day),
       { p: day < 5 ? `Tomorrow: Day ${day + 1}, ${CHALLENGE_DAYS[day].name}. ${FOLLOW}` : FOLLOW },
     ],
     reason: "You’re getting this email because you joined the 5-day Screen-Off Challenge at littlebraincrew.com/free. It ends after Day 5.",
     unsubscribe,
+    campaign: `challenge-day-${day}`,
   });
 }

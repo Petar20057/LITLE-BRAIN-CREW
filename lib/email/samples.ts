@@ -1,6 +1,6 @@
-import { ITEMS } from "@/lib/funnel";
+import { ITEMS, MOMENTS } from "@/lib/funnel";
 import type { Email } from "./layout";
-import { challengeDay, clubWelcome, confirmSignup, freeScreenList, freeStickerPack, orderReceipt, quizResultEmail, renewalReminder } from "./templates";
+import { challengeDay, checkoutReminder, clubWelcome, confirmSignup, freeScreenList, freeStickerPack, orderReceipt, quizResultEmail, renewalReminder } from "./templates";
 import { quizData } from "@/lib/quiz";
 import { quizResult } from "@/lib/quiz-plan";
 
@@ -23,7 +23,9 @@ export const SAMPLES: Record<string, () => Email> = {
   "quiz-result": () => quizResultEmail(quizResult(quizData(), { age: "6-7", moments: ["screens", "after-school", "wired"], sleep: { bed: 21 * 60 + 30, wake: 6 * 60 + 30 }, villains: ["bedi", "lupi"] })!),
   "quiz-result-tips": () =>
     quizResultEmail(quizResult(quizData(), { age: "8-9", moments: ["screens", "cant-sleep"], sleep: null, villains: null })!, { confirmTipsUrl: SAMPLE_CONFIRM }),
+  "checkout-reminder": () => checkoutReminder([ITEMS.guide], "/checkout/guide?utm_source=reminder&crew=dopa&moment=screen-off", MOMENTS["screen-off"], SAMPLE_UNSUBSCRIBE),
   "confirm-free-screen-list": () => confirmSignup("free-screen-list", SAMPLE_CONFIRM),
+  "confirm-sticker-pack": () => confirmSignup("sticker-pack", SAMPLE_CONFIRM),
   "confirm-screen-off-challenge": () => confirmSignup("screen-off-challenge", SAMPLE_CONFIRM),
   "free-screen-list": () => freeScreenList(SAMPLE_UNSUBSCRIBE),
   "free-sticker-pack": () => freeStickerPack(SAMPLE_UNSUBSCRIBE),
