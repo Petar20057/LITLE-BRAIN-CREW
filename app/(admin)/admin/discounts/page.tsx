@@ -1,3 +1,4 @@
+import { connection } from "next/server";
 import { AdminHeader } from "@/components/admin/Admin";
 import DiscountForm from "@/components/admin/DiscountForm";
 import { requireAdmin } from "@/lib/admin";
@@ -8,6 +9,8 @@ export const metadata = { title: "Discount codes · Admin" };
 export const instant = false;
 
 export default async function Page({ searchParams }: PageProps<"/admin/discounts">) {
+  // Auth, usage and expiry must be evaluated for the current request, including after a form refresh.
+  await connection();
   const { email } = await requireAdmin();
   const rawPage = Number((await searchParams).page ?? 1);
   const page = Number.isSafeInteger(rawPage) && rawPage > 0 ? rawPage : 1;
@@ -29,7 +32,7 @@ export default async function Page({ searchParams }: PageProps<"/admin/discounts
         {!needsPermissions && <DiscountForm products={products} />}
         {failed ? <p className="adm-error" role="alert">{needsPermissions ? "The payment key needs discounts:read and discounts:write permissions. Connect a restricted discounts key to enable this page." : <>Couldn’t load codes. <a href="/admin/discounts">Try again</a>.</>}</p> : <>
           <div className="table-wrap">
-            <table className="learn-table adm-list">
+            <table className="learn-table adm-list adm-discounts-table">
               <caption>Discount codes · {discounts?.pagination.total_records ?? 0} total · <a href={`/admin/discounts?page=${page}`}>Refresh usage</a></caption>
               <thead><tr><th scope="col">Code</th><th scope="col">Discount</th><th scope="col">Used / limit</th><th scope="col">Status</th><th scope="col">Products</th><th scope="col">Expires (UTC)</th></tr></thead>
               <tbody>

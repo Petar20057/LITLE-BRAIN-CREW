@@ -148,6 +148,46 @@ describe("Creem webhook", () => {
     expect(sendEmail).toHaveBeenCalledTimes(1);
   });
 
+  it.each([0, 450])("a discounted order records the actual %s cents and still delivers the files", async (amount) => {
+    const order = {
+      id: "evt_discounted",
+      eventType: "checkout.completed",
+      object: {
+        id: "chk_discounted", order: { id: "ord_discounted", amount_paid: amount, amount_due: 900 },
+        customer: { email: "parent@example.com" }, metadata: { order: "guide", delivery: "tok-discount" },
+      },
+    };
+    expect((await deliver(order)).status).toBe(200);
+    expect(fake.table("orders")).toMatchObject([{ amount_cents: amount }]);
+    expect(fake.table("funnel_events")).toMatchObject([{ amount_cents: amount }]);
+    const receipt = vi.mocked(sendEmail).mock.calls[0][1];
+    expect(receipt.text).toContain("/api/download?t=tok-discount&f=toolkit-pdf");
+    expect(receipt.text).toContain(`Total paid: $${amount === 0 ? "0" : "4.50"}`);
+    expect(receipt.text).toContain("Discounts & taxes");
+    await deliver(order);
+    expect(sendEmail).toHaveBeenCalledOnce();
+  });
+
+  it("uses a zero amount due when a free order has no amount_paid field", async () => {
+    await deliver({ id: "evt_free_due", eventType: "checkout.completed", object: {
+      id: "chk_free_due", order: { amount_due: 0 }, customer: { email: "parent@example.com" },
+      metadata: { order: "guide", delivery: "tok-free" },
+    } });
+    expect(fake.table("orders")).toMatchObject([{ amount_cents: 0 }]);
+  });
+
+  it.each([-1, 1.5, "0"])("refuses an invalid signed payment amount %s instead of inventing a paid total", async (amount) => {
+    const spy = vi.spyOn(console, "error").mockImplementation(() => {});
+    const response = await deliver({ id: "evt_invalid_amount", eventType: "checkout.completed", object: {
+      id: "chk_invalid_amount", order: { amount_paid: amount }, customer: { email: "parent@example.com" },
+      metadata: { order: "guide", delivery: "tok-invalid" },
+    } });
+    expect(response.status).toBe(500);
+    expect(fake.table("orders")).toHaveLength(0);
+    expect(sendEmail).not.toHaveBeenCalled();
+    spy.mockRestore();
+  });
+
   it("the Bedtime Kit bought on its own is a post-bump purchase, for $7", async () => {
     await deliver({
       id: "evt_bedtime",

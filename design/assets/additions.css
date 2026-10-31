@@ -467,6 +467,10 @@ html.dad .top .logo .on-dark,html.dad .ad-top .logo .on-dark{display:block}
 .adm-discount-success{background:var(--teo-t);border-radius:var(--r-s);font-weight:700}
 .adm-discount-name{display:block;font-weight:400}
 .adm-discount-pages{display:flex;justify-content:space-between;gap:16px}
+.adm-discounts-table{min-width:760px}
+.adm-discounts-table :is(th,td):not(:nth-child(5)){white-space:nowrap;word-break:normal}
+.adm-discounts-table td:nth-child(5){min-width:240px;max-width:500px}
+.adm-discounts-table .adm-discount-name{white-space:normal;min-width:140px;max-width:240px}
 .adm-list{font-size:14px}
 .adm-list td,.adm-list th{word-break:break-word}
 .adm-list td:first-child{white-space:nowrap}

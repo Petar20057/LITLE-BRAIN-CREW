@@ -93,9 +93,14 @@ async function oneTimeOrder(obj: Record<string, unknown>, eventId: string) {
   }
   const checkoutId = typeof obj.id === "string" ? obj.id : undefined;
   const orderId = (obj.order as { id?: string } | undefined)?.id ?? checkoutId ?? eventId;
+  const payment = obj.order as { amount_paid?: unknown; amount_due?: unknown } | undefined;
+  const amount = payment?.amount_paid ?? payment?.amount_due;
+  // Only signed provider data can set the amount. In particular, zero is a completed free order.
+  if (amount != null && (typeof amount !== "number" || !Number.isSafeInteger(amount) || amount < 0)) throw new Error("Invalid order payment amount");
+  const amountCents = typeof amount === "number" ? amount : undefined;
   const token = typeof metadata.delivery === "string" ? metadata.delivery : null;
   const visit = { visitor: isSessionId(metadata.visitor) ? metadata.visitor : null, session: isSessionId(metadata.session) ? metadata.session : null };
-  const recorded = await recordPaidOrder({ providerOrderId: orderId, email, orderKey, token, visit });
+  const recorded = await recordPaidOrder({ providerOrderId: orderId, email, orderKey, token, visit, amountCents });
   if (!recorded) console.info("[creem] one-time order not recognised", { event: eventId, orderKey });
 }
 

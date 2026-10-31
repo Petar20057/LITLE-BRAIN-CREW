@@ -62,8 +62,9 @@ export default function ThankYou() {
               {order.items.map((i) => (
                 <li key={i.id}><span>{i.name}{i.note && <small style={{ display: "block", color: "var(--ink-soft)", fontWeight: 500 }}>{i.note}</small>}</span><span>{per(i)}</span></li>
               ))}
-              <li><span>Paid today</span><span>{usd(total(order.items))}</span></li>
+              <li><span>Subtotal before discounts</span><span>{usd(total(order.items))}</span></li>
             </ul>
+            <p className="fine">Your payment receipt shows the final total, including any discounts and taxes.</p>
           </>
         )}
 

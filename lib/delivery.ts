@@ -27,6 +27,8 @@ export type PaidOrder = {
   email: string;
   orderKey: string;
   token: string | null;
+  /** Actual amount from Creem's signed checkout event, including discounts. Zero must stay zero. */
+  amountCents?: number;
   /** The visit that bought (Creem metadata from /api/checkout), for /admin's sources and A/B tests. */
   visit?: Visit;
 };
@@ -41,7 +43,7 @@ export async function recordPaidOrder(order: PaidOrder): Promise<boolean> {
 
   const admin = looseAdmin();
   const address = order.email.trim().toLowerCase();
-  const amountCents = items.reduce((sum, i) => sum + i.price, 0) * 100;
+  const amountCents = order.amountCents ?? items.reduce((sum, i) => sum + i.price, 0) * 100;
   const { data, error } = await admin
     .from("orders")
     .upsert(
@@ -74,7 +76,7 @@ export async function recordPaidOrder(order: PaidOrder): Promise<boolean> {
         label: s.label,
         files: s.files.map((f) => ({ name: f.name, url: `${SITE_URL}${downloadPath(order.token!, f.id)}` })),
       }));
-      await sendEmail(address, orderReceipt(items, sections), { tag: "order-receipt" });
+      await sendEmail(address, orderReceipt(items, sections, amountCents), { tag: "order-receipt" });
     } catch (err) {
       // The order is saved and the thank-you page shows the same links; a failed email is only logged.
       console.error("[email] order receipt failed", { order: order.providerOrderId }, err);

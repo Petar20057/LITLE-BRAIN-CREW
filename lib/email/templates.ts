@@ -61,10 +61,13 @@ const TONIGHT: Record<string, string> = {
 export type ReceiptSection = { label: string; files: { name: string; url: string }[] };
 
 /** For one-time purchases: the order, then one download link per file (lib/delivery.ts builds the links per buyer). */
-export function orderReceipt(items: Item[], sections: ReceiptSection[]): Email {
+export function orderReceipt(items: Item[], sections: ReceiptSection[], amountCents = Math.round(total(items) * 100)): Email {
   const main = items.find((i) => ART[i.id]) ?? items[0];
+  const adjustment = amountCents - Math.round(total(items) * 100);
+  const rows = items.map((i): [string, string] => [i.name, usd(i.price)]);
+  if (adjustment) rows.push(["Discounts & taxes", `${adjustment < 0 ? "−" : "+"}${usd(Math.abs(adjustment) / 100)}`]);
   const blocks: Block[] = [
-    { rows: items.map((i): [string, string] => [i.name, usd(i.price)]), total: ["Total", usd(total(items))] },
+    { rows, total: ["Total paid", usd(amountCents / 100)] },
     { p: "Your files are ready. The links are personal, so please keep them to yourself." },
   ];
   // The first file is the coral button (where to start); the rest are white ones, so a long list doesn't shout.
