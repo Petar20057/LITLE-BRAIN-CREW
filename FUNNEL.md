@@ -20,7 +20,7 @@ Cene i tekst svih ponuda menjaš na jednom mestu: [`lib/funnel.ts`](lib/funnel.t
 
 | | Odluka |
 |---|---|
-| **Jedan čitalac** | Roditelj deteta od 3–17 godina koji je umoran od pogađanja zašto se dete ponaša kako se ponaša. |
+| **Jedan čitalac** | Roditelj deteta od 4–17 godina koji je umoran od pogađanja zašto se dete ponaša kako se ponaša. |
 | **Jedna velika ideja** | Ponašanje tvog deteta ima **kod**. Iza većine problema stoji nekoliko istih svakodnevnih stvari (san, svetlo, kretanje, ekrani, stres, bliskost) i nekoliko moždanih hemikalija na koje one utiču, a mi smo ih pretvorili u likove. |
 | **Jedno obećanje** | Znaćeš šta se zaista dešava i šta da uradiš, za 10 minuta dnevno. |
 | **Jedna akcija** | „Choose your plan“: svako dugme na strani vodi na `#plans`. |
@@ -29,7 +29,7 @@ Ideja je namerno opšta: radi za svih 6 likova i za **svaki novi lik koji dodamo
 
 **Naslov:**
 
-> *for parents of kids 3–17*
+> *for parents of kids 4–17*
 > **Your kid didn’t come with a manual. Here’s the code.**
 
 Lede odmah nabraja bolne tačke („Meltdowns. Bad sleep. ‘I’m bored.’ Big moods out of nowhere. A teen who stopped talking.“), pa daje veliku ideju („It looks like a dozen different problems, but most of it comes back to the same few everyday things…“) i skida trud i prigovore („10 minutes a day. No pills. No lectures.“). Tate dobijaju svoju verziju kad kliknu „I’m a dad“.
@@ -388,3 +388,11 @@ Ceo plan: `~/.claude/plans/nastavi-toasty-wilkinson.md`. Mera uspeha je **novac 
 - Pre paljenja podsetnika: (1) rečenica u Privacy policy da adresu sa checkouta koristimo za jedan podsetnik; (2) CAN-SPAM traži fizičku poštansku adresu u komercijalnom mejlu (važi i za newsletter): P.O. box ili adresa registrovanog agenta LLC-a.
 
 **Founding roditelji (Luka, 2026-10-29): za sada ne pozivamo nikoga.** Stranica `/founding` i kartica na početnoj ostaju kako jesu, a prijave i dalje stižu u admin (Newsletter & forms). Dok nema citata, dokaz na sajtu su prave strane iz PDF-a i besplatna strana 5.
+
+## 15. Copy usklađen sa fajlovima (2026-11-02)
+
+Posle spoljne kritike proverene protiv isporučenih fajlova (Toolkit = 72 strane, Reset = 22 strane + tracker, oboje od 28.10.):
+- **Uzrast svuda 4–17** (meta, hero bedž, FAQ, About, kviz, og, llms.txt), jer verzije navika u knjizi idu 4–7 / 8–12 / 13–17. Likovi uzrasnih faza (Whyzi 3–6 …) i learn strane „3 to 17“ ostaju: to su činjenice o likovima, ne obećanje proizvoda. Spoljni direktorijumi (`brand-kit/LISTING-KIT.md`) i dalje kažu 3–17.
+- **Reset „teen track“ → „a page of teen notes with Teo“** (pricing kartica, value stack, tabela, kartica na početnoj, checkout, upgrade ponuda): poglavlje „The Reset for teens“ ima 291 reč, jednu stranu, pa copy sme da obeća samo toliko.
+- **Bonusi po ishodu na /pricing** (red u sadržaju Toolkita i red u tabeli), kao što je već bilo na checkoutu.
+- Creem pravila provereno (docs, refunds-and-chargebacks): „all sales final“ je dozvoljeno, ali Creem može sam da refundira do 60 dana, chargeback košta $25, a kod „excessive“ chargebacka može da suspenduje nalog. Odgovor na stavku iz §2.

@@ -72,7 +72,7 @@ export default function Quiz({ data }: { data: QuizData }) {
       screen = (
         <div className="q-intro">
           <div className="q-arts">{(["dopa", "migo", "mela", "toci"] as const).map((k) => <CrewArt key={k} k={k} mood="happy" />)}</div>
-          <p className="kick">free · for parents of kids 3–17</p>
+          <p className="kick">free · for parents of kids 4–17</p>
           <h1 className={v ? "" : "q-wait"}>{v?.headline ?? VARIANTS.a.headline}</h1>
           <p className="fx-sub">{v?.sub ?? VARIANTS.a.sub}</p>
           <button className="btn btn-main" type="button" disabled={!session} onClick={() => answer("start")}>Start →</button>
