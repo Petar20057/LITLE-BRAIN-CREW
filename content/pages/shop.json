@@ -2,6 +2,7 @@
   "route": "/shop",
   "title": "Bring the crew home: magnets, stickers and plush · Little Brain Crew",
   "description": "Fridge magnets, reward stickers, a card game and plush toys of the crew. Join the waitlist.",
+  "robots": "noindex,follow",
   "ogType": "website",
   "ogImageAlt": "The Little Brain Crew: 12 cartoon characters for the messengers, hormones and brain parts behind a kid’s mood, sleep and focus.",
   "bodyData": {},

@@ -418,7 +418,7 @@ This section supersedes the earlier prices, package contents and launch-price sc
 - New delivery files are under products/delivery/v2. delivery-files.json includes both catalogues; upload-delivery.mjs uploads their distinct paths. Do not rebuild the supplied PDFs from the older products/content HTML.
 - Creem v2 IDs live in lib/creem-products.json; the old IDs remain recognised for webhook compatibility. Toolkit + Bedtime is $26; Reset + cards $46.
 - POST /api/order reads webhook-confirmed purchases by a token in the JSON body. POST /api/upgrade validates a paid Toolkit order and creates/reuses its $20 checkout. A confirmed upgrade is a child order sharing the original download token. No email discount code is needed. Checkout creation never grants access.
-- Schools, Founding and Gift redirect to /. Free redirects to /#free. Ask and Shop keep direct URLs and have no public navigation links. The main hero headline is fixed; its old A/B test is inactive.
+- Schools, Founding and Gift redirect to /. Free redirects to /#free. Ask and Shop keep direct URLs, have no public navigation links, carry noindex and are excluded from the sitemap. The main hero headline is fixed; its old A/B test is inactive.
 
 Operational note: all eight v2 live products were created with the agreed prices; the two Club products are archived so their payment links cannot accept payments. The local key is scoped for live checkout creation, with no product/discount management or sandbox access. Browser dashboard operations were used for catalogue changes. Sandbox IDs remain unset until a test key is supplied; unit tests use isolated provider fixtures.
 

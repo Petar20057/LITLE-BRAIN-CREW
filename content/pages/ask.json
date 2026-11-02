@@ -2,6 +2,7 @@
   "route": "/ask",
   "title": "Ask the crew: one small habit for tonight · Little Brain Crew",
   "description": "Tell us what’s hard right now. Toci brings in the right crew member and gives you one small habit to try tonight. Free. Habits only.",
+  "robots": "noindex,follow",
   "ogType": "website",
   "ogImageAlt": "The Little Brain Crew: 12 cartoon characters for the messengers, hormones and brain parts behind a kid’s mood, sleep and focus.",
   "bodyData": {},
