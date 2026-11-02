@@ -103,8 +103,8 @@ describe("what each email is for", () => {
 
 describe("tag()", () => {
   it("tags our pages with the campaign and the button's label, and leaves the rest alone", () => {
-    expect(tag("/checkout/guide?crew=dopa", "quiz-result", "Get the Toolkit · $9")).toBe(
-      `${EMAIL_BASE}/checkout/guide?crew=dopa&utm_source=email&utm_medium=lifecycle&utm_campaign=quiz-result&utm_content=get-the-toolkit-9`,
+    expect(tag("/checkout/guide?crew=dopa", "quiz-result", "Get the Toolkit · $19")).toBe(
+      `${EMAIL_BASE}/checkout/guide?crew=dopa&utm_source=email&utm_medium=lifecycle&utm_campaign=quiz-result&utm_content=get-the-toolkit-19`,
     );
     expect(tag("/#plans", "x", "Plans")).toContain("utm_content=plans");
     expect(tag("/confirm?t=abc", "x", "Confirm")).toBe(`${EMAIL_BASE}/confirm?t=abc`);

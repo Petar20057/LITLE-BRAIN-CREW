@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { per, total, usd } from "@/lib/funnel";
+import { ITEMS, per, total, usd } from "@/lib/funnel";
 import { downloadPath, ownedProducts, sectionsFor } from "@/lib/delivery-files";
 import { useOrder } from "@/lib/order";
 import { trackEvent } from "@/lib/track-event";
@@ -93,7 +93,7 @@ export default function ThankYou() {
         <h2>Your next 3 steps</h2>
         <ol className="ty-next">
           <li>Open the email from Little Brain Crew (hello@littlebraincrew.com). Not there in 5 minutes? Check Promotions or Spam.</li>
-          <li>{program ? "Tonight: read Day 1 of the 30-Day Reset and choose your bedtime. It takes 10 minutes." : "Tonight: read the chapter for what’s hardest at home right now in The Kid Brain Toolkit. Start with The whole toolkit on one page (p. 5)."}</li>
+          <li>{program ? "Tonight: read Day 1 of the 30-Day Reset and choose your bedtime. It takes 10 minutes." : "Tonight: read the chapter for what’s hardest at home right now in The Kid Brain Toolkit. Start with The code on one page (p. 4). The Science Edition is in your downloads too."}</li>
           <li>{program ? "Print the fridge tracker and stick it where the whole family can see it." : "Pick one small habit for tomorrow, and stick the poster on the fridge."}</li>
         </ol>
         {club && <p className="fine">Your Crew Club membership is in your account. Pause or cancel anytime there: <a href="/account">manage membership</a>.</p>}
@@ -110,7 +110,7 @@ export default function ThankYou() {
         {toolkit && !program && (
           <div className="fx-card" style={{ marginTop: 24 }}>
             <h2>Want to turn the code into habits?</h2>
-            <p>The 30-Day Reset is open: one 10-minute habit a day for 30 days, with the exact words to say. Your $9 counts toward it: email hello@littlebraincrew.com and we’ll send you a $9 code.</p>
+            <p>The 30-Day Reset is open: one 10-minute habit a day for 30 days, with the exact words to say. Your {usd(ITEMS.guide.price)} counts toward it: email hello@littlebraincrew.com and we’ll send you a {usd(ITEMS.guide.price)} code.</p>
             <a className="btn" href="/pricing" onClick={() => trackEvent("cta_click", "thank-you-reset")}>See the 30-Day Reset</a>
           </div>
         )}

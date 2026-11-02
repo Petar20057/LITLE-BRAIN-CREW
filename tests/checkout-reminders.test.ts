@@ -33,7 +33,7 @@ describe("abandoned checkout reminder", () => {
     const [to, email, opts] = vi.mocked(sendEmail).mock.calls[0] as unknown as [string, { text: string }, { unsubscribeUrl: string }];
     expect(to).toBe("mom@example.com");
     expect(email.text).toContain("/checkout/guide?utm_source=reminder&crew=dopa&moment=screen-off");
-    expect(email.text).toContain("page 36");
+    expect(email.text).toContain("page 19");
     expect(opts.unsubscribeUrl).toContain("/api/unsubscribe?t=");
     // Never twice.
     expect(await sendCheckoutReminders(NOW + 3600_000)).toEqual({ sent: 0, skipped: 0 });

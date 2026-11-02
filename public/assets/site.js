@@ -205,7 +205,7 @@ window.sent = sent;
 $$('form[data-form]').forEach(f => { if (f.id !== 'gift-form') f.addEventListener('submit', e => { e.preventDefault(); sent(f); }); });
 
 /* ---------- buying: checkout, upsells and downsells live in the Next.js app ---------- */
-const PRODUCTS = { guide: { name: 'The Kid Brain Toolkit', price: 9 }, program: { name: 'The 30-Day Reset', price: 39 } };
+const PRODUCTS = { guide: { name: 'The Kid Brain Toolkit', price: 19 }, program: { name: 'The 30-Day Reset', price: 39 } };
 // <button data-buy="guide"> anywhere opens /checkout/guide.
 document.addEventListener('click', e => { const b = e.target.closest('[data-buy]'); if (b) { e.preventDefault(); location.href = '/checkout/' + b.dataset.buy; } });
 

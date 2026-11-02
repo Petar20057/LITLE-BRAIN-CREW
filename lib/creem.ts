@@ -38,7 +38,7 @@ export async function creemRequest<T>(path: string, method = "GET", body?: unkno
 }
 
 // Creem product id for everything we sell, keyed by the item ids in lib/funnel.ts. Creem has no order bump, so an
-// order with a bump is its own combined product ("guide+bedtime-kit" = Toolkit + Bedtime Kit, $16).
+// order with a bump is its own combined product ("guide+bedtime-kit" = Toolkit + Bedtime Kit, $26).
 // Fill these from the Creem dashboard; the test and live stores have different ids. Empty = not for sale yet.
 // "Support the crew" (any amount) is missing on purpose until Creem confirms pay-what-you-want.
 const PRODUCTS: Record<string, { test: string; live: string }> = {

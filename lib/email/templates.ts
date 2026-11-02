@@ -51,7 +51,7 @@ export function clubWelcome(plan: "monthly" | "yearly"): Email {
 
 const ART: Record<string, string> = { guide: PRODUCTS.guide.art, program: PRODUCTS.program.art, upgrade: PRODUCTS.program.art, "screen-off-week": "dopa" };
 const TONIGHT: Record<string, string> = {
-  guide: "Tonight: read the chapter for what’s hardest at home right now. Start with the whole toolkit on one page (p. 5).",
+  guide: "Tonight: find what’s hardest at home right now on The code on one page (p. 4) and read that moment’s page. Ten minutes.",
   program: "Tonight: read Day 1 of the Reset and choose your bedtime. 10 minutes.",
   upgrade: "Tonight: read Day 1 of the Reset and choose your bedtime. 10 minutes.",
   "screen-off-week": "Tonight: watch evening 1 with your kid before the screen goes off. 3 minutes.",
@@ -141,7 +141,7 @@ export function quizResultEmail(r: QuizResult, { confirmTipsUrl, sid }: { confir
   );
   if (r.lead.kid) blocks.push({ note: `Say it to your kid: ${r.lead.kid}` });
   blocks.push(
-    { p: `Want the habits behind it? The Kid Brain Toolkit: what science really knows about sleep, focus, mood and energy in kids, in 10 chapters with a version of every habit for ages 4–7, 8–12 and 13–17.${page ? ` “${page.title}”: the plan is on page ${page.page}.` : ""}` },
+    { p: `Want the habits behind it? The Kid Brain Toolkit: 12 crew members, the 12 hardest moments decoded with the exact words, 6 villains and what’s normal at every age, plus the 67-page Science Edition free (the science behind every habit, with a version for every age).${page ? ` “${page.title}”: the plan is on page ${page.page}.` : ""}` },
     { button: { label: `Get the Toolkit · ${usd(ITEMS.guide.price)}`, url: links.guide } },
     { p: "Want it to stick? The 30-Day Reset is one 10-minute habit a day for 30 days, with the exact words to say, a fridge tracker and the Toolkit included." },
     { button: { label: `Start the 30-Day Reset · ${usd(ITEMS.program.price)}`, url: links.program, secondary: true } },

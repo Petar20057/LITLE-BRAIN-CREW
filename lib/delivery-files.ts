@@ -14,7 +14,7 @@ export const DELIVERY_BUCKET: string = catalog.bucket;
 export const DELIVERY_SECTIONS = catalog.sections as DeliverySection[];
 export const DELIVERY_FILES = DELIVERY_SECTIONS.flatMap((s) => s.files);
 
-// Products that come with another product's files: the 30-Day Reset includes The Kid Brain Toolkit, and the $30
+// Products that come with another product's files: the 30-Day Reset includes The Kid Brain Toolkit, and the $20
 // upgrade (sold right after the Toolkit) is the Reset.
 const INCLUDES: Record<string, string[]> = { program: ["guide"], upgrade: ["program", "guide"] };
 

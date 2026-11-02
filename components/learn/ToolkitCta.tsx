@@ -7,7 +7,7 @@ import FreeListForm from "./FreeListForm";
 // form. Paths outside the plan's groups get the generic copy. Habits and learning only, no health claims.
 const GENERIC = {
   heading: "Want the whole crew on your side?",
-  text: `${ITEMS.guide.name}: what science really knows about sleep, focus, mood and energy in kids, and the daily habits that support them, with a version for every age.`,
+  text: `${ITEMS.guide.name}: 12 crew members, the 12 hardest moments decoded with the exact words, 6 villains, and what’s normal at every age. The Science Edition comes with it free: the science behind every habit, with a version for every age.`,
 };
 
 export default function ToolkitCta({ path }: { path: string }) {
@@ -19,7 +19,7 @@ export default function ToolkitCta({ path }: { path: string }) {
       <h3>{box.heading}</h3>
       <p>{box.text}</p>
       <BuyToolkitButton place={group ? `article-${group}` : "article"} />
-      <p className="fine" style={{ marginTop: 12 }}>Instant download: 72-page PDF, printable bonuses and 4 crew cartoons.</p>
+      <p className="fine" style={{ marginTop: 12 }}>Instant download: 43-page Toolkit + 67-page Science Edition free, printable bonuses and 4 crew cartoons.</p>
       <hr style={{ border: 0, borderTop: "1px solid var(--hair)", margin: "24px 0" }} />
       <p>Not ready? Get 15 free ways to end screen time without tears.</p>
       <FreeListForm />

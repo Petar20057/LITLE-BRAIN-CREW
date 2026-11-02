@@ -99,7 +99,7 @@ describe("Creem webhook", () => {
       object: { id: "chk_visit", customer: { id: "cust_3", email: "dad@example.com" }, metadata: { order: "guide", delivery: "tok-v", visitor, session } },
     };
     expect((await deliver(order)).status).toBe(200);
-    expect(fake.table("funnel_events")).toMatchObject([{ name: "purchase", place: "guide", amount_cents: 900, visitor_id: visitor, session_id: session }]);
+    expect(fake.table("funnel_events")).toMatchObject([{ name: "purchase", place: "guide", amount_cents: 1900, visitor_id: visitor, session_id: session }]);
   });
 
   it("ignores visit ids in the metadata that aren't ids", async () => {
@@ -123,10 +123,10 @@ describe("Creem webhook", () => {
     };
     expect((await deliver(order)).status).toBe(200);
     expect(fake.table("orders")).toMatchObject([
-      { provider_order_id: "chk_1", email: "mom@example.com", order_key: "guide+bedtime-kit", items: ["guide", "bedtime-kit"], amount_cents: 1600 },
+      { provider_order_id: "chk_1", email: "mom@example.com", order_key: "guide+bedtime-kit", items: ["guide", "bedtime-kit"], amount_cents: 2600 },
     ]);
     expect(fake.table("orders")[0].delivery_hash).toBe(createHash("sha256").update("tok-abc").digest("hex"));
-    expect(fake.table("funnel_events")).toMatchObject([{ name: "purchase", place: "guide+bedtime-kit", amount_cents: 1600 }]);
+    expect(fake.table("funnel_events")).toMatchObject([{ name: "purchase", place: "guide+bedtime-kit", amount_cents: 2600 }]);
     expect(sendEmail).toHaveBeenCalledTimes(1);
     const [to, email] = vi.mocked(sendEmail).mock.calls[0];
     expect(to).toBe("mom@example.com");
@@ -198,14 +198,14 @@ describe("Creem webhook", () => {
     expect(fake.table("funnel_events")).toMatchObject([{ name: "post_bump_purchase", place: "bedtime-kit", amount_cents: 700 }]);
   });
 
-  it("the $30 upgrade after the Toolkit is a post-bump purchase, and its receipt links the Reset and the Toolkit", async () => {
+  it("the $20 upgrade after the Toolkit is a post-bump purchase, and its receipt links the Reset and the Toolkit", async () => {
     await deliver({
       id: "evt_upgrade",
       eventType: "checkout.completed",
       created_at: T0,
       object: { id: "chk_4", customer: { email: "mom@example.com" }, metadata: { order: "upgrade", delivery: "tok-up" } },
     });
-    expect(fake.table("funnel_events")).toMatchObject([{ name: "post_bump_purchase", place: "upgrade", amount_cents: 3000 }]);
+    expect(fake.table("funnel_events")).toMatchObject([{ name: "post_bump_purchase", place: "upgrade", amount_cents: 2000 }]);
     const receipt = vi.mocked(sendEmail).mock.calls[0][1] as { text: string };
     expect(receipt.text).toContain("Start here: The 30-Day Reset");
     expect(receipt.text).toContain("Start here: The Kid Brain Toolkit");

@@ -14,7 +14,7 @@ Cene i tekst svih ponuda menjaš na jednom mestu: [`lib/funnel.ts`](lib/funnel.t
 
 ## 1. Naslov i početna strana
 
-**Besplatni kviz je uklonjen** (odluka 2026-10-25). Početna strana sada direktno prodaje, a sve tri ponude stoje jedna pored druge: ebook $9, 30-Day Reset $39 i Crew Club $9/mes. Stari linkovi i reklame na `/quiz` vode na `/#plans`.
+**Besplatni kviz je uklonjen** (odluka 2026-10-25). Početna strana sada direktno prodaje, a sve tri ponude stoje jedna pored druge: Toolkit $19 (do 2026-11-02 $9), 30-Day Reset $39 i Crew Club $19/mes. Stari linkovi i reklame na `/quiz` vode na `/#plans`.
 
 **Rule of One za copy početne strane** (zapisano i kao komentar na vrhu `design/index.html`):
 
@@ -70,7 +70,7 @@ Ostali Hormozi elementi:
 - **Bez garancije** (odluka 2026-10-26). Pošto je proizvod digitalan i odmah dostupan, svuda jasno piše da je prodaja konačna („all sales are final“). Ako link ili fajl ne radi, popravljamo. Politika refundacije mora biti vidljiva, pa je u FAQ-u i na checkout-u. Creem je merchant of record i ima svoja pravila za refundacije: proveriti da se slažu sa „all sales final“ pre puštanja naplate.
 - **Za koga jeste / nije** smanjuje pogrešne kupce i reklamacije.
 - **Cena po danu** ($1.30) kao sidro, umesto izmišljenih „vrednost $X“ brojki.
-- **Downsell na istoj stranici:** „Not ready for 30 days? Start with the $9 guide.“
+- **Downsell na istoj stranici:** „Not ready for 30 days? Start with the $19 Toolkit.“
 
 ---
 
@@ -100,7 +100,7 @@ Creem referral link člana ──► početna (Creem cookie 60 dana, Creem check
 **Pravila za ponude posle plaćanja:**
 - Gore se vidi „Order ✓“, da roditelj zna da je već platio i da ništa nije pošlo naopako.
 - Jedna ponuda, jedno veliko „Yes“, jedno pošteno „No thanks“ (bez „ne, ne volim svoje dete“ fora; to je confirmshaming i ruši poverenje).
-- Hitnost je samo istinita: „This $30 price is only on this page“ je tačno, jer program inače košta $39. Lažni tajmeri se ne koriste.
+- Hitnost je samo istinita: „This $20 price is only on this page“ je tačno, jer program inače košta $39 (do 2026-11-02 $30). Lažni tajmeri se ne koriste.
 - Checkout i ponude **nemaju meni**: logo i ništa za klik u stranu.
 
 ---
@@ -170,7 +170,7 @@ Sve je u preview modu (`PREVIEW = true` u `lib/funnel.ts`): dugmad prolaze kroz 
 **Odluka 2026-10-26 (Luka): sve plaćanje ide preko Creem-a** (creem.io, merchant of record: Creem je prodavac na računu, obračunava porez i izdaje račune). PayPal dugmad su uklonjena jer Creem dokumentacija ne navodi PayPal; kupac plaća karticom, Apple Pay ili Google Pay.
 
 - **Checkout:** server poziva Creem „create checkout“ (`product_id`, email kupca, `metadata` sa našim ID-jem porudžbine) i šalje kupca na `checkout_url`. Pristup se daje iz webhookova `checkout.completed` i `subscription.paid`, nikad iz redirecta.
-- **Proizvodi u Creem-u:** Toolkit $9, Reset $39, upgrade $30, Screen-Off Week $12, Club $19/mes i $199/god, plus kombinovani proizvodi za bump (Toolkit + Bedtime Kit $16, Reset + karte $46), jer Creem nema order bump.
+- **Proizvodi u Creem-u:** Toolkit $19, Reset $39, upgrade $20, Screen-Off Week $12, Club $19/mes i $199/god, plus kombinovani proizvodi za bump (Toolkit + Bedtime Kit $26, Reset + karte $46), jer Creem nema order bump. (Do 2026-11-02: Toolkit $9, upgrade $30, Toolkit + Bedtime Kit $16; vidi §16.)
 - **Upsellovi:** Creem dokumentacija ne pokazuje one-click naplatu sačuvane kartice. Svako „Yes“ na ponudi otvara novi Creem checkout sa unapred upisanim emailom. Očekivati nešto manju konverziju upsella nego sa one-click; ako Creem podrška potvrdi one-click, vraćamo ga.
 - **Članstvo:** Creem subscriptions; otkaz na kraju perioda (`subscription.scheduled_cancel`), customer portal link za karticu. Statusi u bazi prate Creem (`supabase/migrations/20261026120000_crew_club.sql`).
 
@@ -232,7 +232,7 @@ Izvori: „Little Brain Crew — biznis plan“ i „Little Brain Crew — lista
 **Odluke (Luka):**
 - **Brend:** svuda je sada Little Brain Crew (logo, naslovi strana, checkout, podrška, PDF-ovi). Provera žiga u SAD i EU **još nije urađena**.
 - **Kviz ostaje uklonjen**, iako ga biznis plan stavlja u centar. Email se i dalje skuplja samo na `/free`.
-- **Ulazna ponuda je The Kid Brain Toolkit, $9.** Ne pravimo pojedinačne planove od $9 za svaki problem.
+- **Ulazna ponuda je The Kid Brain Toolkit, $19** (do 2026-11-02 $9). Ne pravimo pojedinačne planove za svaki problem.
 
 **Pozicioniranje: „Huberman za decu“.** Huberman se na sajtu **ne pominje po imenu**, jer bi to delovalo kao da nas podržava. Pišemo kao on: šta se dešava u telu i mozgu, zašto, koji protokol, i izvor. Copy je Hormozi: bol, mehanizam, ponuda, bez obećanja ishoda.
 
@@ -268,7 +268,7 @@ Nijedan lik nije osećanje, zbog rizika sličnosti sa filmom *Inside Out*.
 
 | Ponuda | Šta obećava |
 |---|---|
-| **The Kid Brain Toolkit, $9** | 12 likova, 12 najtežih trenutaka, 6 zlikovaca, šta je normalno u kom uzrastu, izvori; bonusi (kartice, meltdown plan, poster, crtaći) |
+| **The Kid Brain Toolkit, $19** | 12 likova, 12 najtežih trenutaka, 6 zlikovaca, šta je normalno u kom uzrastu; uz njega besplatno Science Edition (10 poglavlja); bonusi (kartice, meltdown plan, poster, crtaći) |
 | **The 30-Day Reset, $39** (protokol) | 1. nedelja san (Mela, Corti protiv Glo i Bedi); 2. nedelja ekrani i fokus (Dopa, Nora protiv Lupi i Pingi); 3. nedelja ispadi i glad (Migo, Fronti, Greli, Gabi); 4. nedelja kretanje i bliskost (Endo, Toci, Sero, ti); teen track sa Teom; Toolkit uključen |
 | **The Crew Club, $19/mes ili $199/god** (zajednica) | novi lik svakog meseca (sa mape od 156), mesečna Q&A epizoda, privatna zajednica roditelja, vodiči po uzrastu, mesečni izazov i priče |
 
@@ -295,7 +295,7 @@ Odluke 2026-10-26 (Luka): članovi kluba zarađuju **20%** od prodaje preko svog
   - isplata na banku (Creem naplaćuje $7 ili 1%, šta je veće) ili USDC (2%), posle jednokratne Creem provere identiteta
   - „Support the crew“ se ne računa
 
-**Računica (posle 2%):** mesečni član $3.72, godišnji $39.00, Reset $7.64, Toolkit $1.76.
+**Računica (posle 2%):** mesečni član $3.72, godišnji $39.00, Reset $7.64, Toolkit $3.72 (do 2026-11-02, na $9: $1.76).
 
 **Napravljeno (preview):** `/affiliate` (javno), `/account/affiliate` (pravila → „Send me my invite“ → potvrda, 3 gotova opisa sa oznakom), kartica na `/account`, link u footeru, odeljak u Terms, Creem referral cookie u Privacy, rečenica u cancel flow-u („price“ razlog).
 
@@ -372,12 +372,12 @@ Ceo plan: `~/.claude/plans/nastavi-toasty-wilkinson.md`. Mera uspeha je **novac 
 
 **Urađeno 29.10. (nije commitovano):**
 - **Merenje:** novi događaji `checkout_submit` (klik na plaćanje), `offer_view` / `offer_no` (upsell stranice), `scroll_depth` (25/50/75/100% početne). Upsell plaćen = `post_bump_purchase` (sada i za `upgrade`). Admin Traffic tabela ima: pay clicks, upsell seen/bought, prihod i **$ po poseti**, plus tabelu dubine skrola. Migracija `supabase/migrations/20261029120000_funnel_offers_scroll.sql` mora u Supabase pre deploya.
-- **Upsell iza prekidača `UPSELL_OPEN`** (`lib/funnel.ts` i `next.config.ts`, oba `false`): Toolkit → `/offer/upgrade` (Reset $30) → ne → `/offer/bedtime` (Bedtime Kit $7, preskače se ako je uzet bump) → thank-you. Screen-Off Week ostaje ugašen (crtaći ne postoje). Popravljeno: posle upsella thank-you sada dobija token za fajlove (`addPaid` u `lib/order.ts`), a `upgrade` otključava Reset + Toolkit (`lib/delivery-files.ts`).
+- **Upsell iza prekidača `UPSELL_OPEN`** (`lib/funnel.ts` i `next.config.ts`, oba `false`): Toolkit → `/offer/upgrade` (Reset $20, do 2026-11-02 $30) → ne → `/offer/bedtime` (Bedtime Kit $7, preskače se ako je uzet bump) → thank-you. Screen-Off Week ostaje ugašen (crtaći ne postoje). Popravljeno: posle upsella thank-you sada dobija token za fajlove (`addPaid` u `lib/order.ts`), a `upgrade` otključava Reset + Toolkit (`lib/delivery-files.ts`).
 - **Checkout:** „What's inside“ je ispod dugmeta (na telefonu email i dugme su na prvom ekranu), red sa jednom stavkom sklonjen, „All sales are final“ kao sitan tekst ispod dugmeta, bump kraći i o bolu.
 - **Početna:** Club više nije treća kartica; waitlist je jedan red ispod dve kartice koje se mogu kupiti.
 - „$59“ na Resetu se ne prikazuje (`data-early`, `EARLY_BIRD_CONFIRMED = false`), nije problem.
 
-**Da bi upsell proradio (Luka):** napravi Creem proizvod „Upgrade to The 30-Day Reset“ $30 u test i live store-u, upiši id-jeve u `lib/creem.ts` (`upgrade`), stavi `UPSELL_OPEN = true` na oba mesta, test kupovina na test store-u.
+**Da bi upsell proradio (Luka):** napravi Creem proizvod „Upgrade to The 30-Day Reset“ $20 (od 2026-11-02; ranije $30) u test i live store-u, upiši id-jeve u `lib/creem.ts` (`upgrade`), stavi `UPSELL_OPEN = true` na oba mesta, test kupovina na test store-u.
 
 **Sledeće iz plana:** decoder kartice se otvaraju na strani sa CTA (treba tačne strane u Toolkitu), stack Toolkita na ishode, „pogledaj unutra“ sa stranama PDF-a, ponuda odmah posle decodera (danas je na ~8000px skrola na telefonu), besplatna strana 5 kao lead magnet, email sekvenca od 5 mejlova.
 
@@ -396,3 +396,14 @@ Posle spoljne kritike proverene protiv isporučenih fajlova (Toolkit = 72 strane
 - **Reset „teen track“ → „a page of teen notes with Teo“** (pricing kartica, value stack, tabela, kartica na početnoj, checkout, upgrade ponuda): poglavlje „The Reset for teens“ ima 291 reč, jednu stranu, pa copy sme da obeća samo toliko.
 - **Bonusi po ishodu na /pricing** (red u sadržaju Toolkita i red u tabeli), kao što je već bilo na checkoutu.
 - Creem pravila provereno (docs, refunds-and-chargebacks): „all sales final“ je dozvoljeno, ali Creem može sam da refundira do 60 dana, chargeback košta $25, a kod „excessive“ chargebacka može da suspenduje nalog. Odgovor na stavku iz §2.
+
+## 16. Toolkit $19 + Science Edition besplatno (2026-11-02)
+
+Luka, 2026-11-02: cena Toolkita $9 → $19. Toolkit je opet knjiga sa 12 trenutaka (nova verzija: **43 strane**, bez liste referenci i bez brojeva citata; Luka je poslao fajl), a 10-poglavna knjiga (nova verzija: **67 strana**, isto bez referenci) ide uz njega besplatno kao „The Kid Brain Toolkit: Science Edition“. Opis svuda, po Lukinoj formuli, ali sa stvarnim brojem strana fajlova: **„43-page Toolkit + 67-page Science Edition free“** (Luka je napisao 46/72, to su stari fajlovi od 27.10.; strana 2 novog Toolkita i dalje kaže „Science Edition (72 pages, 78 sources)“).
+- Fajlovi: `products/delivery/Kid-Brain-Toolkit/The-Kid-Brain-Toolkit.pdf` (43) i `The-Kid-Brain-Toolkit-Science-Edition.pdf` (67); `Kid-Brain-Toolkit.zip` ponovo napravljen; `lib/delivery-files.json` ima novu stavku `science-edition-pdf`. Stari fajlovi (72-stranična knjiga, arhiva od 28.10., stari zip, 34-stranični draft iz `products/pdf/`) su u `~/.Trash/lbc-toolkit-old-2026-11-02/`.
+- Strane na sajtu: `MOMENTS` u `lib/funnel.ts` (decoder na početnoj, checkout, mejlovi, kviz) sada pokazuju na Toolkit, Part 2 (Moment 1–12 = str. 19–30). Science Edition je zadržala brojeve strana poglavlja stare 72-stranične knjige (poglavlje 6 screens str. 32, 8 stress str. 43 …), pa `lib/article-boxes.ts` i /pricing citiraju oba.
+- Upgrade na Reset: $30 → **$20** (Reset $39 minus Toolkit $19, „your $19 counts“), `ITEMS.upgrade`; Creem proizvod „upgrade“ i dalje ne postoji (`UPSELL_OPEN` false). Affiliate red: Toolkit $3.72.
+- **Ručno u Creemu (test + live), Luka:** Toolkit $9 → $19 i Toolkit + Bedtime Kit $16 → $26. Dok se to ne uradi, sajt piše $19 a Creem naplaćuje $9 (`lib/creem.ts` ne nosi cene, samo ID-jeve).
+- Supabase bucket `delivery`: novi fajlovi upload-ovani 2026-11-02 (`scripts/upload-delivery.mjs --yes`), stari objekat `Kid-Brain-Toolkit/old-46-pages-The-Kid-Brain-Toolkit.pdf` obrisan.
+- Novi PDF-ovi kažu „for parents of kids 3–17“ i kolone 3–7 / 8–12 / 13–17 (stari: 4–17 i 4–7). Prodajne strane ostaju na 4–17 (§15); copy koji opisuje kolone knjige kaže 3–7. Lukina odluka ako treba vratiti 3–17.
+

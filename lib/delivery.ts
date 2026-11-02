@@ -61,7 +61,7 @@ export async function recordPaidOrder(order: PaidOrder): Promise<boolean> {
   if (error) throw error;
   if (!data?.length) return true; // already recorded by an earlier delivery of this webhook
 
-  // Offers sold after the first order (the $30 upgrade, the Bedtime Kit on its own) are "post" purchases, so /admin can
+  // Offers sold after the first order (the $20 upgrade, the Bedtime Kit on its own) are "post" purchases, so /admin can
   // tell first orders from upsells; anything else is a purchase.
   const name = POST_PURCHASE.has(order.orderKey) ? "post_bump_purchase" : "purchase";
   try {

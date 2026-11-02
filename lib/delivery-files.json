@@ -40,6 +40,12 @@
           "path": "Kid-Brain-Toolkit/The-Kid-Brain-Toolkit.pdf",
           "name": "Start here: The Kid Brain Toolkit",
           "kind": "pdf"
+        },
+        {
+          "id": "science-edition-pdf",
+          "path": "Kid-Brain-Toolkit/The-Kid-Brain-Toolkit-Science-Edition.pdf",
+          "name": "The Science Edition: the research behind every habit, in 10 chapters",
+          "kind": "pdf"
         }
       ]
     },
