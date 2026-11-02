@@ -90,7 +90,8 @@ describe("/code email gate", () => {
     expect(text).toContain(`/checkout/guide?crew=dopa&moment=screen-off&qs=${SID_A}`);
     expect(text).toContain(`/checkout/program?crew=dopa&qs=${SID_A}`);
     expect(html).toContain("Start the 30-Day Reset");
-    expect(text).toContain("littlebraincrew.com/free");
+    expect(text).toContain("#free");
+    expect(text).toContain("15 ways to end screen time");
   });
 
   it("refuses a bad address and too many tries from one connection", async () => {

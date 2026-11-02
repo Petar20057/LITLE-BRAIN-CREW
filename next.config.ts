@@ -5,7 +5,7 @@ import type { NextConfig } from "next";
 const COMING_SOON = false;
 
 // The offers after a Toolkit order (/offer/upgrade, then /offer/bedtime). Keep in step with UPSELL_OPEN in lib/funnel.ts.
-const UPSELL_OPEN = false;
+const UPSELL_OPEN = true;
 
 // Sent with every response. Vercel adds HSTS itself. No script CSP yet: Next's inline bootstrap scripts would need a
 // nonce on every request, which turns the static pages dynamic. So this sticks to what can't break a page: no framing
@@ -31,6 +31,10 @@ const nextConfig: NextConfig = {
   // its old offer page goes straight to the order.
   async redirects() {
     return [
+      { source: "/schools", destination: "/", permanent: true },
+      { source: "/founding", destination: "/", permanent: true },
+      { source: "/gift", destination: "/", permanent: true },
+      { source: "/free", destination: "/#free", permanent: true },
       ...(COMING_SOON
         ? [
             { source: "/checkout/:path*", destination: "/#plans", permanent: false },

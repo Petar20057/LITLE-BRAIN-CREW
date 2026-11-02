@@ -49,8 +49,9 @@ export function clubWelcome(plan: "monthly" | "yearly"): Email {
   });
 }
 
-const ART: Record<string, string> = { guide: PRODUCTS.guide.art, program: PRODUCTS.program.art, upgrade: PRODUCTS.program.art, "screen-off-week": "dopa" };
+const ART: Record<string, string> = { guide: PRODUCTS.guide.art, program: PRODUCTS.program.art, upgrade: PRODUCTS.program.art, "bedtime-kit": PRODUCTS.bedtime.art, "screen-off-week": "dopa" };
 const TONIGHT: Record<string, string> = {
+  "bedtime-kit": "Tonight: try Day 1 of Screen-Off Week, then read The Crew Goes to Sleep together.",
   guide: "Tonight: find what’s hardest at home right now on The code on one page (p. 4) and read that moment’s page. Ten minutes.",
   program: "Tonight: read Day 1 of the Reset and choose your bedtime. 10 minutes.",
   upgrade: "Tonight: read Day 1 of the Reset and choose your bedtime. 10 minutes.",
@@ -141,12 +142,12 @@ export function quizResultEmail(r: QuizResult, { confirmTipsUrl, sid }: { confir
   );
   if (r.lead.kid) blocks.push({ note: `Say it to your kid: ${r.lead.kid}` });
   blocks.push(
-    { p: `Want the habits behind it? The Kid Brain Toolkit: 12 crew members, the 12 hardest moments decoded with the exact words, 6 villains and what’s normal at every age, plus the 67-page Science Edition free (the science behind every habit, with a version for every age).${page ? ` “${page.title}”: the plan is on page ${page.page}.` : ""}` },
+    { p: `Want the habits behind it? The Kid Brain Toolkit: 12 crew members, the 12 hardest moments decoded with the exact words, 6 villains and what’s normal at every age, with printable bonuses and 4 crew cartoons.${page ? ` “${page.title}”: the plan is on page ${page.page}.` : ""}` },
     { button: { label: `Get the Toolkit · ${usd(ITEMS.guide.price)}`, url: links.guide } },
-    { p: "Want it to stick? The 30-Day Reset is one 10-minute habit a day for 30 days, with the exact words to say, a fridge tracker and the Toolkit included." },
+    { p: "Want it to stick? The 30-Day Reset is one 10-minute habit a day for 30 days, with the exact words to say, a fridge tracker and the Science Edition included." },
     { button: { label: `Start the 30-Day Reset · ${usd(ITEMS.program.price)}`, url: links.program, secondary: true } },
-    { p: "Not ready to buy? The 5-day Screen-Off Challenge is free: one short email and one small step a day." },
-    { link: { label: "Join the free challenge", url: "/free" } },
+    { p: "Not ready to buy? Start with the free printable: 15 ways to end screen time without tears." },
+    { link: { label: "Get the free screen-time printable", url: "/#free" } },
   );
   if (confirmTipsUrl) {
     blocks.push(
@@ -205,7 +206,7 @@ const CONFIRM_FOR: Record<string, Confirm> = {
     what: "the free list: 15 ways to end screen time without tears",
     art: "dopa",
     subject: "One tap to get your screen-time list",
-    preheader: "Tap confirm and your two-page list arrives right away.",
+    preheader: "Four printable pages. One small change for a calmer screen-off tonight.",
     title: "Your list is one tap away",
     button: "Confirm and get the list",
   },
@@ -237,7 +238,13 @@ export function confirmSignup(form: string, url: string): Email {
     kick: "one tap",
     title: c.title,
     art: c.art,
-    blocks: [
+    blocks: form === "free-screen-list" ? [
+      { p: "Your screen-time printable is ready. Confirm your email and we’ll send all four pages straight to your inbox." },
+      { button: { label: c.button, url } },
+      { preview: { src: "/email/screen-time-list-preview.png", alt: "Preview of the 15 ways to end screen time printable", caption: "4 pages · ages 3–17 · print it or keep it on your phone" } },
+      { list: ["Before the screen goes on: agree on an ending", "When it’s time to stop: the words and small choices", "After the screen goes off: help them land somewhere"] },
+      { note: "Didn’t ask for this? Just ignore this email. We won’t send the list until you confirm." },
+    ] : [
       { p: `You asked littlebraincrew.com for ${c.what}.` },
       { p: "Tap the button to confirm it’s you, and it lands in your inbox right away. Until you do, we won’t send anything else." },
       { button: { label: c.button, url } },
@@ -257,20 +264,21 @@ const FOLLOW = "The crew posts a short cartoon explainer most days. Find us as L
 export function freeScreenList(unsubscribe: string): Email {
   return renderEmail({
     subject: "Your list: 15 ways to end screen time without tears",
-    preheader: "Two pages to print and stick on the fridge.",
+    preheader: "Your four-page printable is here, with one small thing to try tonight.",
     kick: "here it is",
     title: "15 ways to end screen time without tears",
     art: "dopa",
     blocks: [
-      { p: "Thanks for confirming. Here’s your list: two pages, made to print and keep on the fridge." },
-      { button: { label: "Open your list", url: "/downloads/15-ways-to-end-screen-time.pdf" } },
-      { p: "If you only try one thing this week, try number 5: warn twice, at 5 minutes and at 1 minute, with a timer your kid can see. Surprise endings are the hardest ones." },
+      { p: "Here it is: 15 practical ways to make the end of screen time easier, in four pages you can print or keep on your phone." },
+      { button: { label: "Get my 4-page printable", url: "/downloads/15-ways-to-end-screen-time.pdf" } },
+      { preview: { src: "/email/screen-time-list-preview.png", alt: "The first page of your 15 ways to end screen time printable", caption: "Before the screen · time to stop · what comes next" } },
+      { note: "Try this tonight: number 5. Warn at 5 minutes and at 1 minute, with a timer your kid can see. Same warnings, same words, each evening." },
       { p: `Want the exact words for the moment it goes wrong? Page ${SCREEN_OFF.page} of the Kid Brain Toolkit has it, word for word (${SCREEN_OFF.plan}).` },
       { link: { label: `See page ${SCREEN_OFF.page} in the Toolkit · ${usd(ITEMS.guide.price)}`, url: SCREEN_OFF_CHECKOUT } },
       { note: `One small favor: add ${HELLO} to your contacts so the next ones land in your inbox, not Promotions. And hit reply any time: we read every email.` },
       { p: FOLLOW },
     ],
-    reason: "You’re getting this email because you asked for the free list at littlebraincrew.com/free.",
+    reason: "You’re getting this email because you asked for the free list at littlebraincrew.com.",
     unsubscribe,
     campaign: "free-list",
   });
@@ -294,12 +302,12 @@ export function freeStickerPack(unsubscribe: string): Email {
           "On a phone, open the email on the device you chat from.",
         ],
       },
-      { p: "Want something for the tough moments too? The 5-day Screen-Off Challenge is free: one short email and one small step a day." },
-      { link: { label: "Join the free challenge", url: "/free" } },
+      { p: "Want something for the tough moments too? Get the free printable: 15 ways to end screen time without tears." },
+      { link: { label: "Get the free screen-time printable", url: "/#free" } },
       { note: `One small favor: add ${HELLO} to your contacts so the next ones land in your inbox, not Promotions. And hit reply any time: we read every email.` },
       { p: FOLLOW },
     ],
-    reason: "You’re getting this email because you asked for the free sticker pack at littlebraincrew.com/free.",
+    reason: "You’re getting this email because you asked for the free sticker pack at littlebraincrew.com.",
     unsubscribe,
     campaign: "free-stickers",
   });
@@ -394,7 +402,7 @@ export function challengeDay(day: number, unsubscribe: string): Email {
       ...challengeExtras(day),
       { p: day < 5 ? `Tomorrow: Day ${day + 1}, ${CHALLENGE_DAYS[day].name}. ${FOLLOW}` : FOLLOW },
     ],
-    reason: "You’re getting this email because you joined the 5-day Screen-Off Challenge at littlebraincrew.com/free. It ends after Day 5.",
+    reason: "You’re getting this email because you joined the 5-day Screen-Off Challenge at littlebraincrew.com. It ends after Day 5.",
     unsubscribe,
     campaign: `challenge-day-${day}`,
   });

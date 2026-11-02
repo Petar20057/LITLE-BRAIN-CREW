@@ -407,3 +407,15 @@ Luka, 2026-11-02: cena Toolkita $9 → $19. Toolkit je opet knjiga sa 12 trenuta
 - Supabase bucket `delivery`: novi fajlovi upload-ovani 2026-11-02 (`scripts/upload-delivery.mjs --yes`), stari objekat `Kid-Brain-Toolkit/old-46-pages-The-Kid-Brain-Toolkit.pdf` obrisan.
 - Novi PDF-ovi kažu „for parents of kids 3–17“ i kolone 3–7 / 8–12 / 13–17 (stari: 4–17 i 4–7). Prodajne strane ostaju na 4–17 (§15); copy koji opisuje kolone knjige kaže 3–7. Lukina odluka ako treba vratiti 3–17.
 
+
+## 17. Catalogue v2 — 2 November 2026
+
+- Toolkit $19: 43-page guide and existing bonuses. Science belongs to the $39 Reset bundle, with the new 61-page Reset guide and fridge tracker. Reset does not include the standalone Toolkit or its bonuses.
+- Bedtime Kit $7 is one 20-page PDF: seven evenings, age-specific scripts, a routine card and a read-aloud story. Club remains a waitlist at $8/month or $80/year (two months free, save $16).
+- Catalogue v1 paths and ZIPs are immutable. Existing orders and checkouts without a catalogue version default to v1. New checkouts carry catalog_version=2. The migration adds orders.catalog_version, orders.parent_order_id and the private order_upgrades table.
+- New delivery files are under products/delivery/v2. delivery-files.json includes both catalogues; upload-delivery.mjs uploads their distinct paths. Do not rebuild the supplied PDFs from the older products/content HTML.
+- Creem v2 IDs live in lib/creem-products.json; the old IDs remain recognised for webhook compatibility. Toolkit + Bedtime is $26; Reset + cards $46.
+- POST /api/order reads webhook-confirmed purchases by a token in the JSON body. POST /api/upgrade validates a paid Toolkit order and creates/reuses its $20 checkout. A confirmed upgrade is a child order sharing the original download token. No email discount code is needed. Checkout creation never grants access.
+- Schools, Founding and Gift redirect to /. Free redirects to /#free. Ask and Shop keep direct URLs and have no public navigation links. The main hero headline is fixed; its old A/B test is inactive.
+
+Operational note: all eight v2 live products were created with the agreed prices; the two Club products are archived so their payment links cannot accept payments. The local key is scoped for live checkout creation, with no product/discount management or sandbox access. Browser dashboard operations were used for catalogue changes. Sandbox IDs remain unset until a test key is supplied; unit tests use isolated provider fixtures.

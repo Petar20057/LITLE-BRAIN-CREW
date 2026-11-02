@@ -1,6 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { CreemError, discountProducts } from "@/lib/creem";
 
+// Unit tests use an isolated configured store; production IDs and optional sandbox setup are operational data.
+vi.mock("@/lib/creem-products.json", () => ({ default: {
+  guide: { test: "prod_test_guide", live: "" },
+  "guide+bedtime-kit": { test: "prod_test_guide_bedtime", live: "" },
+} }));
+
 const request = vi.fn();
 vi.mock("@/lib/creem", async (original) => ({
   ...(await original<typeof import("@/lib/creem")>()),

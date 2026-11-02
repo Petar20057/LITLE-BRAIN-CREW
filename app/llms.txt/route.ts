@@ -7,7 +7,7 @@ export function GET() {
   const lines: string[] = [
     "# Little Brain Crew",
     "",
-    "> Short cartoon explainers for parents of kids 4–17. Brain chemicals, brain parts and everyday habits are characters, so a hard moment (screen time ends in tears, bedtime drags on, a meltdown after school) makes sense and comes with one thing to try tonight. Educational content only, built on everyday habits: not medical advice, and we never sell supplements, hormones or medicine.",
+    "> Short cartoon explainers for parents of kids 3–17. Brain chemicals, brain parts and everyday habits are characters, so a hard moment (screen time ends in tears, bedtime drags on, a meltdown after school) makes sense and comes with one thing to try tonight. Educational content only, built on everyday habits: not medical advice, and we never sell supplements, hormones or medicine.",
     "",
     `Pages cite vetted sources (${SITE_URL}/sources) and follow ${SITE_URL}/editorial-policy. Characters are metaphors, never measured levels in a child.`,
     "",

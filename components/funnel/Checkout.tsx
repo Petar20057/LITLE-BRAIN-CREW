@@ -173,7 +173,7 @@ export default function Checkout({ slug }: { slug: Product["slug"] }) {
             <h3>What happens next</h3>
             <ol>
               <li>Your link lands in your inbox within a minute.</li>
-              <li>{slug === "club" ? "Watch this week’s cartoon tonight." : slug === "program" ? "Tonight: read Day 1 of the Reset and choose your bedtime. 10 minutes." : slug === "bedtime" ? "Tonight: play Mela and the Soft-Light Night at lights-out. 5 minutes." : "Tonight: read the chapter for what’s hardest at home right now. 5 minutes."}</li>
+              <li>{slug === "club" ? "Watch this week’s cartoon tonight." : slug === "program" ? "Tonight: read Day 1 of the Reset and choose your bedtime. 10 minutes." : slug === "bedtime" ? "Tonight: try Day 1 of Screen-Off Week, then read The Crew Goes to Sleep together." : "Tonight: read the moment that’s hardest at home right now. 5 minutes."}</li>
               <li>Try one small habit. That’s it.</li>
             </ol>
           </div>

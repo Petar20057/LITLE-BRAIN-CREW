@@ -109,7 +109,7 @@ const EXTRA_REFS: Record<string, { title: string; blurb: string }> = {
   "/sources": { title: "Sources", blurb: "Every source our pages cite." },
   "/pricing": { title: "The 30-Day Reset", blurb: "One 10-minute habit a day, for 30 days." },
   "/faq": { title: "Parent FAQ", blurb: "Short answers about screens, sleep and mood." },
-  "/free": { title: "Free tips and stickers", blurb: "Printable crew stickers and tips." },
+  "/#free": { title: "15 ways to end screen time", blurb: "The free printable list." },
   "/ask": { title: "Ask the crew", blurb: "Ask a question and get a crew answer." },
   "/": { title: "Little Brain Crew", blurb: "The crew inside your kid’s brain, made simple." },
 };

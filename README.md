@@ -49,7 +49,7 @@ SEO content, rendered as server components with the same global CSS classes as t
 | Route | What |
 |---|---|
 | `/checkout/guide`, `/checkout/program`, `/checkout/club` | Order page with order bump and email, then Creem checkout (card, Apple Pay, Google Pay) |
-| `/offer/upgrade`, `/offer/screen-off-week`, `/offer/club` | One-click upsells and downsells after payment |
+| `/offer/upgrade`, `/offer/screen-off-week`, `/offer/club` | Post-purchase offers with a prefilled Creem checkout |
 | `/account/affiliate`, `/affiliate` | Members-only affiliate program (20%) on Creem: rules, invite request, share kit |
 | `/thank-you` | Order summary and next steps |
 | `/support` | “Support the crew”, pay what you want (not a donation) |
@@ -57,15 +57,13 @@ SEO content, rendered as server components with the same global CSS classes as t
 
 - Prices, products and the order of offers: `lib/funnel.ts`.
 - Order state across the steps: `lib/order.ts` (sessionStorage for now).
-- Payments: `lib/payments.ts`. **Preview mode:** nothing is charged until Creem is connected there (see FUNNEL.md §7).
+- Payments: `lib/payments.ts`. Payments are live through Creem; PREVIEW is false. Offers still require confirmation on Creem.
 
 ## Known gaps
 
 - `/downloads/crew-stickers.zip` is linked on `/free` but the file doesn't exist yet.
-- The free screen-time list and the 5-day challenge emails aren't written yet: signing up only sends the confirmation link.
 - Yellow “draft” labels mark text waiting for an OK: the Privacy policy and Terms, Club content and launch date, guide page numbers.
 - Testimonials stay empty until there are real ones.
-- File delivery for paid products isn't built, so payments stay off (`COMING_SOON` in `next.config.ts` and `lib/funnel.ts`).
 
 ## Environment
 
@@ -144,3 +142,11 @@ Public routes count requests per client IP in `rate_limits` (`lib/rate-limit.ts`
 ## Stack
 
 GitHub (`Petar20057/LITLE-BRAIN-CREW`, this folder is the repo root) → Vercel, Supabase for members, subscriptions, form signups, quiz data and the admin login, Amazon SES for email, Creem (merchant of record) for payments and the affiliate program.
+
+## Catalogue v2 (2 November 2026)
+
+Current bundles and prices: Toolkit $19 with its bonuses; Reset $39 with the Reset PDF, tracker and Science Edition; Bedtime $7 as one PDF; Club waitlist $8/month or $80/year. See FUNNEL.md §17. Edit the source design and run npm run sync. The retired marketing HTML lives under design/retired and is not generated.
+
+Buyer downloads resolve the catalogue version stored on the paid order. Preserve all v1 paths and ZIPs. New files are under ../products/delivery/v2. The upload script checks both catalogues before upload. Creem product IDs are in lib/creem-products.json. Migration 20261102170000 adds versioned purchases and verified Reset upgrades.
+
+The /api/order and /api/upgrade routes use the original buyer token; a post-purchase upgrade is linked to its paid parent. Confirmation and the 15 Ways delivery email use the actual four-page PDF and its local preview image.

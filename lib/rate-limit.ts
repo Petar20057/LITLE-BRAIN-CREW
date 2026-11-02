@@ -11,6 +11,8 @@ import { supabaseConfigured } from "@/lib/supabase/env";
 // the per-address and per-visit caps in the routes still hold.
 
 export const LIMITS = {
+  /** Polling for webhook-confirmed downloads after a purchase. */
+  orderStatus: { max: 180, windowSeconds: 3600 },
   /** /code email gate: a parent does the quiz once, maybe twice. */
   quizLead: { max: 5, windowSeconds: 3600 },
   /** New /code quiz visits (the first event of a visit). */

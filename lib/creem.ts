@@ -2,6 +2,7 @@ import "server-only";
 
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { ITEMS, type Item } from "./funnel";
+import currentProducts from "./creem-products.json";
 
 // Creem: payments (merchant of record) and the affiliate program. Server only: the API key never reaches the browser.
 // Every key is EMPTY until Creem is connected, and then nothing here runs (the routes answer 503).
@@ -41,7 +42,7 @@ export async function creemRequest<T>(path: string, method = "GET", body?: unkno
 // order with a bump is its own combined product ("guide+bedtime-kit" = Toolkit + Bedtime Kit, $26).
 // Fill these from the Creem dashboard; the test and live stores have different ids. Empty = not for sale yet.
 // "Support the crew" (any amount) is missing on purpose until Creem confirms pay-what-you-want.
-const PRODUCTS: Record<string, { test: string; live: string }> = {
+const LEGACY_PRODUCTS: Record<string, { test: string; live: string }> = {
   guide: { test: "prod_6RLkxpWxFb7axxq5A2xo3N", live: "prod_3uRNXgUJ7KoJE2lw3Lk2Ym" },
   "bedtime-kit": { test: "prod_1aPzq7XExzFTjsj2SmjXZY", live: "prod_6UNUaVPQLo8zhL20cWb7vp" },
   "guide+bedtime-kit": { test: "prod_3wPWFIXUGHNSvHaaM8L4OT", live: "prod_1vCgpOUX7izA3p25ptKpoD" },
@@ -52,6 +53,7 @@ const PRODUCTS: Record<string, { test: string; live: string }> = {
   "club-monthly": { test: "", live: "" },
   "club-yearly": { test: "", live: "" },
 };
+const PRODUCTS: Record<string, { test: string; live: string }> = currentProducts;
 
 const ALL_ITEMS: Item[] = Object.values(ITEMS);
 
@@ -81,7 +83,8 @@ export function discountProducts() {
 export function keyForProduct(productId: string): string | undefined {
   // An empty id must never match a product whose id isn't filled in yet.
   if (!productId) return undefined;
-  return Object.keys(PRODUCTS).find((k) => productIdFor(k) === productId);
+  return Object.keys(PRODUCTS).find((k) => productIdFor(k) === productId)
+    ?? Object.keys(LEGACY_PRODUCTS).find((k) => (CREEM_LIVE ? LEGACY_PRODUCTS[k].live : LEGACY_PRODUCTS[k].test) === productId);
 }
 
 export async function createCheckout(input: {
@@ -89,6 +92,7 @@ export async function createCheckout(input: {
   email: string;
   successUrl: string;
   metadata: Record<string, string>;
+  requestId?: string;
 }): Promise<string> {
   const res = await fetch(`${BASE}/v1/checkouts`, {
     method: "POST",
@@ -98,8 +102,10 @@ export async function createCheckout(input: {
       customer: { email: input.email },
       success_url: input.successUrl,
       metadata: input.metadata,
+      ...(input.requestId ? { request_id: input.requestId } : {}),
     }),
     cache: "no-store",
+    signal: AbortSignal.timeout(20_000),
   });
   if (!res.ok) throw new Error(`Creem checkout failed: ${res.status} ${await res.text()}`);
   const data = (await res.json()) as { checkout_url?: string };

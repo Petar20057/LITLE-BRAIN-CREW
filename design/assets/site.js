@@ -213,8 +213,8 @@ document.addEventListener('click', e => { const b = e.target.closest('[data-buy]
 $$('[data-bill]').forEach(b => b.addEventListener('click', () => {
   $$('[data-bill]').forEach(x => x.setAttribute('aria-pressed', x === b));
   const y = b.dataset.bill === 'y';
-  gi('club-price').innerHTML = y ? '$199<small>/year</small>' : '$19<small>/month</small>';
-  gi('club-save').textContent = y ? 'about $16.58 a month, or $0.55 a day · save $29 a year' : 'about $0.63 a day';
+  gi('club-price').innerHTML = y ? '$80<small>/year</small>' : '$8<small>/month</small>';
+  gi('club-save').textContent = y ? 'about $6.67 a month · two months free · save $16 a year' : 'about $0.27 a day';
   if (gi('club-cta')) gi('club-cta').href = '/checkout/club?plan=' + (y ? 'yearly' : 'monthly');
 }));
 

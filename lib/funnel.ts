@@ -4,16 +4,15 @@
 //                                     (UPSELL_OPEN)            └─no──► /offer/bedtime ($7, skipped if bump taken) ─► /thank-you
 //   home / pricing ──► /checkout/program ──────────────────────────────────────────────────────► /thank-you
 //   Club, /offer/club and /offer/screen-off-week stay closed (next.config.ts redirects) until the Club opens.
-//   gift page ───► /checkout/<guide|program>?gift=1 ────────────────────────────────────► /thank-you
 //   member's Creem referral link ──► home (Creem's cookie credits the member at its checkout, see AFFILIATE)
 
 // True until Creem is connected (lib/payments.ts): buttons walk the funnel without charging.
 export const PREVIEW = false;
 
 // The offers after a Toolkit order: the $20 upgrade to the Reset, then the Bedtime Kit for $7 if the bump wasn't taken.
-// Off until the $20 "upgrade" product exists in Creem (lib/creem.ts PRODUCTS, test and live): with it off the Toolkit
-// goes straight to the thank-you page. Keep in step with UPSELL_OPEN in next.config.ts.
-export const UPSELL_OPEN = false;
+// The verified $20 offer is live. Its provider product is configured in lib/creem-products.json.
+// Keep in step with UPSELL_OPEN in next.config.ts.
+export const UPSELL_OPEN = true;
 
 // True until a payment processor is live: Support the crew shows "Coming soon". Keep in step with COMING_SOON in next.config.ts.
 export const COMING_SOON = false;
@@ -27,8 +26,7 @@ export const CREW_NAMES: Record<CrewKey, string> = {
 /** The 12 hard moments of the home page decoder (design/index.html, data-moment), with where each one's page is in
  *  The Kid Brain Toolkit PDF: Part 2, "Moment N of 12" (what's going on, the move for tonight, the exact words). A decoder
  *  card opens /checkout/guide?crew=…&moment=…, and the checkout names the moment and its page. Pages checked against
- *  products/delivery/Kid-Brain-Toolkit/The-Kid-Brain-Toolkit.pdf (43 pages, 2026-11-02). The Science Edition that comes
- *  with it keeps the chapter pages of the 10-chapter book (screens ch. 6 p. 32, stress ch. 8 p. 43 …), see lib/article-boxes.ts. */
+ *  products/delivery/Kid-Brain-Toolkit/The-Kid-Brain-Toolkit.pdf (43 pages, 2026-11-02). The Science Edition in the Reset bundle keeps the chapter pages of the 10-chapter book (screens ch. 6 p. 32, stress ch. 8 p. 43 …), see lib/article-boxes.ts. */
 export const MOMENTS: Record<string, { title: string; page: number; plan: string }> = {
   "screen-off": { title: "Tears when screen time ends", page: 19, plan: "Moment 1 · the 4-step screen-off" },
   homework: { title: "“I’m bored” and homework that won’t start", page: 20, plan: "Moment 2 · snack, move, one tiny first step" },
@@ -62,9 +60,9 @@ export const ITEMS = {
   // The Reset minus the Toolkit ("your $19 counts"): change it with either price.
   upgrade: { id: "upgrade", name: "Upgrade to The 30-Day Reset", price: 20 },
   screenOffWeek: { id: "screen-off-week", name: "Screen-Off Week · 7 days", price: 12, note: "counts toward the 30-Day Reset if you upgrade later" },
-  // The Club is the only membership: $19 a month or $199 a year. No trial, no lighter tier.
-  clubMonthly: { id: "club-monthly", name: "The Crew Club · monthly", price: 19, every: "month" },
-  clubYearly: { id: "club-yearly", name: "The Crew Club · yearly", price: 199, every: "year" },
+  // Two months free on the yearly plan: 10 × $8, saving $16.
+  clubMonthly: { id: "club-monthly", name: "The Crew Club · monthly", price: 8, every: "month" },
+  clubYearly: { id: "club-yearly", name: "The Crew Club · yearly", price: 80, every: "year" },
 } satisfies Record<string, Item>;
 
 /* ---------- checkout pages ---------- */
@@ -84,24 +82,22 @@ export const PRODUCTS: Record<Product["slug"], Product> = {
   guide: {
     slug: "guide",
     title: "The Kid Brain Toolkit",
-    sub: "Your kid didn’t come with a manual. Here’s the code: 12 crew members, the 12 hardest moments decoded with the exact words, 6 villains, and what’s normal at every age. 43 pages you can read in one evening, plus the 67-page Science Edition free. Ages 4–17.",
+    sub: "12 crew members, the 12 hardest moments decoded with the exact words, 6 villains, and what’s normal at every age. 43 pages you can read in one evening, with printable bonuses and 4 crew cartoons. Ages 3–17.",
     art: "fronti",
-    // The parts of the Toolkit with their pages (same PDF as MOMENTS and the home page card), then the free Science
-    // Edition and the bonuses.
+    // The parts of the Toolkit with their pages (same PDF as MOMENTS and the home page card), then the printable bonuses.
     get: [
       "The code on one page: find your hard moment and the crew member behind it (p. 4)",
       "Meet the crew: 12 members, what helps each one and what throws it off (p. 5)",
       "The 12 hard moments decoded, each with what’s going on, the move for tonight and the exact words: screen-off tears (p. 19), homework that won’t start (p. 20), blow-ups (p. 21), the after-school meltdown (p. 23), wired at bedtime (p. 24) and 7 more",
       "The 6 villains (the phone in bed, autoplay, late bedtimes and 3 more) and how to beat each one (p. 31)",
       "What’s normal at every age, Whyzi (3) to Seki (17) (p. 35), and when to talk to your pediatrician (p. 42)",
-      "Free with it: The Kid Brain Toolkit, Science Edition. 67 pages, 10 chapters on the science behind every habit, a version for ages 3–7, 8–12 and 13–17, a four-week plan and printables",
       "When you don’t know what to say: 24 “Say This, Not That” cards, plus the 60-Second Meltdown Plan for the fridge",
       "Also inside: the crew poster and 4 crew cartoons to watch together",
     ],
     bump: {
       item: ITEMS.bedtimeKit,
       headline: "Add the Bedtime & Screen-Off Kit, $7",
-      text: "For the two hardest moments of the day: a 5-minute crew bedtime story to play at lights-out, and the exact words for ending screen time without a fight. Only with this order.",
+      text: "One 20-page PDF: seven evenings of small screen-off habits, the exact words for every age, a bedtime routine card and a story to read together. Only with this order.",
     },
     // The $20 upgrade to the Reset once it's on sale in Creem (UPSELL_OPEN); until then straight to the thank-you page.
     next: UPSELL_OPEN ? "/offer/upgrade" : "/thank-you",
@@ -117,9 +113,10 @@ export const PRODUCTS: Record<Product["slug"], Product> = {
       "Week 3, meltdowns and hunger: Migo, Fronti, Greli and Gabi",
       "Week 4, move and connect: Endo, Toci, Sero and you",
       "One 10-minute habit a day, with the exact words to say and a line for your kid",
-      "A printable fridge tracker and a page of teen notes with Teo (13–17)",
-      "Instant download: the 30-day guide (a short read each day) and the tracker",
-      "The Kid Brain Toolkit and all its bonuses, included",
+      "A teen track with Teo (13–17): four weeks adapted to the teen years",
+      "Keep it going: a 3-day mini reset and printables for your family",
+      "Instant download: the 61-page Reset guide and the one-page fridge tracker",
+      "The 67-page Science Edition: 10 chapters on the science behind every habit, with a version for ages 3–7, 8–12 and 13–17",
     ],
     bump: {
       item: ITEMS.cardsProgram,
@@ -132,11 +129,13 @@ export const PRODUCTS: Record<Product["slug"], Product> = {
   bedtime: {
     slug: "bedtime",
     title: "The Bedtime & Screen-Off Kit",
-    sub: "A crew bedtime audio story, plus the exact timer scripts for ending screen time without a fight. Instant download.",
+    sub: "Seven calmer evenings, the exact words for screen-off, and a bedtime story to read together. One 20-page PDF, for ages 3–17. Instant download.",
     art: "mela",
     get: [
-      "Mela and the Soft-Light Night: a crew bedtime audio story, about 5 minutes, plays in your browser",
-      "The Bedtime & Screen-Off Kit (PDF): the exact timer scripts for ending screen time without a fight",
+      "Screen-Off Week: seven evenings, one small habit at a time",
+      "Timer scripts for ages 3–7, 8–12 and 13–17",
+      "The three-step bedtime routine card to print and keep",
+      "The Crew Goes to Sleep: a bedtime story to read together",
     ],
     next: "/thank-you",
   },
@@ -185,11 +184,11 @@ export const OFFERS: Record<string, Offer> = {
   upgrade: {
     slug: "upgrade",
     step: "Upgrade",
-    hand: "wait, your $19 counts",
-    title: "Turn the code into a 30-day protocol, for $20 more",
-    sub: "The Toolkit shows you the crew. The 30-Day Reset runs it with you: one 10-minute habit a day, one part of the crew each week, with the exact words and a line for your kid. You already paid $19, so you only pay the difference.",
+    hand: "one small habit a day",
+    title: "Add the 30-Day Reset for $20",
+    sub: "Put the Toolkit into practice: one small habit a day, with the exact words for your kid’s age. Add the Reset guide, fridge tracker and Science Edition to your Toolkit order.",
     art: "endo",
-    stack: ["Week 1 sleep, week 2 screens and focus, week 3 meltdowns and hunger, week 4 move and connect", "One 10-minute habit a day, with the exact words", "A printable fridge tracker, plus a page of teen notes with Teo"],
+    stack: ["The 61-page Reset: sleep, screens and focus, meltdowns and hunger, move and connect", "One 10-minute habit a day, plus a four-week teen track and a 3-day mini reset", "The printable fridge tracker and the 67-page Science Edition"],
     item: ITEMS.upgrade,
     price: "$20",
     was: "$39",
@@ -207,12 +206,12 @@ export const OFFERS: Record<string, Offer> = {
     step: "Upgrade",
     hand: "just the hardest hour?",
     title: "Then make tonight’s bedtime easier, for $7",
-    sub: "Bedtime and turning the screen off are where most evenings go wrong. This kit covers both: a crew bedtime story to play at lights-out, and the exact words for ending screen time without a fight.",
+    sub: "One PDF for the hardest hour of the day: seven evenings of screen-off habits, the words for every age, a bedtime routine card and a story to read together.",
     art: "mela",
     stack: [
-      "Mela and the Soft-Light Night: a crew bedtime audio story, about 5 minutes",
+      "Seven evenings with Dopa, one small screen-off habit a night",
       "The exact timer scripts for ending screen time, with the words to say",
-      "Use it tonight, next to the Toolkit’s sleep and screens chapters",
+      "The three-step bedtime routine card and The Crew Goes to Sleep story",
     ],
     item: ITEMS.bedtimeKit,
     price: "$7",
@@ -247,12 +246,12 @@ export const OFFERS: Record<string, Offer> = {
     art: "duo",
     stack: ["A new crew member every month, from our map of 156", "A monthly Q&A episode: your questions, answered", "A private community of parents", "Ages & stages guides as your kid grows"],
     item: ITEMS.clubMonthly,
-    price: "$19 a month",
+    price: "$8 a month",
     per: "renews monthly until you cancel · pause or cancel in 2 clicks",
-    yes: "Yes, join for $19 a month",
+    yes: "Yes, join for $8 a month",
     no: "No thanks, take me to my order",
     next: { yes: "/thank-you", no: "/thank-you" },
-    consent: "I understand that the Crew Club renews at $19 a month until I cancel, and that I can pause or cancel anytime in my account.",
+    consent: "I understand that the Crew Club renews at $8 a month until I cancel, and that I can pause or cancel anytime in my account.",
   },
 };
 

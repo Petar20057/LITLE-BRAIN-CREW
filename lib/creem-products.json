@@ -1,0 +1,34 @@
+{
+  "guide": {
+    "test": "",
+    "live": "prod_4yWrSPR65djrk54x3wafOB"
+  },
+  "bedtime-kit": {
+    "test": "",
+    "live": "prod_3xFL7JIOeyrisbqTBkJ4cb"
+  },
+  "guide+bedtime-kit": {
+    "test": "",
+    "live": "prod_E1gP0yZAWuMeqWpmawo0s"
+  },
+  "program": {
+    "test": "",
+    "live": "prod_3mmyLBzga7NpdbgE3WZmzP"
+  },
+  "program+cards": {
+    "test": "",
+    "live": "prod_6d142HGVXIBWDbZCmMRYBn"
+  },
+  "upgrade": {
+    "test": "",
+    "live": "prod_PWUqmqrxx9yjrMRWFC6tI"
+  },
+  "club-monthly": {
+    "test": "",
+    "live": "prod_1S0reIotNSNBB7rUZvMmi6"
+  },
+  "club-yearly": {
+    "test": "",
+    "live": "prod_62M16BhebPTkZHOFX9jd7C"
+  }
+}

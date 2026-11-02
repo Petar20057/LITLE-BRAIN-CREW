@@ -62,7 +62,7 @@ export default async function Page({ searchParams }: PageProps<"/admin/members">
       />
       <div className="adm-grid">
         <TopTable title="Subscriptions by status" cols={["Subscriptions"]} rows={count(all, (s) => s.status.replaceAll("_", " ")).map(([label, n]) => ({ label, values: [n] }))} empty="No subscriptions yet." />
-        <TopTable title="Live subscriptions by plan" cols={["Subscriptions"]} rows={count(live, (s) => (s.plan === "club_yearly" ? "Yearly $199" : "Monthly $19")).map(([label, n]) => ({ label, values: [n] }))} empty="No live subscriptions." />
+        <TopTable title="Live subscriptions by plan" cols={["Subscriptions"]} rows={count(live, (s) => (s.plan === "club_yearly" ? "Yearly $80" : "Monthly $8")).map(([label, n]) => ({ label, values: [n] }))} empty="No live subscriptions." />
         <TopTable title={`Why they cancel, ${days} days`} cols={["Answers"]} rows={count(feedback, (f) => REASON[f.reason] ?? f.reason).map(([label, n]) => ({ label, values: [n] }))} empty="No cancellations." />
         <TopTable
           title={`Save offers, ${days} days`}

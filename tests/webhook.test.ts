@@ -5,10 +5,10 @@ import { fake } from "./fake-db";
 
 vi.mock("@/lib/supabase/admin", () => ({ createAdminClient: () => fake.client() }));
 vi.mock("@/lib/email/send", () => ({ sendEmail: vi.fn(async () => "message-id") }));
-// Product ids stay empty in lib/creem.ts until the Creem dashboard has them; the tests use two made-up ones.
+// Provider fixtures are isolated from the production product catalogue.
 vi.mock("@/lib/creem", async (original) => ({
   ...(await original<typeof import("@/lib/creem")>()),
-  keyForProduct: (id: string) => ({ prod_monthly: "club-monthly", prod_yearly: "club-yearly" })[id],
+  keyForProduct: (id: string) => ({ prod_monthly: "club-monthly", prod_yearly: "club-yearly", prod_guide_v2: "guide" })[id],
 }));
 
 const { POST } = await import("@/app/api/creem/webhook/route");
@@ -57,7 +57,7 @@ describe("Creem webhook", () => {
     const res = await deliver(checkoutCompleted);
     expect(res.status).toBe(200);
     expect(fake.table("members")).toMatchObject([{ email: "parent@example.com", creem_customer_id: "cust_1" }]);
-    expect(fake.table("subscriptions")).toMatchObject([{ status: "active", plan: "club_monthly", price_cents: 1900, renewal_consent_at: "2026-11-01T09:59:00Z" }]);
+    expect(fake.table("subscriptions")).toMatchObject([{ status: "active", plan: "club_monthly", price_cents: 800, renewal_consent_at: "2026-11-01T09:59:00Z" }]);
     expect(sendEmail).toHaveBeenCalledTimes(1);
   });
 
@@ -228,5 +228,29 @@ describe("Creem webhook", () => {
     await deliver({ ...checkoutCompleted, object: { ...checkoutCompleted.object, subscription: undefined, metadata: { order: "guide", quiz_session: sid } } });
     expect(fake.table("quiz_sessions")[0]).toMatchObject({ purchase_order: "guide" });
     expect(fake.table("quiz_sessions")[0].purchased_at).toBeTruthy();
+  });
+
+  it("records the v2 catalogue and sends only the standalone Toolkit files", async () => {
+    const response = await deliver({ id: "evt_v2", eventType: "checkout.completed", object: {
+      id: "chk_v2", product: { id: "prod_guide_v2" }, order: { amount_paid: 1900 },
+      customer: { email: "parent@example.com" }, metadata: { order: "guide", delivery: "tok-v2", catalog_version: "2" },
+    } });
+    expect(response.status).toBe(200);
+    expect(fake.table("orders")[0].catalog_version).toBe(2);
+    const receipt = vi.mocked(sendEmail).mock.calls[0][1];
+    expect(receipt.text).toContain("toolkit-pdf");
+    expect(receipt.text).not.toContain("science-edition-pdf");
+  });
+
+  it("does not deliver a v2 Reset when the paid provider product is the Toolkit", async () => {
+    const spy = vi.spyOn(console, "error").mockImplementation(() => {});
+    const response = await deliver({ id: "evt_wrong_v2_product", eventType: "checkout.completed", object: {
+      id: "chk_wrong_v2_product", product: { id: "prod_guide_v2" }, order: { amount_paid: 1900 },
+      customer: { email: "parent@example.com" }, metadata: { order: "program", delivery: "tok-v2", catalog_version: "2" },
+    } });
+    expect(response.status).toBe(500);
+    expect(fake.table("orders")).toHaveLength(0);
+    expect(sendEmail).not.toHaveBeenCalled();
+    spy.mockRestore();
   });
 });

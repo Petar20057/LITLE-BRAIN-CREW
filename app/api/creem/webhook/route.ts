@@ -4,6 +4,7 @@ import { keyForProduct, verifyWebhook, webhookConfigured } from "@/lib/creem";
 import { sendEmail } from "@/lib/email/send";
 import { clubWelcome } from "@/lib/email/templates";
 import { recordPaidOrder } from "@/lib/delivery";
+import { catalogVersion } from "@/lib/delivery-files";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { isSessionId } from "@/lib/quiz-track";
 import type { Database } from "@/lib/supabase/database.types";
@@ -99,8 +100,13 @@ async function oneTimeOrder(obj: Record<string, unknown>, eventId: string) {
   if (amount != null && (typeof amount !== "number" || !Number.isSafeInteger(amount) || amount < 0)) throw new Error("Invalid order payment amount");
   const amountCents = typeof amount === "number" ? amount : undefined;
   const token = typeof metadata.delivery === "string" ? metadata.delivery : null;
+  const version = catalogVersion(metadata.catalog_version);
+  if (version === 2 && keyForProduct(idOf(obj.product as Ref) ?? "") !== orderKey) throw new Error("Checkout product does not match the order");
   const visit = { visitor: isSessionId(metadata.visitor) ? metadata.visitor : null, session: isSessionId(metadata.session) ? metadata.session : null };
-  const recorded = await recordPaidOrder({ providerOrderId: orderId, email, orderKey, token, visit, amountCents });
+  const recorded = await recordPaidOrder({ providerOrderId: orderId, email, orderKey, token, visit, amountCents,
+    catalogVersion: version,
+    parentOrderId: typeof metadata.parent_order_id === "string" ? metadata.parent_order_id : undefined,
+  });
   if (!recorded) console.info("[creem] one-time order not recognised", { event: eventId, orderKey });
 }
 

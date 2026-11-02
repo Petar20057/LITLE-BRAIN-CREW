@@ -3,12 +3,8 @@ import affiliate from "./affiliate.json";
 import ask from "./ask.json";
 import dopa from "./dopa.json";
 import faq from "./faq.json";
-import founding from "./founding.json";
-import free from "./free.json";
-import gift from "./gift.json";
 import index from "./index.json";
 import pricing from "./pricing.json";
-import schools from "./schools.json";
 import shop from "./shop.json";
 
-export const PAGES = { affiliate, ask, dopa, faq, founding, free, gift, index, pricing, schools, shop };
+export const PAGES = { affiliate, ask, dopa, faq, index, pricing, shop };

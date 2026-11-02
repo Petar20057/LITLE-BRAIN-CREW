@@ -39,7 +39,7 @@ export function renderEntryOg(section: SectionKey, slug: string) {
           <img src={LOGO} width={222} height={80} alt="" />
           <div style={{ display: "flex", fontSize, fontWeight: 800, lineHeight: 1.1, letterSpacing: -1 }}>{title}</div>
           <div style={{ display: "flex", fontSize: 28, color: "#57536A" }}>
-            {e ? e.kicker : "Short cartoon explainers for parents of kids 4–17"}
+            {e ? e.kicker : "Short cartoon explainers for parents of kids 3–17"}
           </div>
         </div>
       </div>

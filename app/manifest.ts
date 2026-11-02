@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "Little Brain Crew",
     short_name: "Brain Crew",
-    description: "Short cartoon explainers for parents of kids 4–17: the brain chemicals, brain parts and habits behind everyday moments.",
+    description: "Short cartoon explainers for parents of kids 3–17: the brain chemicals, brain parts and habits behind everyday moments.",
     start_url: "/",
     display: "standalone",
     background_color: "#FFFBF4",

@@ -72,7 +72,7 @@ export default function Quiz({ data }: { data: QuizData }) {
       screen = (
         <div className="q-intro">
           <div className="q-arts">{(["dopa", "migo", "mela", "toci"] as const).map((k) => <CrewArt key={k} k={k} mood="happy" />)}</div>
-          <p className="kick">free · for parents of kids 4–17</p>
+          <p className="kick">free · for parents of kids 3–17</p>
           <h1 className={v ? "" : "q-wait"}>{v?.headline ?? VARIANTS.a.headline}</h1>
           <p className="fx-sub">{v?.sub ?? VARIANTS.a.sub}</p>
           <button className="btn btn-main" type="button" disabled={!session} onClick={() => answer("start")}>Start →</button>
@@ -497,7 +497,7 @@ function Result({ data, p, sid, email }: { data: QuizData; p: Progress; sid: str
         <CrewArt k={r.lead.char.key} mood="happy" />
         <div>
           <h2>Want the habits behind it?</h2>
-          <p>The Kid Brain Toolkit: 12 crew members, the 12 hardest moments decoded with the exact words, 6 villains, and what’s normal at every age. The Science Edition comes with it free: the science behind every habit in 10 chapters, with a version for every age.</p>
+          <p>The Kid Brain Toolkit: 12 crew members, the 12 hardest moments decoded with the exact words, 6 villains, and what’s normal at every age. Includes printable bonuses and 4 crew cartoons.</p>
           {page && <p className="q-page">“{page.title}”: the plan is on page {page.page} ({page.plan}).</p>}
           <a className="btn btn-main" href={links.guide} onClick={click("guide")}>Get the Toolkit · ${ITEMS.guide.price}</a>
           <p className="fine">Instant download. Educational only, not medical advice.</p>
@@ -508,7 +508,7 @@ function Result({ data, p, sid, email }: { data: QuizData; p: Progress; sid: str
         <CrewArt k="endo" mood="happy" />
         <div>
           <h2>Want it to stick?</h2>
-          <p>The 30-Day Reset: one 10-minute habit a day for 30 days, one part of the crew each week. Sleep, screens and focus, meltdowns and hunger, moving and connecting. The exact words to say, a fridge tracker, and the Toolkit included.</p>
+          <p>The 30-Day Reset: one 10-minute habit a day for 30 days, one part of the crew each week. Sleep, screens and focus, meltdowns and hunger, moving and connecting. The Reset guide, fridge tracker and Science Edition, with a four-week teen track.</p>
           <a className="btn" href={links.program} onClick={click("program")}>Start the 30-Day Reset · ${ITEMS.program.price}</a>
           <p className="fine">Instant download. About ${(ITEMS.program.price / 30).toFixed(2)} a day.</p>
         </div>
@@ -518,7 +518,7 @@ function Result({ data, p, sid, email }: { data: QuizData; p: Progress; sid: str
         <h3>Not ready to buy? Start free</h3>
         <p>The 5-day Screen-Off Challenge: one short email and one small step a day, to end screen time without a meltdown.</p>
         <FreeListForm form="screen-off-challenge" button="Start the free challenge" sentText="Almost in: tap the link in the email we just sent ✓" email={email} primary={false} />
-        <p className="fine">Or get the free screen-time list and the crew stickers on <a href="/free" target="_blank" rel="noopener" onClick={click("/free")}>our free page</a>.</p>
+        <p className="fine">Or get the free screen-time printable on <a href="/#free" target="_blank" rel="noopener" onClick={click("/#free")}>the home page</a>.</p>
       </div>
 
       <h3>Read more, free</h3>

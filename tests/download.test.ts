@@ -33,6 +33,32 @@ describe("download route", () => {
     expect((await get("t=good-token&f=bedtime-pdf")).status).toBe(403);
   });
 
+  it("preserves the original Science and ZIP links for a legacy Toolkit buyer", async () => {
+    expect((await get("t=good-token&f=science-edition-pdf")).status).toBe(302);
+    expect((await get("t=good-token&f=toolkit-zip")).headers.get("location")).toContain("/signed/Kid-Brain-Toolkit.zip?");
+  });
+
+  it("a new Toolkit buyer gets the v2 file and cannot download Science or the Reset", async () => {
+    fake.table("orders")[0].catalog_version = 2;
+    expect((await get("t=good-token&f=toolkit-pdf")).headers.get("location")).toContain("/signed/v2/Kid-Brain-Toolkit/");
+    expect((await get("t=good-token&f=science-edition-pdf")).status).toBe(403);
+    expect((await get("t=good-token&f=reset-pdf")).status).toBe(403);
+  });
+
+  it("a new Reset buyer gets its three PDFs without the standalone Toolkit", async () => {
+    Object.assign(fake.table("orders")[0], { catalog_version: 2, items: ["program"] });
+    for (const id of ["reset-pdf", "reset-tracker-pdf", "science-edition-pdf"]) expect((await get(`t=good-token&f=${id}`)).status).toBe(302);
+    expect((await get("t=good-token&f=toolkit-pdf")).status).toBe(403);
+  });
+
+  it("keeps the audio for old Bedtime buyers and serves one PDF to new buyers", async () => {
+    fake.table("orders")[0].items = ["bedtime-kit"];
+    expect((await get("t=good-token&f=bedtime-audio")).status).toBe(302);
+    fake.table("orders")[0].catalog_version = 2;
+    expect((await get("t=good-token&f=bedtime-audio")).status).toBe(403);
+    expect((await get("t=good-token&f=bedtime-pdf")).headers.get("location")).toContain("/signed/v2/Bedtime-and-Screen-Off-Kit/");
+  });
+
   it("refuses a token that matches no order", async () => {
     expect((await get("t=wrong&f=toolkit-pdf")).status).toBe(404);
     expect((await get("f=toolkit-pdf")).status).toBe(404);

@@ -8,14 +8,14 @@ export const SITE_PAGES: SitePage[] = [
     slug: "about",
     h1: "About Little Brain Crew",
     metaTitle: "About Little Brain Crew",
-    description: "Little Brain Crew turns the science of kids’ brains into a cartoon crew for parents of kids 4 to 17. What we make, why characters, and what we are not.",
+    description: "Little Brain Crew turns the science of kids’ brains into a cartoon crew for parents of kids 3 to 17. What we make, why characters, and what we are not.",
     dek: "Short cartoon explainers that turn the science of everyday kid behavior into something you can see, remember and use tonight.",
     updated: "2026-10-26",
     sections: [
       {
         h2: "What is Little Brain Crew?",
         paras: [
-          "Little Brain Crew makes short cartoon explainers and plain-language guides for parents of kids aged 4 to 17 in the United States. Meltdowns, bad sleep, “I’m bored,” the 5 p.m. hangry explosion, a teen who stopped talking: it can look like a dozen different problems. Often it is the same few brain messengers, hormones and brain parts, plus a handful of habits getting in their way.",
+          "Little Brain Crew makes short cartoon explainers and plain-language guides for parents of kids aged 3 to 17 in the United States. Meltdowns, bad sleep, “I’m bored,” the 5 p.m. hangry explosion, a teen who stopped talking: it can look like a dozen different problems. Often it is the same few brain messengers, hormones and brain parts, plus a handful of habits getting in their way.",
           "We turn that science into a cartoon crew, so you can see what is going on and know what to try tonight. Habits only: sleep, daylight, food, movement, play, closeness and smarter screen time.",
         ],
       },

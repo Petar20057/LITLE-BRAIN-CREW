@@ -3,7 +3,7 @@
 
 /** Every email form on the design pages (data-form="…"). The gift form is a checkout, not a signup. */
 export const SIGNUP_FORMS = {
-  "free-screen-list": { label: "Free screen-time list · /free", newsletter: true },
+  "free-screen-list": { label: "Free screen-time list · /#free", newsletter: true },
   "sticker-pack": { label: "Sticker pack · /free", newsletter: true },
   "screen-off-challenge": { label: "5-day Screen-Off Challenge · /free", newsletter: true },
   "coming-next": { label: "Coming next waitlist · /founding", newsletter: false },

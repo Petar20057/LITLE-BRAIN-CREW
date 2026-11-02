@@ -27,7 +27,7 @@ type Experiment = {
 export const EXPERIMENTS = {
   "home-hero": {
     label: "Home headline and intro (/)",
-    active: true,
+    active: false,
     weights: { a: 50, b: 50 },
   },
   "buy-button": {

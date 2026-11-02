@@ -5,6 +5,7 @@ import { SITE_URL } from "@/lib/design";
 import { isSessionId } from "@/lib/quiz-track";
 import { allow, tooMany } from "@/lib/rate-limit";
 import { newDeliveryToken } from "@/lib/delivery";
+import { CURRENT_CATALOG_VERSION } from "@/lib/delivery-files";
 import { recordCheckoutStart } from "@/lib/checkout-reminders";
 
 // Starts a Creem checkout for what the funnel page asks for and returns its URL (lib/payments.ts redirects there).
@@ -35,8 +36,10 @@ export async function POST(request: NextRequest) {
   if (!/^\S+@\S+\.\S+$/.test(email)) return NextResponse.json({ error: "Please enter a valid email." }, { status: 400 });
   // Unknown ids include "support" (any amount): not sold through Creem until it confirms pay-what-you-want.
   if (!items) return NextResponse.json({ error: "This isn’t on sale yet." }, { status: 404 });
+  if (ids.includes("upgrade")) return NextResponse.json({ error: "Please open the upgrade from your paid Toolkit order." }, { status: 403 });
 
   const recurring = items.some((i) => i.every);
+  if (recurring) return NextResponse.json({ error: "The Crew Club is opening soon. Join the waitlist on the plans page." }, { status: 404 });
   // Auto-renewal laws: the membership needs the "I understand it renews" tick, stored with the subscription.
   if (recurring && body.consent !== true) {
     return NextResponse.json({ error: "Please tick the box to confirm how the membership renews." }, { status: 400 });
@@ -46,7 +49,7 @@ export async function POST(request: NextRequest) {
   const productId = productIdFor(key);
   if (!productId) return NextResponse.json({ error: "This isn’t on sale yet." }, { status: 404 });
 
-  const metadata: Record<string, string> = { order: key };
+  const metadata: Record<string, string> = { order: key, catalog_version: String(CURRENT_CATALOG_VERSION) };
   if (recurring) metadata.renewal_consent_at = new Date().toISOString();
   if (typeof body.crew === "string" && body.crew in CREW_NAMES) metadata.crew = body.crew;
   // The webhook marks the /code quiz visit as bought (quiz_sessions.purchased_at).

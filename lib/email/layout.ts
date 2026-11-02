@@ -14,6 +14,7 @@ import { CHARS } from "@/lib/learn";
 export type Email = { subject: string; preheader: string; html: string; text: string };
 
 export type Block =
+  | { preview: { src: string; alt: string; caption: string } }
   | { p: string }
   | { list: string[] }
   | { rows: [string, string][]; total?: [string, string] }
@@ -96,6 +97,10 @@ export function tag(url: string, campaign: string | undefined, label: string, ba
 type Ctx = { base: string; hex: string; pale: string; campaign?: string };
 
 function blockHtml(b: Block, c: Ctx): string {
+  if ("preview" in b) {
+    const preview = b.preview;
+    return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:8px 0 24px"><tr><td class="note" align="center" style="padding:22px;background:${c.pale};border-radius:20px"><img src="${esc(abs(c.base, preview.src))}" alt="${esc(preview.alt)}" width="184" height="238" style="display:block;width:184px;max-width:100%;height:auto;border:1px solid ${C.edge};border-radius:8px"><p class="soft" style="margin:12px 0 0;font:600 13px/1.4 ${BODY};color:${C.soft}">${esc(preview.caption)}</p></td></tr></table>`;
+  }
   if ("p" in b) return `<p class="ink" style="margin:0 0 16px;font:400 17px/1.6 ${BODY};color:${C.ink}">${esc(b.p)}</p>`;
   if ("note" in b) {
     return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:8px 0 18px"><tr><td class="note ink" style="background:${c.pale};border-radius:20px;padding:16px 20px;font:400 15px/1.55 ${BODY};color:${C.ink}">${esc(b.note)}</td></tr></table>`;
@@ -129,6 +134,7 @@ function blockHtml(b: Block, c: Ctx): string {
 }
 
 function blockText(b: Block, c: Ctx): string {
+  if ("preview" in b) return b.preview.caption;
   if ("p" in b) return b.p;
   if ("note" in b) return b.note;
   if ("list" in b) return b.list.map((i) => `- ${i}`).join("\n");

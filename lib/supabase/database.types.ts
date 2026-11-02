@@ -157,9 +157,40 @@ export type Database = {
         };
         Relationships: [];
       };
+      order_upgrades: {
+        Row: {
+          checkout_url: string | null;
+          created_at: string;
+          parent_order_id: string;
+          state: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          checkout_url?: string | null;
+          created_at?: string;
+          parent_order_id: string;
+          state?: string;
+        };
+        Update: {
+          checkout_url?: string | null;
+          created_at?: string;
+          parent_order_id?: string;
+          state?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "order_upgrades_parent_order_id_fkey";
+            columns: ["parent_order_id"];
+            isOneToOne: true;
+            referencedRelation: "orders";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       orders: {
         Row: {
           amount_cents: number;
+          catalog_version: number;
           created_at: string;
           delivery_hash: string | null;
           download_until: string;
@@ -167,11 +198,13 @@ export type Database = {
           id: string;
           items: string[];
           order_key: string;
+          parent_order_id: string | null;
           provider_order_id: string;
         };
         ComputedFields: never;
         Insert: {
           amount_cents: number;
+          catalog_version?: number;
           created_at?: string;
           delivery_hash?: string | null;
           download_until?: string;
@@ -179,10 +212,12 @@ export type Database = {
           id?: string;
           items: string[];
           order_key: string;
+          parent_order_id?: string | null;
           provider_order_id: string;
         };
         Update: {
           amount_cents?: number;
+          catalog_version?: number;
           created_at?: string;
           delivery_hash?: string | null;
           download_until?: string;
@@ -190,9 +225,18 @@ export type Database = {
           id?: string;
           items?: string[];
           order_key?: string;
+          parent_order_id?: string | null;
           provider_order_id?: string;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: "orders_parent_order_id_fkey";
+            columns: ["parent_order_id"];
+            isOneToOne: false;
+            referencedRelation: "orders";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       page_views: {
         Row: {

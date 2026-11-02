@@ -3,7 +3,7 @@ import "server-only";
 import { createHash, randomBytes } from "node:crypto";
 import { itemsFor } from "@/lib/creem";
 import { SITE_URL } from "@/lib/design";
-import { DELIVERY_BUCKET, downloadPath, sectionsFor } from "@/lib/delivery-files";
+import { DELIVERY_BUCKET, downloadPath, sectionsFor, type CatalogVersion } from "@/lib/delivery-files";
 import { sendEmail } from "@/lib/email/send";
 import { orderReceipt } from "@/lib/email/templates";
 import { recordServerEvent, type Visit } from "@/lib/funnel-events";
@@ -27,6 +27,8 @@ export type PaidOrder = {
   email: string;
   orderKey: string;
   token: string | null;
+  catalogVersion?: CatalogVersion;
+  parentOrderId?: string;
   /** Actual amount from Creem's signed checkout event, including discounts. Zero must stay zero. */
   amountCents?: number;
   /** The visit that bought (Creem metadata from /api/checkout), for /admin's sources and A/B tests. */
@@ -42,6 +44,15 @@ export async function recordPaidOrder(order: PaidOrder): Promise<boolean> {
   if (!items || items.some((i) => i.every)) return false;
 
   const admin = looseAdmin();
+  const version = order.catalogVersion ?? 1;
+  if (order.parentOrderId) {
+    const { data: parent, error: parentError } = await admin.from("orders").select("id, items")
+      .eq("id", order.parentOrderId).eq("delivery_hash", tokenHash(order.token ?? "")).maybeSingle();
+    if (parentError) throw parentError;
+    if (order.orderKey !== "upgrade" || !parent?.items.includes("guide")) throw new Error("Invalid upgrade parent");
+  } else if (order.orderKey === "upgrade" && version === 2) {
+    throw new Error("Missing upgrade parent");
+  }
   const address = order.email.trim().toLowerCase();
   const amountCents = order.amountCents ?? items.reduce((sum, i) => sum + i.price, 0) * 100;
   const { data, error } = await admin
@@ -53,12 +64,18 @@ export async function recordPaidOrder(order: PaidOrder): Promise<boolean> {
         order_key: order.orderKey,
         items: ids,
         amount_cents: amountCents,
-        delivery_hash: order.token ? tokenHash(order.token) : null,
+        delivery_hash: order.token && !order.parentOrderId ? tokenHash(order.token) : null,
+        catalog_version: version,
+        parent_order_id: order.parentOrderId ?? null,
       },
       { onConflict: "provider_order_id", ignoreDuplicates: true },
     )
     .select("id");
   if (error) throw error;
+  if (order.parentOrderId) {
+    const { error: stateError } = await admin.from("order_upgrades").update({ state: "paid" }).eq("parent_order_id", order.parentOrderId);
+    if (stateError) console.error("[upgrade] checkout status update failed");
+  }
   if (!data?.length) return true; // already recorded by an earlier delivery of this webhook
 
   // Offers sold after the first order (the $20 upgrade, the Bedtime Kit on its own) are "post" purchases, so /admin can
@@ -72,7 +89,7 @@ export async function recordPaidOrder(order: PaidOrder): Promise<boolean> {
 
   if (order.token) {
     try {
-      const sections = sectionsFor(ids).map((s) => ({
+      const sections = sectionsFor(ids, version).map((s) => ({
         label: s.label,
         files: s.files.map((f) => ({ name: f.name, url: `${SITE_URL}${downloadPath(order.token!, f.id)}` })),
       }));

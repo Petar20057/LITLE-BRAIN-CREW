@@ -17,7 +17,7 @@ import { fileURLToPath } from "node:url";
 const here = dirname(fileURLToPath(import.meta.url));
 const SOURCE = resolve(here, "../../products/delivery");
 const catalog = JSON.parse(readFileSync(join(here, "../lib/delivery-files.json"), "utf8"));
-const files = catalog.sections.flatMap((s) => s.files);
+const files = [...new Map([...catalog.sections, ...(catalog.legacySections ?? [])].flatMap((s) => s.files).map((f) => [f.path, f])).values()];
 const BUCKET = catalog.bucket;
 const TYPES = { ".pdf": "application/pdf", ".mp4": "video/mp4", ".mp3": "audio/mpeg", ".zip": "application/zip" };
 const MB = (bytes) => `${(bytes / 1024 / 1024).toFixed(1)} MB`;
