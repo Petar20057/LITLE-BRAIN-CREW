@@ -410,6 +410,8 @@ Luka, 2026-11-02: cena Toolkita $9 → $19. Toolkit je opet knjiga sa 12 trenuta
 
 ## 17. Catalogue v2 — 2 November 2026
 
+This section supersedes the earlier prices, package contents and launch-price schedule above. Reset stays $39; there is no scheduled $59 price advertised.
+
 - Toolkit $19: 43-page guide and existing bonuses. Science belongs to the $39 Reset bundle, with the new 61-page Reset guide and fridge tracker. Reset does not include the standalone Toolkit or its bonuses.
 - Bedtime Kit $7 is one 20-page PDF: seven evenings, age-specific scripts, a routine card and a read-aloud story. Club remains a waitlist at $8/month or $80/year (two months free, save $16).
 - Catalogue v1 paths and ZIPs are immutable. Existing orders and checkouts without a catalogue version default to v1. New checkouts carry catalog_version=2. The migration adds orders.catalog_version, orders.parent_order_id and the private order_upgrades table.
@@ -419,3 +421,7 @@ Luka, 2026-11-02: cena Toolkita $9 → $19. Toolkit je opet knjiga sa 12 trenuta
 - Schools, Founding and Gift redirect to /. Free redirects to /#free. Ask and Shop keep direct URLs and have no public navigation links. The main hero headline is fixed; its old A/B test is inactive.
 
 Operational note: all eight v2 live products were created with the agreed prices; the two Club products are archived so their payment links cannot accept payments. The local key is scoped for live checkout creation, with no product/discount management or sandbox access. Browser dashboard operations were used for catalogue changes. Sandbox IDs remain unset until a test key is supplied; unit tests use isolated provider fixtures.
+
+Cutover checks: the migration is applied and all 21 current/legacy private delivery objects match their local SHA-256 hashes. The five original live products are archived after the v2 deployment; their IDs and delivery entitlements remain supported. An unused Toolkit duplicate was also archived. Six v2 one-time products remain active. Production hosted checkouts were checked for $19, $26, $39, $46 and $7, without completing payment. All 224 tests, lint, learn checks and production build passed; a full sandbox payment still needs a sandbox key/configuration. Retired-page redirects, sitemap exclusion, invalid-token rejection, closed Club checkout and the $80 annual toggle were checked on production.
+
+The existing CREW100 code (100%, once, 25 total uses, none used at inspection, no expiry) still targets the five archived products. Creem cannot edit a code's product scope. Replacing it with the same code and limits on the five corresponding v2 products is awaiting Luka's explicit confirmation because it requires permanent deletion in the dashboard. Do not create a second 25-use allocation or add the upgrade/Club to its scope. TOOLKIT9 is a historical discount; the new $20 upgrade does not require it.

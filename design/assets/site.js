@@ -8,11 +8,6 @@ const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 // Web3Forms access key: once it's here, every form emails you. The form name goes in the subject.
 const W3F_KEY = '';
 // Checkout, upsells and downsells live in the Next.js app (/checkout/<product>, /offer/...). Prices: web/lib/funnel.ts.
-// Launch price of the 30-Day Reset: $39 until this moment, then $59 (Luka, 2026-10-30). Until then the old price and the
-// "launch price" line ([data-early]) show; after it they hide by themselves. Raising the price itself is manual:
-// the Creem product, web/lib/funnel.ts ITEMS.program and the "$39" in design/index.html, pricing.html and dopa.html.
-const OPEN = new Date('2027-01-01T00:00:00-05:00');
-if (new Date() < OPEN) document.documentElement.classList.add('early-on');
 /* ========================================================================= */
 
 /* ---------- the crew ---------- */

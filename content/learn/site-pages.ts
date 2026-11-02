@@ -267,7 +267,7 @@ export const SITE_PAGES: SitePage[] = [
         h2: "Digital products",
         paras: [
           "We sell digital products, such as the Kid Brain Toolkit and the 30-Day Reset, and may sell more over time. You get a link or files by email after you pay. A purchase gives you a personal, non-transferable license to use the content with your own family. Please don’t resell, share, copy or post it. Classroom, school and business use needs a separate license.",
-          "Prices and what is included are shown at checkout. The 30-Day Reset has a launch price of $39 until January 1, 2027; after that it costs $59.",
+          "Prices and what is included are shown at checkout. The 30-Day Reset costs $39 as a one-time purchase.",
         ],
       },
       {
