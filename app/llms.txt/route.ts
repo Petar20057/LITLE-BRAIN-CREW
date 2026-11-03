@@ -1,5 +1,6 @@
 import { SECTIONS, SITE_PAGES, pathOf } from "@/content/learn";
 import { SITE_URL } from "@/lib/design";
+import { CHARACTERS } from "@/lib/characters";
 import { entriesOf, plain } from "@/lib/learn";
 
 // llms.txt: a plain-text map of the site for AI assistants. Built from content/learn, so it is always current.
@@ -22,7 +23,7 @@ export function GET() {
   lines.push(
     "## About",
     "",
-    `- [Meet the crew](${SITE_URL}/crew): all 26 characters and what each one stands for.`,
+    `- [Meet the crew](${SITE_URL}/crew): all ${CHARACTERS.length} characters and what each one stands for.`,
     `- [All guides](${SITE_URL}/learn): every hub in one place.`,
     `- [Glossary](${SITE_URL}/glossary): the brain words we use, in plain English.`,
     `- [Sources](${SITE_URL}/sources): every source our pages cite.`,

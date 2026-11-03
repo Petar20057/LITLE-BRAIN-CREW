@@ -425,3 +425,50 @@ Operational note: all eight v2 live products were created with the agreed prices
 Cutover checks: the migration is applied and all 21 current/legacy private delivery objects match their local SHA-256 hashes. The five original live products are archived after the v2 deployment; their IDs and delivery entitlements remain supported. An unused Toolkit duplicate was also archived. Six v2 one-time products remain active. Production hosted checkouts were checked for $19, $26, $39, $46 and $7, without completing payment. All 224 tests, lint, learn checks and production build passed; a full sandbox payment still needs a sandbox key/configuration. Retired-page redirects, sitemap exclusion, invalid-token rejection, closed Club checkout and the $80 annual toggle were checked on production.
 
 After Luka's explicit approval on 2 November 2026, the old CREW100 was deleted and replaced by discount dis_cm94kbHyseKWrMebQFZ68: 100% off once, 25 total redemptions, no expiry. The dashboard confirmed 0/25 used and the five corresponding v2 products: Toolkit, Bedtime Kit, Toolkit + Bedtime, Reset, and Reset + cards. The upgrade and Club are excluded. There is one CREW100 allocation, not an additional 25-use code. TOOLKIT9 is a historical discount; the new $20 upgrade does not require it.
+
+## 18. Svih 214 likova, zaključavanje i naplata — 3. novembar 2026
+
+Zadatak (brif koleginice/kolege, Luka ga prosledio 3. 11.): na `/crew` svih 214 likova sa filterima All / Free / Locked / po paketu; 38 slobodnih (26 postojećih, 11 probnih = po jedan iz svakog paketa, Vejpi) sa celom stranicom; 176 zaključanih kod kojih su javni kartica (senka + ime + rečenica), kratak odgovor i „When to talk to your pediatrician“ (i sve o bezbednosti, uvek), a objašnjenje, „What to say“, štampa i crtani se otključavaju kroz Crew Club ($8/mes, $80/god) ili paket ($7 zauvek). Zaključan tekst se **ne šalje u HTML** bez prava. Redovi rečnika (in_glossary = yes) ostaju besplatni i vode na stranicu lika. Lik sa published = ne ima samo „Coming to the Club · Tell me when ready“; paket ide u prodaju tek kad su svi njegovi likovi gotovi. Podaci dolaze **isključivo iz CSV-a** (`lbc-likovi.csv`), ništa se ne prepisuje iz dokumenata.
+
+### Faze 1–3: napravljeno (podaci, /crew, stranica lika)
+
+| Deo | Gde | Šta radi |
+|---|---|---|
+| Pravila | `lib/character-rules.ts` | tipovi (`Character`, `PublicCharacter`, `Viewer`), `canRead` (free, ili Club, ili paket lika; nikad pre `published`), `publicOf` (skida zaključani tekst), `packsOf` (paket je `onSale` samo kad su svi likovi gotovi), `validate` (pravila iz brifa), `PACK_PRICE = 7`, `PACK_CHECKOUT_OPEN = false`, `CLUB_OPEN = false` |
+| Podaci | `content/characters.json` (+ `lib/characters.ts`, samo server) | 26 ugrađenih iz `lib/learn.ts` (uvek free) + redovi iz CSV-a; red sa istim slug-om zamenjuje ugrađeni. Dok CSV ne stigne fajl je `[]`, pa sajt i dalje pokazuje 26. |
+| Uvoz | `node scripts/import-characters.mjs <lbc-likovi.csv> [--dry]` | čita CSV (engleska ili srpska zaglavlja, vidi `ALIASES`; da/ne, yes/no, 1/0, x), proverava pravila, piše JSON i kopira SVG lika iz `../characters/svg/<id>.svg` u `public/crew-art/`. Prijavljuje: brojeve, pakete, probne, kolone koje nisu prepoznate, likove bez crteža. Ne piše dok ima grešaka. |
+| Ko čita | `lib/viewer.ts` | Supabase sesija → `has_club_access()`; paketi prazni do faze 4 (tabela prava). Jedan upit po zahtevu (React `cache`). Greška = nema pristupa, nikad greška stranice. |
+| `/crew` | `app/(learn)/crew/page.tsx`, `components/learn/CrewCard.tsx`, `CrewFilters.tsx` | slobodna ekipa po vrstama pa blok po paketu („x od y gotovo“ ili „$7, zauvek, ili u Club-u“); kartice su javne (senka za zaključane, oznake Free sample / Club · paket / Coming); filteri su u hash-u URL-a (`/crew#free`, `/crew#pack-puberty-pack`) i samo sakrivaju kartice. |
+| Stranica lika | `app/(learn)/crew/[slug]/page.tsx`, `components/learn/CharacterPage.tsx` | statično: mrvice, kicker (paket · stvarno ime), ime, rečenica, figura, kratak odgovor, pedijatar, bezbednost, „Read more“ (dubinski članak za 26), „More in the pack“. Zaključani deo je **samo u `<Suspense>`** iza provere čitaoca: bez prava se vidi `LockBox` (Club + paket, ili „Tell me when it’s ready“ dok paket nije gotov); sa pravom se streamuje pun sadržaj (objašnjenje, What to say, štampa, crtani) i figura u boji. Neobjavljen lik: samo kartica + „Coming to the Club“ forma, `noindex`. |
+| Rečnik, sitemap, llms.txt | `app/(learn)/glossary/page.tsx`, `app/sitemap.ts`, `app/llms.txt/route.ts` | red rečnika čiji `char` postoji u CSV-u sa in_glossary = yes dobija „Meet X →“; objavljeni likovi su u sitemap-u. |
+| Forma | `components/learn/TellMeForm.tsx`, `lib/analytics.ts` | `character-waitlist` (bez potvrdnog mejla) sa `details.character` i `details.pack`; vidi se u admin panelu kao i ostale forme. |
+| Stil | `design/assets/additions.css` (`npm run sync` → `public/`) | `.crew-filters`, `.lock-tag`, `.lock-box`, senka (`.crew-face.is-silhouette`), `.tell-form` |
+| Testovi | `tests/characters.test.ts` | pravila pristupa, javna projekcija bez zaključanog teksta, paketi, validacija, CSV parser sa srpskim zaglavljima |
+
+Očekivane kolone CSV-a (bilo koji od naziva, velika/mala slova i dijakritici nebitni): `slug`/`id`, `name`/`ime`, `real`/`naučni naziv`, `group`/`grupa`, `pack`/`paket`, `access`/`pristup` (free/locked, slobodno/zaključano), `sample`/`probni`, `in_glossary`/`u rečniku`, `published`/`objavljen`, `sentence`/`rečenica`/`kartica`, `short_answer`/`kratak odgovor`, `when_to_talk`/`pedijatar`, `safety`/`bezbednost`, `explanation`/`objašnjenje`, `what_to_say`/`šta reći`, `print`/`štampa`, `cartoon`/`crtani`, `color`/`boja`, `art`/`svg`. Nepoznate kolone skripta prijavi; ako je u CSV-u drugačiji naziv, dodati ga u `ALIASES`.
+
+### Šta nedostaje da bi faze 1–3 bile gotove
+
+1. **`lbc-likovi.csv` nije stigao** (nije u Downloads-u ni igde na Mac-u). Bez njega `characters.json` ostaje prazan.
+2. **Dokument plana** (`claude.ai/artifact/8xDWq9GHDCBk9ULUo3H6VP`) nije podeljen sa nalogom petar100games@gmail.com (404), pa spisak paketa iz Faze 5 i spisak za proveru pre puštanja nisu pročitani.
+3. **Crteži:** registar u `../characters/` ima 156 likova; za ostalih do 214 nema SVG-a. Zaključani mogu kao senka tek kad crtež postoji; slobodni (38) moraju da imaju crtež. Skripta za uvoz ispisuje koji likovi nemaju crtež.
+
+### Faze 4–6 (kad bude gotov prvi paket) — još nije rađeno
+
+Nalog preko mejla (magic link), tabela prava (Club iz `subscriptions`, paketi iz Creem webhook-a `checkout.completed` po proizvodu paketa, pokloni uz Reset), ponude na sajtu (Club, paketi, Fuel & Body Pack sa Crew Fuel Stack + No-Pill Shelf PDF-ovima; uz Reset Habit Helpers Pack + 30 dana Club-a). Redosled paketa: Puberty, Fuel & Body, ostali po Fazi 5 dokumenta.
+
+### Provera Creem-a (dokumentacija, 3. 11. 2026)
+
+| Traženo | Creem | Napomena |
+|---|---|---|
+| Probni period | **Da.** Po proizvodu (samo pretplate): `trial_period_days` ≥ 1, besplatan ili plaćen (`trial_price` ≥ 1.00 i manji od redovne cene). Kartica se verifikuje i čuva. Webhook `subscription.trialing`. | docs.creem.io/features/trials |
+| „$1 prvi mesec“ | **Da, na dva načina:** plaćeni trial 30 dana po $1 (pa $8), ili kod za popust `once` na prvu uplatu (npr. $7 off). Kod se **ne** primenjuje na trial uplatu, već na prvu posle triala. | features/trials, features/discounts |
+| Pauza pretplate | **Da.** Dashboard, `POST /v1/subscriptions/{id}/pause`, zakazana pauza kroz cancel (`mode: scheduled`, `onExecute: pause`), webhook `subscription.paused`. Resume: u CLI-ju i dashboardu; API strana za resume nije nađena. | subscriptions/managing, api-reference |
+| Otkazivanje u 2 klika | **Delimično.** Creem portal = 3 klika (izaberi pretplatu → Manage → Cancel, odmah). Za 2 klika na našem sajtu: naše dugme + `POST /v1/subscriptions/{id}/cancel` (`mode` immediate ili scheduled). Creem traži da otkaz postoji u proizvodu (API ili link na portal). | features/customer-portal, cancel-subscription |
+| Dodela proizvoda bez plaćanja (poklon uz Reset) | **Ne postoji.** Nema „grant“/gift API-ja. Jedino 100 % `once` kod kroz checkout (Creem ga sam koristi za test kupovine), što za pretplatu znači sačuvanu karticu i naplatu od drugog meseca. **Zaključak:** pokloni (Habit Helpers Pack, 30 dana Club-a) su naša prava u Supabase, bez Creem-a; Fuel Stack / No-Pill Shelf PDF-ovi idu kroz naš sistem isporuke kupcima paketa i članovima. | features/discounts, merchant-of-record/account-reviews |
+
+### Ranije runde (provereno 3. 11.)
+
+- Naslov „Your kid didn’t come with a manual. Here’s the code.“ je vraćen **namerno** (Lukin commit 55ff89f, „Restore homepage copy“; odeljak 17 kaže da je naslov fiksan) — nije dirano.
+- Reset **ne uključuje** Toolkit (odeljak 17: „Reset does not include the standalone Toolkit“), pa red „The Kid Brain Toolkit, included“ nije dodat.
+- Meta i TikTok piksel sa `Purchase` (event id za deduplikaciju) i `InitiateCheckout` postoje od 55ff89f (`lib/ad-pixels.ts`, `components/AdPixels.tsx`); ID-jevi piksela idu u env (`README.md`, „Advertising purchase measurement“).

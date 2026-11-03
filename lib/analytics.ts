@@ -11,6 +11,7 @@ export const SIGNUP_FORMS = {
   "shop-waitlist": { label: "Shop waitlist · /shop", newsletter: false },
   "reset-waitlist": { label: "30-Day Reset waitlist · /, /pricing, thank-you", newsletter: false },
   "crew-club-waitlist": { label: "Crew Club waitlist · /, /pricing", newsletter: false },
+  "character-waitlist": { label: "Character not ready yet · /crew/<slug>", newsletter: false },
   b2b: { label: "Schools and teams · /schools", newsletter: false },
 } as const;
 

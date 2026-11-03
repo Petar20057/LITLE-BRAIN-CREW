@@ -3,6 +3,7 @@ import Breadcrumbs from "@/components/learn/Breadcrumbs";
 import JsonLd from "@/components/learn/JsonLd";
 import LearnShell from "@/components/learn/LearnShell";
 import { breadcrumbLd, glossaryLd } from "@/lib/jsonld";
+import { characterNamed, characterPath } from "@/lib/characters";
 import { pathExists } from "@/lib/learn";
 import { simpleMetadata } from "@/lib/seo";
 
@@ -25,7 +26,9 @@ export default function Page() {
           <p className="dek">The words we use, one line each. Characters are cartoons for real things, never a measurement of your kid.</p>
           {terms.length === 0 ? <p>The glossary is coming soon.</p> : null}
           <dl className="glossary">
-            {terms.map((t) => (
+            {terms.map((t) => {
+              const who = characterNamed(t.char);
+              return (
               <div key={t.id} id={t.id} className="gloss-item">
                 <dt>
                   {t.term}
@@ -33,9 +36,11 @@ export default function Page() {
                 </dt>
                 <dd>{t.definition}</dd>
                 {t.kid ? <dd className="gloss-kid"><span className="kid-say">Say it to your kid</span>{t.kid}</dd> : null}
+                {who ? <dd><a href={characterPath(who)}>Meet {who.name} →</a></dd> : null}
                 {t.link && pathExists(t.link) ? <dd><a href={t.link}>Read more →</a></dd> : null}
               </div>
-            ))}
+              );
+            })}
           </dl>
           <p className="fine disclaimer">
             Educational content only, built on everyday habits. It’s not medical advice, a diagnosis or a treatment.

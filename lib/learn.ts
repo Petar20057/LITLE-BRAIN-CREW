@@ -102,7 +102,7 @@ export type PageRef = { path: string; title: string; blurb?: string; char?: Char
 
 const EXTRA_REFS: Record<string, { title: string; blurb: string }> = {
   "/learn": { title: "All guides", blurb: "Every hub in one place." },
-  "/crew": { title: "Meet the crew", blurb: "All 26 characters, grouped." },
+  "/crew": { title: "Meet the crew", blurb: "Every character, free and in packs." },
   "/glossary": { title: "Glossary", blurb: "The words in this site, in plain English." },
   "/about": { title: "About Little Brain Crew", blurb: "Who we are and what we teach." },
   "/editorial-policy": { title: "How we write", blurb: "Sources, checks and what we never claim." },

@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { ENTRIES, SECTIONS, SITE_PAGES, pathOf } from "@/content/learn";
 import { PAGES, SITE_URL, isIndexable, type PageName } from "@/lib/design";
+import { CHARACTERS, characterPath } from "@/lib/characters";
 import { entriesOf } from "@/lib/learn";
 
 const url = (path: string) => `${SITE_URL}${path}`;
@@ -20,6 +21,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const entries = ENTRIES.map((e) => ({ url: url(pathOf(e)), lastModified: when(e.updated) }));
   const fixed = ["/learn", "/crew", "/glossary", "/sources"].map((p) => ({ url: url(p), lastModified: when(newest(all)) }));
   const site = SITE_PAGES.map((p) => ({ url: url(`/${p.slug}`), lastModified: when(p.updated) }));
+  // Character pages (unpublished ones are noindex and stay out).
+  const crew = CHARACTERS.filter((c) => c.published).map((c) => ({ url: url(characterPath(c)) }));
 
-  return [...design, ...fixed, ...hubs, ...entries, ...site];
+  return [...design, ...fixed, ...hubs, ...entries, ...site, ...crew];
 }

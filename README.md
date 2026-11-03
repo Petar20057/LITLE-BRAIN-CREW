@@ -59,6 +59,16 @@ SEO content, rendered as server components with the same global CSS classes as t
 - Order state across the steps: `lib/order.ts` (sessionStorage for now).
 - Payments: `lib/payments.ts`. Payments are live through Creem; PREVIEW is false. Offers still require confirmation on Creem.
 
+## Characters (`/crew`, `/crew/<slug>`)
+
+Every character the site knows is in `content/characters.json`, imported from Luka's CSV with
+`node scripts/import-characters.mjs <lbc-likovi.csv> [--dry]` (it also copies the SVGs from `../characters/svg` into
+`public/crew-art/`). The 26 drawn in `crew-art.js` are built in (`lib/characters.ts`) and always free. Rules live in
+`lib/character-rules.ts`: a locked character's explanation, "What to say", printable and cartoon render only inside
+`<Suspense>` after `lib/viewer.ts` has checked the reader (Crew Club via `has_club_access()`, packs from phase 4), so
+that text never reaches a browser without the right. Import `@/lib/characters` in server code only. Details and the
+state of the phases: `FUNNEL.md` section 18.
+
 ## Known gaps
 
 - `/downloads/crew-stickers.zip` is linked on `/free` but the file doesn't exist yet.
