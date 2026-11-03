@@ -283,14 +283,7 @@ $$('.toggle button').forEach(b => b.addEventListener('click', () => {
 }));
 try { if (localStorage.getItem('vlc-who') === 'dad') setWho('dad'); } catch (err) { /* ignore */ }
 
-/* ---------- countdown ---------- */
-const pad = n => String(n).padStart(2, '0');
-function tick() {
-  let s = Math.max(0, (OPEN - new Date()) / 1000);
-  const d = Math.floor(s / 86400); s %= 86400; const h = Math.floor(s / 3600); s %= 3600; const m = Math.floor(s / 60);
-  [['d', pad(d)], ['h', pad(h)], ['m', pad(m)], ['bar-days', d], ['d2', d]].forEach(([id, v]) => { if (gi(id)) gi(id).textContent = v; });
-}
-tick(); setInterval(tick, 30000);
+// The launch countdown was retired when checkout opened. No launch date is configured anymore.
 $$('.check').forEach(c => c.addEventListener('click', () => c.classList.toggle('on')));
 
 /* ---------- RedNote-style tip cards ---------- */

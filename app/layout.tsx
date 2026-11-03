@@ -3,6 +3,7 @@ import { preload } from "react-dom";
 import { SITE_URL } from "@/lib/design";
 import Track from "@/components/Track";
 import Clarity from "@/components/Clarity";
+import AdPixels from "@/components/AdPixels";
 import ABExposure from "@/components/ABExposure";
 import { abCss, abHeadScript } from "@/lib/experiments";
 import "../public/assets/site.css";
@@ -60,6 +61,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <Track />
         <ABExposure />
         <Clarity />
+        <AdPixels enabled={process.env.NODE_ENV === "production" && (!process.env.VERCEL_ENV || process.env.VERCEL_ENV === "production")} />
       </body>
     </html>
   );

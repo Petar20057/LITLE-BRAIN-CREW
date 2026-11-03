@@ -671,4 +671,9 @@ html.dad .top .logo .on-dark,html.dad .ad-top .logo .on-dark{display:block}
 
 /* Keep the new outcome headline together at the existing desktop and phone widths. */
 .hero h1{font-size:clamp(40px,5.3vw,68px)}.hero h1 .nowrap{white-space:nowrap}
+.support-promise{margin-top:var(--s4);padding:var(--s3);border:1px solid var(--endo);border-radius:var(--r-l);background:var(--paper,#fffdf7);color:var(--ink);--fg:var(--ink);--fg-soft:var(--ink-soft)}
+.support-promise h3{margin:0 0 12px}.support-promise p+p{margin-top:12px}
+.ad-consent{position:fixed;z-index:10000;bottom:20px;left:20px;width:min(540px,calc(100% - 40px));padding:24px;border:1px solid var(--hair);border-radius:var(--r-l);background:#fff;color:var(--ink);--fg:var(--ink);--fg-soft:var(--ink-soft);box-shadow:var(--sh-1)}
+.ad-consent h2{font-size:20px;margin:0 0 12px}.ad-consent p{font-size:15px;margin:0 0 16px}.ad-consent>div{display:flex;flex-wrap:wrap;gap:10px}.ad-consent .btn{font-size:14px;padding:10px 16px}
+.ad-preferences{position:fixed;z-index:80;left:12px;bottom:86px;padding:8px 12px;border:1px solid var(--hair);border-radius:12px;background:#fff;color:var(--ink);font:inherit;font-size:12px;cursor:pointer}
 @media(max-width:640px){.hero h1{font-size:clamp(36px,10vw,40px)}}

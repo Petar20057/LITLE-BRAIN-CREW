@@ -204,7 +204,8 @@ export const SITE_PAGES: SitePage[] = [
       {
         h2: "Cookies, ads and tracking",
         paras: [
-          "We don’t use advertising cookies or tracking pixels. To see where pages confuse parents, we use Microsoft Clarity: it records how you scroll, click and move on our pages and turns that into heatmaps and replays of visits. It hides what you type into forms, so we never see your email or answers in it. Clarity sets its own cookies (“_clck” for up to a year and “_clsk” for a day) so the pages of one visit can be grouped, and Microsoft processes this data under its own privacy statement. It never runs on our team pages. Two more cookies may be set. The sign-in cookie for Crew Club accounts (planned) is described above. When you open a Crew Club member’s share link, Creem, our payment partner, sets a referral cookie for 60 days, so that if you buy, that member gets their share. It is used only for that, never for advertising. Like any website, our hosting provider, Vercel, keeps standard server logs, such as IP address and pages requested, to keep the site running and secure. If we add other analytics later, we will describe them here first.",
+          "To see where pages confuse parents, we use Microsoft Clarity: it records how you scroll, click and move on our pages and turns that into heatmaps and replays of visits. It hides what you type into forms, so we never see your email or answers in it. Clarity sets its own cookies (“_clck” for up to a year and “_clsk” for a day) so the pages of one visit can be grouped, and Microsoft processes this data under its own privacy statement. It never runs on our team pages. Two more cookies may be set. The sign-in cookie for Crew Club accounts (planned) is described above. When you open a Crew Club member’s share link, Creem, our payment partner, sets a referral cookie for 60 days, so that if you buy, that member gets their share. It is used only for that, never for advertising. Like any website, our hosting provider, Vercel, keeps standard server logs, such as IP address and pages requested, to keep the site running and secure. If we add other analytics later, we will describe them here first.",
+          "When enabled, Meta and TikTok advertising pixels load only after you choose Allow ad cookies. They measure visits, checkout starts and confirmed purchases, including product identifiers, the amount paid and currency, to help us understand and improve our ads. We do not send your email address, your child’s details, quiz answers or download tokens as event parameters. These services may use advertising cookies and receive browser and device information. You can decline or withdraw permission through Ad cookie choices on our public pages. The pixels stay off on preview deployments, team pages, account pages and confirmation or unsubscribe links.",
           "We don’t sell your personal information.",
         ],
       },
@@ -215,6 +216,7 @@ export const SITE_PAGES: SitePage[] = [
         ],
         bullets: [
           "Vercel hosts the website. It handles every page request, which includes your IP address, and tells us the country it comes from.",
+          "Meta and TikTok receive advertising measurement events when their pixels are enabled and you allow ad cookies. Their own privacy policies describe how they process those events.",
           "Microsoft Clarity records how visitors use our pages (scrolls, clicks, page changes, device type and approximate location) for heatmaps and visit replays, with form entries hidden.",
           "Supabase stores our database: form entries, quiz answers, visit counts and, later, Crew Club accounts.",
           "Amazon Web Services (Amazon SES) sends our emails, such as quiz results and confirmation links. It receives your email address and the email we send you.",
@@ -273,7 +275,8 @@ export const SITE_PAGES: SitePage[] = [
       {
         h2: "All sales are final",
         paras: [
-          "Because you get instant access to digital content, all sales are final. We do not offer refunds, money-back terms or guarantees of any kind, including any guarantee of results. If a link or a file doesn’t work, contact us and we will fix it or resend it.",
+          "Because you get instant access to digital content, all sales are final. We do not offer refunds or money-back terms, and we do not guarantee results. If a link or a file doesn’t work, contact us and we will fix it or resend it.",
+          "Personal help is included with the Toolkit, the 30-Day Reset and the Bedtime & Screen-Off Kit. Try it for seven evenings. If it’s not working, email your hardest moment to hello@littlebraincrew.com and we will send you a personal plan. This is a promise of support; it does not change our final-sales policy or guarantee a particular outcome.",
         ],
       },
       {

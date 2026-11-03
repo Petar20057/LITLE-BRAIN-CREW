@@ -10,6 +10,8 @@ import { copyB } from "@/lib/experiments";
 import AB from "@/components/AB";
 import CrewArt from "./CrewArt";
 import Steps from "./Steps";
+import PersonalHelp from "./PersonalHelp";
+import { trackAdCheckout } from "@/lib/ad-pixels";
 
 // Gifts are closed (design/gift.html): nothing sends the gift card yet, so ?gift=1 is ignored until it does.
 const GIFTS_OPEN = false;
@@ -59,6 +61,7 @@ export default function Checkout({ slug }: { slug: Product["slug"] }) {
     setError("");
     setBusy(true);
     trackEvent("checkout_submit", items.map((i) => i.id).join("+"));
+    trackAdCheckout(items);
     try {
       const next = gift ? "/thank-you" : p.next;
       // The Bedtime Kit page adds to the order already in this tab (the Toolkit bought before it); anything else starts fresh.
@@ -157,6 +160,7 @@ export default function Checkout({ slug }: { slug: Product["slug"] }) {
             <li>{recurring ? "Pause or cancel yourself, anytime" : "One payment, yours to keep. Instant access by email."}</li>
           </ul>
           {!recurring && <p className="fine">Digital product with instant access, so all sales are final.</p>}
+          {!recurring && <PersonalHelp />}
 
           {/* What's inside sits below the button, so on a phone the email field and the button are on the first screen. */}
           <details className="fx-inside">

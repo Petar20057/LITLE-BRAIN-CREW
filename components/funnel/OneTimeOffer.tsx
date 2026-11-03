@@ -9,6 +9,7 @@ import { trackEvent } from "@/lib/track-event";
 import CrewArt from "./CrewArt";
 import Steps from "./Steps";
 import { usePaidPurchases } from "./usePaidPurchases";
+import { trackAdCheckout } from "@/lib/ad-pixels";
 
 // An upsell or downsell shown after payment: one offer, one yes, one honest no.
 export default function OneTimeOffer({ slug }: { slug: string }) {
@@ -37,6 +38,7 @@ export default function OneTimeOffer({ slug }: { slug: string }) {
     if (o.consent && !consent) return setError("Please tick the box to confirm how it renews.");
     setBusy(true);
     setError("");
+    trackAdCheckout([o.item]);
     try {
       if (slug === "upgrade") {
         const response = await fetch("/api/upgrade", {

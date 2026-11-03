@@ -34,7 +34,7 @@ export function sectionsFor(itemIds: string[], version: CatalogVersion = CURRENT
   return (version === 1 ? LEGACY_DELIVERY_SECTIONS : DELIVERY_SECTIONS).filter((s) => owned.includes(s.product));
 }
 
-export type PaidPurchase = { items: string[]; catalogVersion: CatalogVersion; amountCents: number };
+export type PaidPurchase = { items: string[]; catalogVersion: CatalogVersion; amountCents: number; eventId?: string };
 
 /** A legacy Toolkit and a new Reset upgrade may coexist under the same buyer's token. */
 export function sectionsForPurchases(purchases: PaidPurchase[]): DeliverySection[] {

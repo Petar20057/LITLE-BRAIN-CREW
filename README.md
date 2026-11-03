@@ -69,6 +69,16 @@ SEO content, rendered as server components with the same global CSS classes as t
 
 Copy `.env.example` to `.env.local`. `NEXT_PUBLIC_SITE_URL` is the public origin (canonical URLs, Open Graph, JSON-LD, sitemap). Leave it empty: production builds use `https://www.littlebraincrew.com`, local dev `http://localhost:3000`. Keep unused keys empty.
 
+### Advertising purchase measurement
+
+The signed Creem webhook already records paid orders and their actual amounts in `orders` and `funnel_events` for `/admin`. Meta and TikTok pixels are optional: set `NEXT_PUBLIC_META_PIXEL_ID` and `NEXT_PUBLIC_TIKTOK_PIXEL_ID` in Vercel **Production**, then rebuild. Missing IDs leave their SDKs and consent UI off. No advertising access tokens are needed for these browser pixels.
+
+`components/AdPixels.tsx` loads the configured SDKs on the production domain only after the visitor allows ad cookies. Visitors can decline or withdraw consent through **Ad cookie choices**. Team, account, quiz and token-bearing confirmation routes are excluded. The privacy page describes the events and services.
+
+Events: `PageView` (TikTok `page`), `InitiateCheckout` on payment submission, and `Purchase` only for webhook-confirmed orders returned by `/api/order`. This runs on the post-purchase offer as well as thank-you, including separate paid upgrades. Amounts include discounts; zero remains zero. Stable hashed order IDs and local deduplication prevent refreshes or repeated status polls from sending another purchase. No email, quiz answers or download tokens are sent as event parameters.
+
+Before using purchase optimization, verify a consenting test visit and purchase in both platforms’ **Test Events**, including the actual amount/currency, refresh deduplication and a declined-consent visit. Browser blockers, closed tabs or missing consent can prevent pixel events; the server-side order ledger still counts those sales. Server-to-server Meta Conversions API and TikTok Events API are not configured.
+
 ## Email
 
 Sending goes through Amazon SES in `eu-north-1`, where `littlebraincrew.com` is a verified domain (Easy DKIM, MAIL FROM `mail.littlebraincrew.com`, records in Vercel DNS). Receiving stays on Hostinger (root MX). The account is out of the SES sandbox.

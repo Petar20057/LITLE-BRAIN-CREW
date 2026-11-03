@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { PaidPurchase } from "@/lib/delivery-files";
+import { AD_READY_EVENT, trackAdPurchase } from "@/lib/ad-pixels";
 
 type Delivery = { token: string; items: string[] };
 type State = { key: string; byToken: Record<string, PaidPurchase[]>; pending: boolean; error: string };
@@ -42,5 +43,12 @@ export function usePaidPurchases(deliveries: Delivery[] | undefined, waitForUpgr
     void poll();
     return () => { controller.abort(); clearTimeout(timer); };
   }, [key, waitForUpgrade]);
+  useEffect(() => {
+    if (state.key !== key) return;
+    const track = () => Object.values(state.byToken).flat().forEach(trackAdPurchase);
+    track();
+    window.addEventListener(AD_READY_EVENT, track);
+    return () => window.removeEventListener(AD_READY_EVENT, track);
+  }, [state.key, state.byToken, key]);
   return state.key === key ? state : { key, byToken: {}, pending: true, error: "" };
 }

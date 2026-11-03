@@ -8,6 +8,7 @@ import { trackEvent } from "@/lib/track-event";
 import CrewArt from "./CrewArt";
 import Steps from "./Steps";
 import { usePaidPurchases } from "./usePaidPurchases";
+import PersonalHelp from "./PersonalHelp";
 
 export default function ThankYou() {
   const order = useOrder();
@@ -65,6 +66,7 @@ export default function ThankYou() {
           <li>{program ? "Tonight: read Day 1 of the 30-Day Reset and choose your bedtime. About 10 minutes." : bedtime && !toolkit ? "Tonight: try Day 1 of Screen-Off Week, then read The Crew Goes to Sleep together." : "Tonight: find your hardest moment on The code on one page (Toolkit p. 4), then read that moment’s page."}</li>
           <li>{program ? "Print the fridge tracker and put it where the whole family can see it. The Science Edition explains the habits behind the plan." : "Choose one small habit to try tomorrow."}</li>
         </ol>
+        {purchases.length > 0 && <PersonalHelp />}
         {toolkit && !program && !waitForUpgrade && <div className="fx-card" style={{ marginTop: 24 }}>
           <h2>Put the Toolkit into practice</h2>
           <p>Add the 30-Day Reset for $20: the Reset guide, fridge tracker and Science Edition. No discount code needed.</p>

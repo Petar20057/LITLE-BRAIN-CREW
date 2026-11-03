@@ -56,6 +56,9 @@ describe("verified Reset upgrade", () => {
     expect(fake.table("orders")).toHaveLength(2);
     expect(fake.table("orders")[1]).toMatchObject({ parent_order_id: "parent-1", delivery_hash: null, catalog_version: 2 });
     const order = (await paidOrderForToken(token))!;
+    expect(order.purchases.map((p) => p.eventId)).toEqual([expect.stringMatching(/^[a-f0-9]{64}$/), expect.stringMatching(/^[a-f0-9]{64}$/)]);
+    expect(order.purchases[0].eventId).not.toBe(order.purchases[1].eventId);
+    expect((await paidOrderForToken(token))!.purchases.map((p) => p.eventId)).toEqual(order.purchases.map((p) => p.eventId));
     const files = sectionsForPurchases(order.purchases).flatMap((s) => s.files);
     expect(files.find((f) => f.id === "reset-pdf")?.path).toBe("v2/30-Day-Reset/The-30-Day-Reset.pdf");
     expect(files.filter((f) => f.id === "science-edition-pdf")).toHaveLength(1);
