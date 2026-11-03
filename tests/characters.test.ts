@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { ageLabel, packLabel, canRead, countsOf, groupTitle, packsOf, paragraphs, publicOf, slugify, sortByWave, validate, warnings, type Character } from "@/lib/character-rules";
-import { accessOf, mapHeaders, parseCsv, rowToCharacter, yes } from "../scripts/import-characters.mjs";
+import { ageLabel, packLabel, canRead, countsOf, groupTitle, packsOf, paragraphs, parseSayPairs, publicOf, slugify, sortByWave, splitReference, validate, warnings, type Character } from "@/lib/character-rules";
+import { accessOf, applyContent, mapHeaders, parseCsv, rowToCharacter, yes } from "../scripts/import-characters.mjs";
 
 const base: Character = {
   slug: "soli", name: "Soli", real: "Vitamin D", pack: "Fuel & Body Pack", packSlug: "fuel-body-pack",
@@ -99,6 +99,24 @@ describe("text helpers", () => {
     expect(slugify("Fuel & Body Pack")).toBe("fuel-body-pack");
     expect(slugify("Đurđa Čić")).toBe("djurdja-cic");
     expect(slugify("  Vitamin D  ")).toBe("vitamin-d");
+  });
+  it("reads 'what to say' pairs and references", () => {
+    expect(parseSayPairs("Instead of: “Stop it.” | Say: “Let’s pause.” | Why: calmer.\n\nInstead of: A | Say: B")).toEqual([
+      { instead: "“Stop it.”", say: "“Let’s pause.”", why: "calmer." },
+      { instead: "A", say: "B" },
+    ]);
+    expect(parseSayPairs("Just a paragraph.")).toBeNull();
+    expect(parseSayPairs("")).toBeNull();
+    expect(splitReference("NICHD. Puberty. https://www.nichd.nih.gov/health/topics/puberty")).toEqual({ title: "NICHD. Puberty.", url: "https://www.nichd.nih.gov/health/topics/puberty" });
+    expect(splitReference("Book, 2001.")).toEqual({ title: "Book, 2001." });
+  });
+  it("a content file fills the public and locked fields and may publish", () => {
+    const c: Character = { ...base, published: false, shortAnswer: "", locked: {} };
+    const problems = applyContent(c, { shortAnswer: "Short.", explanation: "Long.", sources: ["S08"], published: true, bogus: 1 }, "soli.json");
+    expect(problems).toEqual(['soli.json: unknown field "bogus"']);
+    expect(c).toMatchObject({ shortAnswer: "Short.", published: true, sources: ["S08"], locked: { explanation: "Long." } });
+    expect(applyContent(c, { published: "yes" }, "x.json")).toEqual(['x.json: "published" must be true or false']);
+    expect(applyContent(c, [], "x.json")).toHaveLength(1);
   });
   it("paragraphs split on line breaks", () => {
     expect(paragraphs("One.\n\nTwo.\nThree.")).toEqual(["One.", "Two.", "Three."]);

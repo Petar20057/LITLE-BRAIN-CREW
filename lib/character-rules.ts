@@ -34,6 +34,10 @@ export type Character = {
   shortAnswer: string;
   whenToTalk: string;
   safety?: string;
+  /** "Say it to your kid": 2–3 sentences said out loud (public). */
+  kidVersion?: string;
+  /** Public: keys of content/learn/sources.ts ("S08") or full references, a URL at the end becomes a link. */
+  sources?: string[];
   /** The CSV's row number ("F12", "107"). */
   num?: string;
   /** Priority inside the pack: ★ first, then ○, then ·. */
@@ -47,6 +51,10 @@ export type Character = {
   artFile?: string;
   locked: LockedContent;
 };
+
+/** The fields a per-character content file (content/characters/<slug>.json) may set; the rest comes from the CSV. */
+export const PUBLIC_CONTENT_FIELDS = ["shortAnswer", "whenToTalk", "safety", "kidVersion", "sources", "published"] as const;
+export const LOCKED_CONTENT_FIELDS = ["explanation", "whatToSay", "print", "cartoon"] as const;
 
 /** What a card or a locked page may show: everything but the locked content. */
 export type PublicCharacter = Omit<Character, "locked">;
@@ -189,3 +197,27 @@ export const paragraphs = (text: string | undefined): string[] =>
   (text ?? "").split(/\n\s*\n|\r?\n/).map((p) => p.trim()).filter(Boolean);
 
 export const isUrl = (s: string | undefined): s is string => typeof s === "string" && /^https?:\/\/\S+$/i.test(s.trim());
+
+export type SayPair = { instead: string; say: string; why?: string };
+/** "What to say" written as one pair per paragraph: `Instead of: … | Say: … | Why: …`. Null when any paragraph
+ *  doesn't follow that shape (the page then shows plain paragraphs). */
+export function parseSayPairs(text: string | undefined): SayPair[] | null {
+  const paras = paragraphs(text);
+  if (paras.length === 0) return null;
+  const pairs: SayPair[] = [];
+  for (const p of paras) {
+    const parts = p.split("|").map((x) => x.trim());
+    const instead = parts.find((x) => /^instead(?: of)?\s*:/i.test(x))?.replace(/^instead(?: of)?\s*:\s*/i, "");
+    const say = parts.find((x) => /^say\s*:/i.test(x))?.replace(/^say\s*:\s*/i, "");
+    const why = parts.find((x) => /^why\s*:/i.test(x))?.replace(/^why\s*:\s*/i, "");
+    if (!instead || !say) return null;
+    pairs.push(why ? { instead, say, why } : { instead, say });
+  }
+  return pairs;
+}
+
+/** A reference line: "Title. https://…" -> { title, url }. */
+export function splitReference(line: string): { title: string; url?: string } {
+  const m = line.trim().match(/^(.*?)\s*(https?:\/\/\S+)\s*$/);
+  return m ? { title: m[1].replace(/[\s,;:–-]+$/, ""), url: m[2] } : { title: line.trim() };
+}

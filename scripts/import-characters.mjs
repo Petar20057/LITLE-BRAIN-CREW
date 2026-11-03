@@ -3,8 +3,13 @@
 // SVG from the parent project (../characters/svg/<id>.svg) into public/crew-art/. The CSV is the only source of the
 // text on the character pages: nothing is typed in by hand.
 //
-//   node scripts/import-characters.mjs <path/to/lbc-likovi.csv>          write content/characters.json
-//   node scripts/import-characters.mjs <path/to/lbc-likovi.csv> --dry    report only
+//   node scripts/import-characters.mjs                    content/characters.csv -> content/characters.json
+//   node scripts/import-characters.mjs <other.csv>        the same from another CSV (then copy it to content/)
+//   node scripts/import-characters.mjs --dry              report only
+//
+// The written text of a character lives next to the CSV, one file per character: content/characters/<slug>.json
+// with the fields in PUBLIC_CONTENT_FIELDS and LOCKED_CONTENT_FIELDS (lib/character-rules.ts). A file's field
+// replaces the CSV column of the same name; `published: true` in the file publishes the page.
 //
 // Column names are matched after normalising (lower case, no diacritics, spaces -> _), in English or Serbian:
 // see ALIASES. Unknown columns are reported and kept out. Yes/no columns accept yes/no, da/ne, true/false, 1/0, x.
@@ -13,10 +18,12 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-const { packsOf, slugify, validate, warnings } = await import("../lib/character-rules.ts");
+const { LOCKED_CONTENT_FIELDS, PUBLIC_CONTENT_FIELDS, packsOf, slugify, validate, warnings } = await import("../lib/character-rules.ts");
 
 const web = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = path.join(web, "content", "characters.json");
+const DEFAULT_CSV = path.join(web, "content", "characters.csv");
+const CONTENT_DIR = path.join(web, "content", "characters");
 const ART_DIR = path.join(web, "public", "crew-art");
 const SVG_SRC = path.resolve(web, "..", "characters", "svg");
 const REGISTRY = path.resolve(web, "..", "characters", "registry.json");
@@ -44,6 +51,8 @@ export const ALIASES = {
   whatToSay: ["what_to_say", "say", "sta_reci", "what_to_say_to_your_kid", "words", "sta_da_kazem"],
   print: ["print", "printable", "stampa", "pdf", "print_url", "za_stampu"],
   cartoon: ["cartoon", "video", "crtani", "cartoon_url", "video_url"],
+  kidVersion: ["kid_version", "kid", "say_it_to_your_kid", "za_dete", "decja_verzija"],
+  sources: ["sources", "source", "izvori", "izvor", "references"],
   num: ["num", "number", "broj", "no", "row"],
   wave: ["wave", "talas", "priority", "prioritet"],
   ageFlag: ["age_flag", "age", "ages", "uzrast"],
@@ -119,6 +128,8 @@ export function rowToCharacter(row, map) {
     shortAnswer: get("shortAnswer"),
     whenToTalk: get("whenToTalk"),
     safety: get("safety") || undefined,
+    kidVersion: get("kidVersion") || undefined,
+    sources: get("sources") ? get("sources").split(/\r?\n|;/).map((x) => x.trim()).filter(Boolean) : undefined,
     num: get("num") || undefined,
     wave: get("wave") || undefined,
     ageFlag: get("ageFlag") || undefined,
@@ -166,15 +177,57 @@ function attachArt(chars, { write }) {
   return missing;
 }
 
+/** Merges content/characters/<slug>.json into a character. Returns the problems found (unknown keys, wrong types). */
+export function applyContent(c, obj, where = c.slug) {
+  const problems = [];
+  if (!obj || typeof obj !== "object" || Array.isArray(obj)) return [`${where}: the content file must hold one object`];
+  for (const [k, v] of Object.entries(obj)) {
+    if (k === "published") {
+      if (typeof v !== "boolean") problems.push(`${where}: "published" must be true or false`);
+      else c.published = v;
+    } else if (k === "sources") {
+      if (!Array.isArray(v) || v.some((x) => typeof x !== "string")) problems.push(`${where}: "sources" must be a list of strings`);
+      else c.sources = v.map((x) => x.trim()).filter(Boolean);
+    } else if (PUBLIC_CONTENT_FIELDS.includes(k)) {
+      if (typeof v !== "string") problems.push(`${where}: "${k}" must be text`);
+      else if (v.trim()) c[k] = v.trim();
+    } else if (LOCKED_CONTENT_FIELDS.includes(k)) {
+      if (typeof v !== "string") problems.push(`${where}: "${k}" must be text`);
+      else if (v.trim()) c.locked[k] = v.trim();
+    } else problems.push(`${where}: unknown field "${k}"`);
+  }
+  return problems;
+}
+
+/** Reads every content/characters/<slug>.json. Files without a CSV row are reported. */
+function readContentFiles(chars) {
+  const problems = [];
+  let used = 0;
+  if (!fs.existsSync(CONTENT_DIR)) return { used, problems };
+  const bySlug = new Map(chars.map((c) => [c.slug, c]));
+  for (const name of fs.readdirSync(CONTENT_DIR).filter((n) => n.endsWith(".json")).sort()) {
+    const slug = name.slice(0, -5);
+    const c = bySlug.get(slug);
+    const file = path.join(CONTENT_DIR, name);
+    if (!c) { problems.push(`${name}: no character "${slug}" in the CSV`); continue; }
+    let obj;
+    try { obj = JSON.parse(fs.readFileSync(file, "utf8")); } catch (e) { problems.push(`${name}: not valid JSON (${e.message})`); continue; }
+    problems.push(...applyContent(c, obj, name));
+    used += 1;
+  }
+  return { used, problems };
+}
+
 /** Names in the site glossary (content/learn/glossary.ts `char` fields), for CSVs without an in_glossary column. */
 function glossaryNames() {
   if (!fs.existsSync(GLOSSARY_TS)) return new Set();
   return new Set([...fs.readFileSync(GLOSSARY_TS, "utf8").matchAll(/^\s*char:\s*"([^"]+)"/gm)].map((m) => m[1]));
 }
 
-export function report(chars, { unknown, missingArt, problems, warn = [] }) {
+export function report(chars, { unknown, missingArt, problems, warn = [], contentFiles = 0 }) {
   const free = chars.filter((c) => c.access === "free");
   const lines = [
+    `content files: ${contentFiles} (content/characters/<slug>.json)`,
     `${chars.length} characters: ${free.length} free, ${chars.length - free.length} locked, ${chars.filter((c) => c.published).length} published, ${chars.filter((c) => c.inGlossary).length} in the glossary`,
     `samples: ${free.filter((c) => c.sample).length}`,
   ];
@@ -192,9 +245,9 @@ export function report(chars, { unknown, missingArt, problems, warn = [] }) {
 function main() {
   const args = process.argv.slice(2);
   const dry = args.includes("--dry");
-  const file = args.find((a) => !a.startsWith("--"));
-  if (!file) {
-    console.error("usage: node scripts/import-characters.mjs <lbc-likovi.csv> [--dry]");
+  const file = args.find((a) => !a.startsWith("--")) ?? DEFAULT_CSV;
+  if (!fs.existsSync(file)) {
+    console.error(`no CSV at ${file}\nusage: node scripts/import-characters.mjs [lbc-likovi.csv] [--dry]`);
     process.exit(2);
   }
   const rows = parseCsv(fs.readFileSync(file, "utf8"));
@@ -211,9 +264,10 @@ function main() {
   }
   // The 26 drawn in crew-art.js keep their site text (lib/characters.ts), so the CSV needn't carry it.
   const siteBacked = fs.existsSync(INLINE_ART) ? new Set(Object.keys(JSON.parse(fs.readFileSync(INLINE_ART, "utf8")))) : new Set();
-  const problems = validate(chars, siteBacked);
+  const content = readContentFiles(chars);
+  const problems = [...content.problems, ...validate(chars, siteBacked)];
   const missingArt = attachArt(chars, { write: !dry && problems.length === 0 });
-  console.log(report(chars, { unknown, missingArt, problems, warn: warnings(chars) }));
+  console.log(report(chars, { unknown, missingArt, problems, warn: warnings(chars), contentFiles: content.used }));
   if (problems.length) {
     console.error(`\nnot written: fix the ${problems.length} problem(s) in the CSV first`);
     process.exit(1);

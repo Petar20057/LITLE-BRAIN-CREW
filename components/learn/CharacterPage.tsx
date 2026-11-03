@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import type { CharKey } from "@/content/learn";
-import { CLUB_OPEN, PACK_CHECKOUT_OPEN, PACK_PRICE, ageLabel, canRead, groupTitle, isUrl, packLabel, paragraphs, sortByWave, type Character, type Pack } from "@/lib/character-rules";
+import { CLUB_OPEN, PACK_CHECKOUT_OPEN, PACK_PRICE, ageLabel, canRead, groupTitle, isUrl, packLabel, paragraphs, parseSayPairs, sortByWave, splitReference, type Character, type Pack } from "@/lib/character-rules";
+import { SOURCE_BY_KEY } from "@/content/learn";
 import { PUBLIC_CHARACTERS, characterPath, packAt } from "@/lib/characters";
 import { ITEMS, usd } from "@/lib/funnel";
 import { breadcrumbLd, webPageLd, type Crumb } from "@/lib/jsonld";
@@ -12,6 +13,7 @@ import { DISCLAIMER } from "./EntryArticle";
 import JsonLd from "./JsonLd";
 import LearnShell from "./LearnShell";
 import PediatricianBox from "./PediatricianBox";
+import SayThis from "./SayThis";
 import TellMeForm from "./TellMeForm";
 import Text from "./Text";
 
@@ -20,14 +22,38 @@ import Text from "./Text";
 // inside <Suspense> after lib/viewer.ts has checked the reader (Crew Club or the pack), so that text never reaches
 // a browser without the right. An unpublished character shows only the card and "Tell me when it's ready".
 
-const Paras = ({ text }: { text: string | undefined }) => paragraphs(text).map((p, i) => <p key={i}><Text>{p}</Text></p>);
+/** Paragraphs; a paragraph that starts with "## " is a sub-heading. */
+const Paras = ({ text }: { text: string | undefined }) =>
+  paragraphs(text).map((p, i) => (p.startsWith("## ") ? <h3 key={i}>{p.slice(3)}</h3> : <p key={i}><Text>{p}</Text></p>));
+
+function WhatToSay({ text }: { text: string }) {
+  const pairs = parseSayPairs(text);
+  return pairs ? <SayThis pairs={pairs} /> : <Paras text={text} />;
+}
+
+function Sources({ sources }: { sources: string[] }) {
+  const refs = sources.map((s) => {
+    const known = SOURCE_BY_KEY[s];
+    return known ? { title: known.title, url: known.url } : splitReference(s);
+  });
+  return (
+    <section aria-labelledby="src-h">
+      <h2 id="src-h">Sources</h2>
+      <ol className="sources">
+        {refs.map((r, i) => (
+          <li key={i}>{r.title}{r.url ? <> <a href={r.url} rel="noopener">{r.url.replace(/^https?:\/\//, "")}</a></> : null}</li>
+        ))}
+      </ol>
+    </section>
+  );
+}
 
 function FullContent({ c }: { c: Character }) {
   const l = c.locked;
   return (
     <>
       {l.explanation ? <section><h2>What’s going on</h2><Paras text={l.explanation} /></section> : null}
-      {l.whatToSay ? <section><h2>What to say</h2><Paras text={l.whatToSay} /></section> : null}
+      {l.whatToSay ? <section><h2>What to say</h2><WhatToSay text={l.whatToSay} /></section> : null}
       {l.print ? (
         <section>
           <h2>Print it</h2>
@@ -102,6 +128,7 @@ export default function CharacterPage({ c }: { c: Character }) {
       {locked ? <Suspense fallback={<CrewFace c={c} silhouette />}><Face c={c} /></Suspense> : <CrewFace c={c} />}
       <div className="figure-text">
         <p className="figure-cap">{c.name}: {c.real}</p>
+        {c.kidVersion && c.published ? <p><span className="kid-say">Say it to your kid</span><Text>{c.kidVersion}</Text></p> : null}
         {pack ? <p>Part of the {packLabel(pack.name)}{pack.onSale ? "" : `, ${pack.ready} of ${pack.total} characters ready`}.</p> : null}
       </div>
     </div>
@@ -147,6 +174,8 @@ export default function CharacterPage({ c }: { c: Character }) {
               <Paras text={c.safety} />
             </aside>
           ) : null}
+
+          {c.sources?.length && c.published ? <Sources sources={c.sources} /> : null}
 
           {deep ? (
             <section>
