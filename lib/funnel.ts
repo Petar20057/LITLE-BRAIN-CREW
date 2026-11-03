@@ -4,6 +4,7 @@
 //                                     (UPSELL_OPEN)            └─no──► /offer/bedtime ($7, skipped if bump taken) ─► /thank-you
 //   home / pricing ──► /checkout/program ──────────────────────────────────────────────────────► /thank-you
 //   Club, /offer/club and /offer/screen-off-week stay closed (next.config.ts redirects) until the Club opens.
+//   home / pricing ──► /personal-plan (the intake form) ──► Creem $199 ──► /personal-plan/thanks (lib/personal-plan.ts)
 //   member's Creem referral link ──► home (Creem's cookie credits the member at its checkout, see AFFILIATE)
 
 // True until Creem is connected (lib/payments.ts): buttons walk the funnel without charging.
@@ -63,6 +64,9 @@ export const ITEMS = {
   // Two months free on the yearly plan: 10 × $8, saving $16.
   clubMonthly: { id: "club-monthly", name: "The Crew Club · monthly", price: 8, every: "month" },
   clubYearly: { id: "club-yearly", name: "The Crew Club · yearly", price: 80, every: "year" },
+  // A plan written for one family from the /personal-plan form. Sold only through that form (app/api/personal-plan):
+  // no checkout slug, and /api/checkout refuses it.
+  personalPlan: { id: "personal-plan", name: "The Personal plan", price: 199 },
 } satisfies Record<string, Item>;
 
 /* ---------- checkout pages ---------- */
@@ -82,7 +86,7 @@ export const PRODUCTS: Record<Product["slug"], Product> = {
   guide: {
     slug: "guide",
     title: "The Kid Brain Toolkit",
-    sub: "12 crew members, the 12 hardest moments decoded with the exact words, 6 villains, and what’s normal at every age. 43 pages you can read in one evening, with printable bonuses and 4 crew cartoons. Ages 3–17.",
+    sub: "12 crew members, the 12 hardest moments decoded with the exact words, 6 villains, and what’s normal at every age. 43 pages you can read in one evening, with printable bonuses. Ages 3–17.",
     art: "fronti",
     // The parts of the Toolkit with their pages (same PDF as MOMENTS and the home page card), then the printable bonuses.
     get: [
@@ -92,7 +96,7 @@ export const PRODUCTS: Record<Product["slug"], Product> = {
       "The 6 villains (the phone in bed, autoplay, late bedtimes and 3 more) and how to beat each one (p. 31)",
       "What’s normal at every age, Whyzi (3) to Seki (17) (p. 35), and when to talk to your pediatrician (p. 42)",
       "When you don’t know what to say: 24 “Say This, Not That” cards, plus the 60-Second Meltdown Plan for the fridge",
-      "Also inside: the crew poster and 4 crew cartoons to watch together",
+      "Also inside: the crew poster for the fridge",
     ],
     bump: {
       item: ITEMS.bedtimeKit,

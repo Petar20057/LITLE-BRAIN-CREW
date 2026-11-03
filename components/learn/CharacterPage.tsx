@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import type { CharKey } from "@/content/learn";
-import { CLUB_OPEN, PACK_CHECKOUT_OPEN, PACK_PRICE, canRead, isUrl, paragraphs, type Character, type Pack } from "@/lib/character-rules";
+import { CLUB_OPEN, PACK_CHECKOUT_OPEN, PACK_PRICE, ageLabel, canRead, groupTitle, isUrl, packLabel, paragraphs, sortByWave, type Character, type Pack } from "@/lib/character-rules";
 import { PUBLIC_CHARACTERS, characterPath, packAt } from "@/lib/characters";
 import { ITEMS, usd } from "@/lib/funnel";
 import { breadcrumbLd, webPageLd, type Crumb } from "@/lib/jsonld";
@@ -50,7 +50,7 @@ function LockBox({ c, pack }: { c: Character; pack: Pack | undefined }) {
       <h2 id="lock-h">Unlock {c.name}</h2>
       <p>
         The full explanation, what to say, the printable and the cartoon are for Crew Club members
-        {pack ? ` and everyone who has the ${pack.name}` : ""}.
+        {pack ? ` and everyone who has the ${packLabel(pack.name)}` : ""}.
       </p>
       <ul>
         <li>
@@ -60,12 +60,12 @@ function LockBox({ c, pack }: { c: Character; pack: Pack | undefined }) {
         </li>
         {pack ? (
           <li>
-            <b>{pack.name}</b>
+            <b>{packLabel(pack.name)}</b>
             <span>
               {usd(PACK_PRICE)}, yours forever. {pack.onSale ? `All ${pack.total} characters are ready.` : `${pack.ready} of ${pack.total} characters ready.`}
             </span>
             {pack.onSale && PACK_CHECKOUT_OPEN ? (
-              <a className="btn" href={`/checkout/pack/${pack.slug}`}>Get the {pack.name}</a>
+              <a className="btn" href={`/checkout/pack/${pack.slug}`}>Get the {packLabel(pack.name)}</a>
             ) : (
               <TellMeForm details={{ character: c.slug, pack: pack.slug }} />
             )}
@@ -92,16 +92,17 @@ export default function CharacterPage({ c }: { c: Character }) {
   const path = characterPath(c);
   const locked = c.access === "locked";
   const crumbs: Crumb[] = [{ name: "Home", path: "/" }, { name: "Meet the crew", path: "/crew" }, { name: c.name }];
-  const kicker = [pack?.name ?? c.group, c.real].filter(Boolean).join(" · ");
+  const kicker = [pack?.name ?? groupTitle(c.group), c.real].filter(Boolean).join(" · ");
+  const age = ageLabel(c.ageFlag);
   const deep = c.artKey ? charPage(c.artKey as CharKey) : undefined;
-  const siblings = PUBLIC_CHARACTERS.filter((s) => s.slug !== c.slug && (pack ? s.packSlug === pack.slug : !s.packSlug && s.group === c.group)).slice(0, 6);
+  const siblings = sortByWave(PUBLIC_CHARACTERS.filter((s) => s.slug !== c.slug && (pack ? s.packSlug === pack.slug : !s.packSlug && s.group === c.group))).slice(0, 6);
 
   const figure = (
     <div className="figure">
       {locked ? <Suspense fallback={<CrewFace c={c} silhouette />}><Face c={c} /></Suspense> : <CrewFace c={c} />}
       <div className="figure-text">
         <p className="figure-cap">{c.name}: {c.real}</p>
-        {pack ? <p>Part of the {pack.name}{pack.onSale ? "" : `, ${pack.ready} of ${pack.total} characters ready`}.</p> : null}
+        {pack ? <p>Part of the {packLabel(pack.name)}{pack.onSale ? "" : `, ${pack.ready} of ${pack.total} characters ready`}.</p> : null}
       </div>
     </div>
   );
@@ -120,6 +121,7 @@ export default function CharacterPage({ c }: { c: Character }) {
           <p className="meta">
             {kicker}
             {!c.published ? <span className="lock-tag soon">Coming</span> : locked ? <span className="lock-tag">Club · pack</span> : <span className="lock-tag free">Free</span>}
+            {age ? <span className="teen-badge">{age}</span> : null}
           </p>
           <h1>{c.name}</h1>
           <p className="dek"><Text>{c.sentence}</Text></p>
@@ -127,7 +129,7 @@ export default function CharacterPage({ c }: { c: Character }) {
 
           {!c.published ? (
             <aside className="lock-box coming" aria-labelledby="soon-h">
-              <h2 id="soon-h">Coming to the Club</h2>
+              <h2 id="soon-h">{locked ? "Coming to the Club" : "Coming soon, free"}</h2>
               <p>{c.name} isn’t finished yet. Leave your email and we’ll tell you the moment it’s ready.</p>
               <TellMeForm details={{ character: c.slug, ...(pack ? { pack: pack.slug } : {}) }} />
             </aside>
@@ -155,7 +157,7 @@ export default function CharacterPage({ c }: { c: Character }) {
 
           {siblings.length ? (
             <section aria-labelledby="more-h">
-              <h2 id="more-h">{pack ? `More in the ${pack.name}` : "More of the crew"}</h2>
+              <h2 id="more-h">{pack ? `More in the ${packLabel(pack.name)}` : "More of the crew"}</h2>
               <ul className="hub-grid crew-grid">{siblings.map((s) => <CrewCard key={s.slug} c={s} />)}</ul>
               <p><a href={pack ? `/crew#pack-${pack.slug}` : "/crew"}>See the whole crew →</a></p>
             </section>

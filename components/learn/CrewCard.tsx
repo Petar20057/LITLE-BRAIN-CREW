@@ -1,5 +1,5 @@
 import type { CharKey } from "@/content/learn";
-import type { PublicCharacter } from "@/lib/character-rules";
+import { ageLabel, packLabel, type PublicCharacter } from "@/lib/character-rules";
 import { characterPath } from "@/lib/characters";
 import CharArt from "./CharArt";
 
@@ -23,7 +23,7 @@ export default function CrewCard({ c }: { c: PublicCharacter }) {
   const tag = !c.published ? (
     <em className="lock-tag soon">Coming</em>
   ) : locked ? (
-    <em className="lock-tag">Club · {c.pack}</em>
+    <em className="lock-tag">Club · {packLabel(c.pack)}</em>
   ) : c.sample ? (
     <em className="lock-tag free">Free sample</em>
   ) : null;
@@ -41,6 +41,7 @@ export default function CrewCard({ c }: { c: PublicCharacter }) {
           <small className="crew-real">{c.real}</small>
           <small>{c.sentence}</small>
           {tag}
+          {c.ageFlag ? <em className="teen-badge">{ageLabel(c.ageFlag)}</em> : null}
         </span>
       </a>
     </li>

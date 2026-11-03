@@ -13,7 +13,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-const { packsOf, slugify, validate } = await import("../lib/character-rules.ts");
+const { packsOf, slugify, validate, warnings } = await import("../lib/character-rules.ts");
 
 const web = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = path.join(web, "content", "characters.json");
@@ -21,18 +21,22 @@ const ART_DIR = path.join(web, "public", "crew-art");
 const SVG_SRC = path.resolve(web, "..", "characters", "svg");
 const REGISTRY = path.resolve(web, "..", "characters", "registry.json");
 const INLINE_ART = path.join(web, "content", "art.json");
+const GLOSSARY_TS = path.join(web, "content", "learn", "glossary.ts");
+
+/** CSV ids whose SVG in ../characters/svg has another spelling. */
+const ART_ALIASES = { beshi: "besi", uchi: "uci" };
 
 export const ALIASES = {
   slug: ["slug", "id", "key", "kljuc", "url"],
   name: ["name", "ime", "character", "lik", "ime_lika"],
-  real: ["real", "real_name", "scientific", "scientific_name", "stands_for", "stvarno", "naucni_naziv", "sta_je", "meaning"],
+  real: ["real", "real_name", "science_name", "science", "scientific", "scientific_name", "stands_for", "stvarno", "naucni_naziv", "sta_je", "meaning"],
   group: ["group", "grupa", "category", "kategorija", "type", "tip"],
   pack: ["pack", "package", "paket", "pack_name", "naziv_paketa"],
   access: ["access", "pristup"],
   sample: ["sample", "probni", "free_sample", "uzorak", "probni_lik"],
   inGlossary: ["in_glossary", "glossary", "recnik", "u_recniku", "rečnik"],
-  published: ["published", "objavljen", "objavljeno", "ready", "gotov", "gotovo", "done", "status"],
-  sentence: ["sentence", "card", "card_sentence", "kartica", "recenica", "one_liner", "tagline", "line", "job"],
+  published: ["published", "objavljen", "objavljeno", "ready", "gotov", "gotovo", "done", "status", "has_page_now", "has_page", "page"],
+  sentence: ["sentence", "teaser", "teaser_en", "card", "card_sentence", "kartica", "recenica", "one_liner", "tagline", "line", "job"],
   shortAnswer: ["short_answer", "short", "kratak_odgovor", "answer", "odgovor", "summary"],
   whenToTalk: ["when_to_talk", "pediatrician", "when_to_talk_to_your_pediatrician", "when_to_talk_to_pediatrician", "pedijatar", "kad_pedijatru", "kada_lekaru"],
   safety: ["safety", "bezbednost", "safety_note", "safety_notes", "sigurnost"],
@@ -40,6 +44,9 @@ export const ALIASES = {
   whatToSay: ["what_to_say", "say", "sta_reci", "what_to_say_to_your_kid", "words", "sta_da_kazem"],
   print: ["print", "printable", "stampa", "pdf", "print_url", "za_stampu"],
   cartoon: ["cartoon", "video", "crtani", "cartoon_url", "video_url"],
+  num: ["num", "number", "broj", "no", "row"],
+  wave: ["wave", "talas", "priority", "prioritet"],
+  ageFlag: ["age_flag", "age", "ages", "uzrast"],
   color: ["color", "colour", "boja"],
   art: ["art", "svg", "image", "slika", "art_id"],
 };
@@ -112,6 +119,9 @@ export function rowToCharacter(row, map) {
     shortAnswer: get("shortAnswer"),
     whenToTalk: get("whenToTalk"),
     safety: get("safety") || undefined,
+    num: get("num") || undefined,
+    wave: get("wave") || undefined,
+    ageFlag: get("ageFlag") || undefined,
     color: get("color") || undefined,
     locked: {},
   };
@@ -146,7 +156,7 @@ function attachArt(chars, { write }) {
     const wanted = c.art ? slugify(c.art) : c.slug;
     delete c.art;
     if (inline.has(wanted)) { c.artKey = wanted; continue; }
-    const id = ids.get(wanted) ?? ids.get(slugify(c.name)) ?? wanted;
+    const id = ART_ALIASES[wanted] ?? ids.get(wanted) ?? ids.get(slugify(c.name)) ?? wanted;
     const src = path.join(SVG_SRC, `${id}.svg`);
     if (fs.existsSync(src)) {
       if (write) fs.copyFileSync(src, path.join(ART_DIR, `${c.slug}.svg`));
@@ -156,7 +166,13 @@ function attachArt(chars, { write }) {
   return missing;
 }
 
-export function report(chars, { unknown, missingArt, problems }) {
+/** Names in the site glossary (content/learn/glossary.ts `char` fields), for CSVs without an in_glossary column. */
+function glossaryNames() {
+  if (!fs.existsSync(GLOSSARY_TS)) return new Set();
+  return new Set([...fs.readFileSync(GLOSSARY_TS, "utf8").matchAll(/^\s*char:\s*"([^"]+)"/gm)].map((m) => m[1]));
+}
+
+export function report(chars, { unknown, missingArt, problems, warn = [] }) {
   const free = chars.filter((c) => c.access === "free");
   const lines = [
     `${chars.length} characters: ${free.length} free, ${chars.length - free.length} locked, ${chars.filter((c) => c.published).length} published, ${chars.filter((c) => c.inGlossary).length} in the glossary`,
@@ -168,6 +184,7 @@ export function report(chars, { unknown, missingArt, problems }) {
     const freeMissing = missingArt.filter((c) => c.access === "free");
     lines.push(`no art for ${missingArt.length} (${freeMissing.length} of them free): ${missingArt.map((c) => c.name).join(", ")}`);
   }
+  if (warn.length) lines.push("warnings:", ...warn.map((w) => `  - ${w}`));
   if (problems.length) lines.push("PROBLEMS:", ...problems.map((p) => `  - ${p}`));
   return lines.join("\n");
 }
@@ -188,9 +205,15 @@ function main() {
     process.exit(2);
   }
   const chars = body.map((r) => rowToCharacter(r, map));
-  const problems = validate(chars);
+  if (map.inGlossary === undefined) {
+    const names = glossaryNames();
+    for (const c of chars) c.inGlossary = names.has(c.name);
+  }
+  // The 26 drawn in crew-art.js keep their site text (lib/characters.ts), so the CSV needn't carry it.
+  const siteBacked = fs.existsSync(INLINE_ART) ? new Set(Object.keys(JSON.parse(fs.readFileSync(INLINE_ART, "utf8")))) : new Set();
+  const problems = validate(chars, siteBacked);
   const missingArt = attachArt(chars, { write: !dry && problems.length === 0 });
-  console.log(report(chars, { unknown, missingArt, problems }));
+  console.log(report(chars, { unknown, missingArt, problems, warn: warnings(chars) }));
   if (problems.length) {
     console.error(`\nnot written: fix the ${problems.length} problem(s) in the CSV first`);
     process.exit(1);

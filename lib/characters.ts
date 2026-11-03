@@ -2,15 +2,15 @@ import "server-only";
 
 // All the characters the site knows: the 26 drawn in crew-art.js (from lib/learn.ts, always free) plus every row of
 // content/characters.json (Luka's CSV, imported by scripts/import-characters.mjs). A CSV row with the same slug
-// replaces the built-in one. Only server code may import this file: the JSON holds the locked text.
+// takes over, keeping the built-in page text (short answer, pediatrician line), colour and inline art the CSV
+// doesn't carry. Only server code may import this file: the JSON holds the locked text.
 import data from "@/content/characters.json";
 import { GLOSSARY, entryAt } from "@/content/learn";
 import { CHARS, CREW_GROUPS, charPage, type CharGroup } from "@/lib/learn";
 import { packsOf, publicOf, type Character, type PublicCharacter } from "./character-rules";
 
-const GROUP_PACK: Record<CharGroup, string> = {
-  chemical: "Brain chemicals", "brain-part": "Brain parts", rule: "The two rules", villain: "The villains", age: "Ages and stages",
-};
+/** The CSV's group codes for the built-in crew (the same ones the CSV uses). */
+const GROUP_CODE: Record<CharGroup, string> = { chemical: "messengers", "brain-part": "brain", rule: "rules", villain: "villains", age: "ages" };
 
 function siteCrew(): Character[] {
   const glossaryNames = new Set(GLOSSARY.map((g) => g.char).filter(Boolean));
@@ -23,7 +23,7 @@ function siteCrew(): Character[] {
         slug: key,
         name: c.name,
         real: c.real,
-        group: GROUP_PACK[c.group],
+        group: GROUP_CODE[c.group],
         pack: "",
         packSlug: "",
         access: "free" as const,
@@ -41,11 +41,24 @@ function siteCrew(): Character[] {
   );
 }
 
-const imported = data as Character[];
-const builtIn = siteCrew().filter((c) => !imported.some((i) => i.slug === c.slug));
+const builtIn = siteCrew();
+const imported = (data as Character[]).map((row) => {
+  const base = builtIn.find((b) => b.slug === row.slug);
+  if (!base) return row;
+  return {
+    ...base,
+    ...row,
+    shortAnswer: row.shortAnswer || base.shortAnswer,
+    whenToTalk: row.whenToTalk || base.whenToTalk,
+    color: row.color ?? base.color,
+    artKey: base.artKey,
+    inGlossary: row.inGlossary || base.inGlossary,
+  };
+});
+const importedSlugs = new Set(imported.map((c) => c.slug));
 
-/** Every character, built-in crew first, then the CSV in its own order. */
-export const CHARACTERS: readonly Character[] = [...builtIn, ...imported];
+/** Every character: the CSV in its own order, then any built-in one the CSV doesn't mention. */
+export const CHARACTERS: readonly Character[] = [...imported, ...builtIn.filter((c) => !importedSlugs.has(c.slug))];
 export const PUBLIC_CHARACTERS: readonly PublicCharacter[] = CHARACTERS.map(publicOf);
 export const PACKS = packsOf(CHARACTERS);
 

@@ -76,36 +76,6 @@
     },
     {
       "product": "guide",
-      "label": "Crew cartoons: watch with your kid",
-      "files": [
-        {
-          "id": "cartoon-meet-mp4",
-          "path": "Kid-Brain-Toolkit/Bonuses/Crew-Cartoons/Meet-the-Little-Brain-Crew.mp4",
-          "name": "Meet the Little Brain Crew",
-          "kind": "video"
-        },
-        {
-          "id": "cartoon-dopa-mp4",
-          "path": "Kid-Brain-Toolkit/Bonuses/Crew-Cartoons/Dopa-and-the-Screen-That-Stopped.mp4",
-          "name": "Dopa and the Screen That Stopped",
-          "kind": "video"
-        },
-        {
-          "id": "cartoon-mela-mp4",
-          "path": "Kid-Brain-Toolkit/Bonuses/Crew-Cartoons/Melas-Soft-Light-Night.mp4",
-          "name": "Mela\u2019s Soft-Light Night",
-          "kind": "video"
-        },
-        {
-          "id": "cartoon-migo-mp4",
-          "path": "Kid-Brain-Toolkit/Bonuses/Crew-Cartoons/Migo-Fronti-and-the-Big-Alarm.mp4",
-          "name": "Migo, Fronti and the Big Alarm",
-          "kind": "video"
-        }
-      ]
-    },
-    {
-      "product": "guide",
       "label": "Get everything in one download",
       "files": [
         {

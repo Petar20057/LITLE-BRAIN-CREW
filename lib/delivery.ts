@@ -2,6 +2,7 @@ import "server-only";
 
 import { createHash, randomBytes } from "node:crypto";
 import { itemsFor } from "@/lib/creem";
+import { ITEMS } from "@/lib/funnel";
 import { SITE_URL } from "@/lib/design";
 import { DELIVERY_BUCKET, downloadPath, sectionsFor, type CatalogVersion } from "@/lib/delivery-files";
 import { sendEmail } from "@/lib/email/send";
@@ -42,6 +43,8 @@ export async function recordPaidOrder(order: PaidOrder): Promise<boolean> {
   const ids = order.orderKey.split("+");
   const items = itemsFor(ids);
   if (!items || items.some((i) => i.every)) return false;
+  // A paid Personal plan has no files; lib/personal-plan.ts records it (the webhook branches there first).
+  if (ids.includes(ITEMS.personalPlan.id)) return false;
 
   const admin = looseAdmin();
   const version = order.catalogVersion ?? 1;

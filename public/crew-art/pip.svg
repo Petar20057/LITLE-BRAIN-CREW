@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-14 -14 148 148" width="1024" height="1024"><g class="bob"><g transform="translate(60 108) scale(0.55) translate(-60 -108)">
+     <g><g transform="translate(60 70)"><circle cx="0" cy="8" r="56" fill="rgba(200,236,255,.35)" stroke="rgba(255,255,255,.8)" stroke-width="3"/><path d="M-30 -30a40 40 0 0 1 20-12" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/></g></g>
+     <g data-o="28 82"></g>
+     <g></g>
+     <path d="M24 104C22 70 36 40 60 40s38 30 36 64z" fill="#F7C6D9" stroke="#1B1A33" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+     <g><circle cx="38" cy="80" r="5" fill="#FFA58F" opacity="1"/><circle cx="82" cy="80" r="5" fill="#FFA58F" opacity="1"/><g class="eyes"><circle cx="46" cy="68" r="7" fill="#fff" stroke="#1B1A33" stroke-width="2.5"/><circle cx="74" cy="68" r="7" fill="#fff" stroke="#1B1A33" stroke-width="2.5"/><g><circle cx="47.5" cy="69" r="3.6" fill="#1B1A33"/><circle cx="75.5" cy="69" r="3.6" fill="#1B1A33"/></g></g><g><path d="M38 68.6a8 8 0 0 1 16 0z" fill="#F7C6D9"/><path d="M66 68.6a8 8 0 0 1 16 0z" fill="#F7C6D9"/><path d="M38.4 68.6h15.2M66.4 68.6h15.2" fill="none" stroke="#1B1A33" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></g><path d="M49 85q11 10 22 0" fill="none" stroke="#1B1A33" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></g>
+     <g><g transform="translate(60 99)"></g></g>
+     <g><g transform="translate(60 40)"></g></g>
+     <g data-o="92 82"></g></g></g></svg>

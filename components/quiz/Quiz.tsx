@@ -497,7 +497,7 @@ function Result({ data, p, sid, email }: { data: QuizData; p: Progress; sid: str
         <CrewArt k={r.lead.char.key} mood="happy" />
         <div>
           <h2>Want the habits behind it?</h2>
-          <p>The Kid Brain Toolkit: 12 crew members, the 12 hardest moments decoded with the exact words, 6 villains, and what’s normal at every age. Includes printable bonuses and 4 crew cartoons.</p>
+          <p>The Kid Brain Toolkit: 12 crew members, the 12 hardest moments decoded with the exact words, 6 villains, and what’s normal at every age. Includes printable bonuses.</p>
           {page && <p className="q-page">“{page.title}”: the plan is on page {page.page} ({page.plan}).</p>}
           <a className="btn btn-main" href={links.guide} onClick={click("guide")}>Get the Toolkit · ${ITEMS.guide.price}</a>
           <p className="fine">Instant download. Educational only, not medical advice.</p>

@@ -1,4 +1,4 @@
-// Rules for the 214-character crew (content/characters.json, imported from Luka's CSV by scripts/import-characters.mjs).
+// Rules for the crew of 214 (content/characters.json, imported from Luka's CSV by scripts/import-characters.mjs).
 // Pure functions only, no data and no imports, so the import script (Node) and the tests can use them as well as the pages.
 
 export type Access = "free" | "locked";
@@ -17,7 +17,7 @@ export type Character = {
   name: string;
   /** What the character stands for in real life. */
   real: string;
-  /** Free text from the CSV ("group"), for the kicker. */
+  /** The CSV's group code ("messengers", "brain", "habit_helpers"...); groupTitle() makes it readable. */
   group?: string;
   /** The pack that sells this character ("" for the free core crew). */
   pack: string;
@@ -27,13 +27,19 @@ export type Character = {
   sample: boolean;
   /** A glossary row links to this page. */
   inGlossary: boolean;
-  /** false: nothing is sold or shown but the card and "Coming to the Club · Tell me when ready". */
+  /** false: nothing is sold or shown but the card and "Tell me when it's ready". */
   published: boolean;
   /** Public: the card line, the short answer, "When to talk to your pediatrician" and anything about safety. */
   sentence: string;
   shortAnswer: string;
   whenToTalk: string;
   safety?: string;
+  /** The CSV's row number ("F12", "107"). */
+  num?: string;
+  /** Priority inside the pack: ★ first, then ○, then ·. */
+  wave?: string;
+  /** "10+", "13+": the character is for older kids. */
+  ageFlag?: string;
   color?: string;
   /** Inline art from content/art.json (the first 26). */
   artKey?: string;
@@ -55,6 +61,39 @@ export const PACK_PRICE = 7;
 export const PACK_CHECKOUT_OPEN = false;
 /** The Crew Club is a waitlist until phases 4–6 (next.config.ts sends /checkout/club back to the plans). */
 export const CLUB_OPEN = false;
+
+/** Readable names for the CSV's group codes (the free crew is grouped by these on /crew). */
+export const GROUP_TITLES: Record<string, string> = {
+  messengers: "Brain chemicals",
+  brain: "Brain parts",
+  senses: "Senses",
+  rules: "The rules",
+  ages: "Ages and stages",
+  villains: "The villains",
+  body: "The body",
+  development: "Growing up",
+  habit_helpers: "Habit helpers",
+  sleep: "Sleep",
+  food: "Food",
+  feelings_family: "Feelings and family",
+};
+export const groupTitle = (group: string | undefined): string => (group ? (GROUP_TITLES[group] ?? group) : "The crew");
+
+/** "Fuel & Body" -> "Fuel & Body pack"; a name that already ends in "Pack" stays as it is. */
+export const packLabel = (name: string): string => (/\bpack$/i.test(name.trim()) ? name : `${name} pack`);
+
+/** "13+" -> "Teens 13+", "10+" -> "Ages 10+". */
+export const ageLabel = (flag: string | undefined): string | undefined =>
+  !flag ? undefined : flag.startsWith("13") ? `Teens ${flag}` : `Ages ${flag}`;
+
+const WAVES = ["★", "○", "·"];
+export const waveRank = (wave: string | undefined): number => {
+  const i = WAVES.indexOf((wave ?? "").trim());
+  return i === -1 ? WAVES.length : i;
+};
+/** ★ first, then ○, then ·, keeping the CSV order inside a wave. */
+export const sortByWave = <T extends Pick<Character, "wave">>(chars: readonly T[]): T[] =>
+  chars.map((c, i) => ({ c, i })).sort((a, b) => waveRank(a.c.wave) - waveRank(b.c.wave) || a.i - b.i).map((x) => x.c);
 
 export const canRead = (c: Pick<Character, "access" | "published" | "packSlug">, v: Viewer): boolean =>
   c.published && (c.access === "free" || v.club || (c.packSlug !== "" && v.packs.includes(c.packSlug)));
@@ -106,8 +145,9 @@ export function slugify(s: string): string {
     .replace(/^-+|-+$/g, "");
 }
 
-/** Problems that must be fixed in the CSV before the data goes live. Empty = fine. */
-export function validate(chars: readonly Character[]): string[] {
+/** Problems that must be fixed in the CSV before the data goes live. Empty = fine.
+ *  `siteBacked`: slugs whose page text the site already has (the 26 in lib/learn.ts), so the CSV may leave it out. */
+export function validate(chars: readonly Character[], siteBacked: ReadonlySet<string> = new Set()): string[] {
   const problems: string[] = [];
   const seen = new Set<string>();
   for (const c of chars) {
@@ -120,15 +160,22 @@ export function validate(chars: readonly Character[]): string[] {
     if (c.access === "locked" && !c.packSlug) problems.push(`${where}: locked but in no pack`);
     if (c.sample && c.access !== "free") problems.push(`${where}: a sample must be free`);
     if (!c.sentence) problems.push(`${where}: no card sentence`);
-    if (c.published) {
+    if (c.published && !siteBacked.has(c.slug)) {
       if (!c.shortAnswer) problems.push(`${where}: published but no short answer`);
       if (!c.whenToTalk) problems.push(`${where}: published but no "When to talk to your pediatrician"`);
     }
   }
   for (const p of packsOf(chars)) {
-    if (p.samples.length !== 1) problems.push(`pack ${p.name}: ${p.samples.length} samples, expected exactly one`);
+    if (p.samples.length > 1) problems.push(`pack ${p.name}: ${p.samples.length} samples, expected one`);
   }
   return problems;
+}
+
+/** Things worth a look that don't block the import. */
+export function warnings(chars: readonly Character[]): string[] {
+  const out: string[] = [];
+  for (const p of packsOf(chars)) if (p.samples.length === 0) out.push(`pack ${p.name}: no free sample marked`);
+  return out;
 }
 
 /** Counts for the /crew filters. */

@@ -142,7 +142,7 @@ export function quizResultEmail(r: QuizResult, { confirmTipsUrl, sid }: { confir
   );
   if (r.lead.kid) blocks.push({ note: `Say it to your kid: ${r.lead.kid}` });
   blocks.push(
-    { p: `Want the habits behind it? The Kid Brain Toolkit: 12 crew members, the 12 hardest moments decoded with the exact words, 6 villains and what’s normal at every age, with printable bonuses and 4 crew cartoons.${page ? ` “${page.title}”: the plan is on page ${page.page}.` : ""}` },
+    { p: `Want the habits behind it? The Kid Brain Toolkit: 12 crew members, the 12 hardest moments decoded with the exact words, 6 villains and what’s normal at every age, with printable bonuses.${page ? ` “${page.title}”: the plan is on page ${page.page}.` : ""}` },
     { button: { label: `Get the Toolkit · ${usd(ITEMS.guide.price)}`, url: links.guide } },
     { p: "Want it to stick? The 30-Day Reset is one 10-minute habit a day for 30 days, with the exact words to say, a fridge tracker and the Science Edition included." },
     { button: { label: `Start the 30-Day Reset · ${usd(ITEMS.program.price)}`, url: links.program, secondary: true } },

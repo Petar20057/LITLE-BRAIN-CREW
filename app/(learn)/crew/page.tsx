@@ -3,7 +3,7 @@ import CrewCard from "@/components/learn/CrewCard";
 import CrewFilters from "@/components/learn/CrewFilters";
 import JsonLd from "@/components/learn/JsonLd";
 import LearnShell from "@/components/learn/LearnShell";
-import { PACK_PRICE, countsOf, slugify } from "@/lib/character-rules";
+import { PACK_PRICE, countsOf, groupTitle, sortByWave } from "@/lib/character-rules";
 import { PACKS, PUBLIC_CHARACTERS, characterPath } from "@/lib/characters";
 import { usd } from "@/lib/funnel";
 import { breadcrumbLd, collectionLd, itemListLd } from "@/lib/jsonld";
@@ -22,17 +22,17 @@ export const metadata = simpleMetadata({ metaTitle: "Meet the Crew: Kids’ Brai
 
 export default function Page() {
   const core = PUBLIC_CHARACTERS.filter((c) => !c.packSlug);
-  const coreGroups = [...new Set(core.map((c) => c.group ?? "The crew"))].map((title) => ({
-    key: slugify(title),
-    title,
+  const coreGroups = [...new Set(core.map((c) => c.group ?? ""))].map((group) => ({
+    key: `group-${group || "crew"}`,
+    title: groupTitle(group || undefined),
     note: "",
-    chars: core.filter((c) => (c.group ?? "The crew") === title),
+    chars: core.filter((c) => (c.group ?? "") === group),
   }));
   const packGroups = PACKS.map((p) => ({
     key: `pack-${p.slug}`,
     title: p.name,
     note: p.onSale ? `${p.total} characters · ${usd(PACK_PRICE)}, yours forever, or in the Crew Club` : `${p.ready} of ${p.total} characters ready · coming to the Club`,
-    chars: PUBLIC_CHARACTERS.filter((c) => c.packSlug === p.slug),
+    chars: sortByWave(PUBLIC_CHARACTERS.filter((c) => c.packSlug === p.slug)),
   }));
   const groups = [...coreGroups, ...packGroups];
   const linked = PUBLIC_CHARACTERS.filter((c) => c.published).map((c) => ({ path: characterPath(c), name: `${c.name}: ${c.real}` }));

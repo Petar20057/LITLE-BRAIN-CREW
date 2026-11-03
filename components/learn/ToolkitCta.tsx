@@ -19,7 +19,7 @@ export default function ToolkitCta({ path }: { path: string }) {
       <h3>{box.heading}</h3>
       <p>{box.text}</p>
       <BuyToolkitButton place={group ? `article-${group}` : "article"} />
-      <p className="fine" style={{ marginTop: 12 }}>Instant download: 43-page Toolkit, printable bonuses and 4 crew cartoons.</p>
+      <p className="fine" style={{ marginTop: 12 }}>Instant download: 43-page Toolkit and printable bonuses.</p>
       <hr style={{ border: 0, borderTop: "1px solid var(--hair)", margin: "24px 0" }} />
       <p>Not ready? Get 15 free ways to end screen time without tears.</p>
       <FreeListForm />

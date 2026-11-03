@@ -27,6 +27,8 @@ export const LIMITS = {
   event: { max: 300, windowSeconds: 3600 },
   /** New Creem checkouts. */
   checkout: { max: 20, windowSeconds: 3600 },
+  /** Personal plan forms (app/api/personal-plan): a parent fills it in once, maybe twice. */
+  planRequest: { max: 5, windowSeconds: 3600 },
 } as const;
 
 export type Bucket = keyof typeof LIMITS;

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { canRead, countsOf, packsOf, paragraphs, publicOf, slugify, validate, type Character } from "@/lib/character-rules";
+import { ageLabel, packLabel, canRead, countsOf, groupTitle, packsOf, paragraphs, publicOf, slugify, sortByWave, validate, warnings, type Character } from "@/lib/character-rules";
 import { accessOf, mapHeaders, parseCsv, rowToCharacter, yes } from "../scripts/import-characters.mjs";
 
 const base: Character = {
@@ -66,7 +66,31 @@ describe("packs", () => {
     expect(problems).toContain("Y (y): locked but in no pack");
     expect(problems).toContain("Z (z): published but no short answer");
     expect(problems).toContain('Z (z): published but no "When to talk to your pediatrician"');
-    expect(problems).toContain("pack Fuel & Body Pack: 2 samples, expected exactly one");
+    expect(problems).toContain("pack Fuel & Body Pack: 2 samples, expected one");
+  });
+  it("a built-in character may be published without CSV text (the site has it)", () => {
+    const dopa: Character = { ...free, shortAnswer: "", whenToTalk: "" };
+    expect(validate([dopa]).length).toBe(2);
+    expect(validate([dopa], new Set(["dopa"]))).toEqual([]);
+  });
+  it("a pack without a marked sample is a warning, not a problem", () => {
+    const noSample: Character[] = [base, { ...base, slug: "b", name: "B" }];
+    expect(validate(noSample)).toEqual([]);
+    expect(warnings(noSample)).toEqual(["pack Fuel & Body Pack: no free sample marked"]);
+  });
+  it("orders ★ before ○ before · and keeps the CSV order inside a wave", () => {
+    const rows = [{ wave: "·", n: 1 }, { wave: "○", n: 2 }, { wave: "★", n: 3 }, { wave: "○", n: 4 }, { wave: undefined, n: 5 }];
+    expect(sortByWave(rows).map((r) => r.n)).toEqual([3, 2, 4, 1, 5]);
+  });
+  it("names groups and ages for the page", () => {
+    expect(groupTitle("habit_helpers")).toBe("Habit helpers");
+    expect(groupTitle("something_new")).toBe("something_new");
+    expect(groupTitle(undefined)).toBe("The crew");
+    expect(ageLabel("13+")).toBe("Teens 13+");
+    expect(ageLabel("10+")).toBe("Ages 10+");
+    expect(ageLabel(undefined)).toBeUndefined();
+    expect(packLabel("Fuel & Body")).toBe("Fuel & Body pack");
+    expect(packLabel("Habit Helpers Pack")).toBe("Habit Helpers Pack");
   });
 });
 
@@ -103,6 +127,18 @@ describe("CSV import", () => {
     expect(soli.locked).not.toHaveProperty("cartoon");
     const zinki = rowToCharacter(rows[1], map);
     expect(zinki).toMatchObject({ slug: "zinki", access: "free", sample: true, inGlossary: false, published: false, locked: {} });
+  });
+  it("reads Luka's real column names", () => {
+    const real = [
+      "num,id,name,science_name,group,access,pack,wave,age_flag,has_page_now,teaser_en",
+      "F10,teo,Teo,Testosterone,messengers,free,,,13+,yes,\"Builds strength, energy and confidence in the teen years.\"",
+      "106,fero,Fero,Iron,food,locked,Fuel & Body,★,,no,Carries oxygen. Low iron can mean low energy.",
+    ].join("\n");
+    const [headers, ...rows] = parseCsv(real);
+    const { map, unknown } = mapHeaders(headers);
+    expect(unknown).toEqual([]);
+    expect(rowToCharacter(rows[0], map)).toMatchObject({ slug: "teo", real: "Testosterone", group: "messengers", access: "free", pack: "", published: true, ageFlag: "13+", num: "F10", sentence: "Builds strength, energy and confidence in the teen years." });
+    expect(rowToCharacter(rows[1], map)).toMatchObject({ slug: "fero", pack: "Fuel & Body", packSlug: "fuel-body", access: "locked", published: false, wave: "★", num: "106" });
   });
   it("understands yes/no in both languages", () => {
     expect(yes("da")).toBe(true);

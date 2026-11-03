@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createCheckout, creemConfigured, itemsFor, orderKey, productIdFor } from "@/lib/creem";
-import { CREW_NAMES } from "@/lib/funnel";
+import { CREW_NAMES, ITEMS } from "@/lib/funnel";
 import { SITE_URL } from "@/lib/design";
 import { isSessionId } from "@/lib/quiz-track";
 import { allow, tooMany } from "@/lib/rate-limit";
@@ -37,6 +37,8 @@ export async function POST(request: NextRequest) {
   // Unknown ids include "support" (any amount): not sold through Creem until it confirms pay-what-you-want.
   if (!items) return NextResponse.json({ error: "This isn’t on sale yet." }, { status: 404 });
   if (ids.includes("upgrade")) return NextResponse.json({ error: "Please open the upgrade from your paid Toolkit order." }, { status: 403 });
+  // The Personal plan starts with its form (app/api/personal-plan): the answers must exist before the payment does.
+  if (ids.includes(ITEMS.personalPlan.id)) return NextResponse.json({ error: "Please start your Personal plan at littlebraincrew.com/personal-plan: the form comes first." }, { status: 403 });
 
   const recurring = items.some((i) => i.every);
   if (recurring) return NextResponse.json({ error: "The Crew Club is opening soon. Join the waitlist on the plans page." }, { status: 404 });

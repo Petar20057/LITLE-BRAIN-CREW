@@ -4,6 +4,7 @@ import { keyForProduct, verifyWebhook, webhookConfigured } from "@/lib/creem";
 import { sendEmail } from "@/lib/email/send";
 import { clubWelcome } from "@/lib/email/templates";
 import { recordPaidOrder } from "@/lib/delivery";
+import { recordPlanPurchase } from "@/lib/personal-plan";
 import { catalogVersion } from "@/lib/delivery-files";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { isSessionId } from "@/lib/quiz-track";
@@ -103,6 +104,11 @@ async function oneTimeOrder(obj: Record<string, unknown>, eventId: string) {
   const version = catalogVersion(metadata.catalog_version);
   if (version === 2 && keyForProduct(idOf(obj.product as Ref) ?? "") !== orderKey) throw new Error("Checkout product does not match the order");
   const visit = { visitor: isSessionId(metadata.visitor) ? metadata.visitor : null, session: isSessionId(metadata.session) ? metadata.session : null };
+  if (orderKey === ITEMS.personalPlan.id) {
+    // A paid Personal plan has no files: the form row is marked paid and the team gets the answers (lib/personal-plan.ts).
+    await recordPlanPurchase({ providerOrderId: orderId, email, amountCents, token, requestId: isSessionId(metadata.request_id) ? metadata.request_id : null, visit });
+    return;
+  }
   const recorded = await recordPaidOrder({ providerOrderId: orderId, email, orderKey, token, visit, amountCents,
     catalogVersion: version,
     parentOrderId: typeof metadata.parent_order_id === "string" ? metadata.parent_order_id : undefined,
