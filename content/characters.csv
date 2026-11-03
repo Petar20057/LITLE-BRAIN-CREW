@@ -1,215 +1,215 @@
-num,id,name,science_name,group,access,pack,wave,age_flag,has_page_now,teaser_en
-F1,dopa,Dopa,Dopamine,messengers,free,,,,yes,Gives out gold stars when you finish something.
-F2,sero,Sero,Serotonin,messengers,free,,,,yes,Opens the curtains and keeps the mood steady.
-F3,endo,Endo,Endorphins,messengers,free,,,,yes,Turns jumping and laughing into good feelings.
-F4,nora,Nora,Norepinephrine,messengers,free,,,,yes,Switches on the spotlight when something matters.
-F5,gabi,Gabi,GABA,messengers,free,,,,yes,Presses the brain’s brake and turns the volume down.
-F6,toci,Toci,Oxytocin,messengers,free,,,,yes,"Builds the feeling “I’m safe, I belong”."
-F7,corti,Corti,Cortisol,messengers,free,,,,yes,Rings the alarm when there’s danger.
-F8,mela,Mela,Melatonin,messengers,free,,,,yes,Whispers “night is coming” so the body gets sleepy.
-F9,greli,Greli,Ghrelin,messengers,free,,,,yes,Rings the hunger bell from the stomach.
-F10,teo,Teo,Testosterone,messengers,free,,,13+,yes,"Builds strength, energy and confidence in the teen years."
-F11,adri,Adri,Adrenaline,messengers,free,,,,no,Makes your heart pound so your body is ready to move fast.
-F12,deno,Deno,Adenosine (sleep pressure),messengers,free,,,,no,Sleep sand that piles up all day until it’s time to sleep.
-F13,suli,Suli,Insulin,messengers,free,,,,no,"Carries sugar from your blood into your cells, like a delivery truck."
-F14,lepi,Lepi,Leptin,messengers,free,,,,no,Tells your brain when you’ve had enough to eat.
-F15,dea,Dea,DHEA / adrenarche,messengers,free,,,,no,The first little signal that your body is starting to grow up.
-F16,migo,Migo,Amygdala,brain,free,,,,yes,The smoke detector that yells “danger!” in a flash.
-F17,fronti,Fronti,Prefrontal cortex,brain,free,,,,yes,"Plans, waits and works the brakes, still under construction."
-F18,kampi,Kampi,Hippocampus,brain,free,,,,no,The librarian who files today’s memories while you sleep.
-F19,tala,Tala,Hypothalamus,brain,free,,,,no,"The control room that watches hunger, thirst and temperature."
-F20,belu,Belu,Cerebellum,brain,free,,,,no,Keeps you balanced and helps your moves get smooth with practice.
-F21,relo,Relo,Thalamus,brain,free,,,,no,The switchboard that passes your senses’ messages to the right place.
-F22,tiki,Tiki,Master clock (suprachiasmatic nucleus),brain,free,,,,no,The body’s master clock. Morning light helps Tiki keep time.
-F23,vagi,Vagi,Vagus nerve,brain,free,,,,no,A long cable from your brain to your tummy. Slow breaths help it relax you.
-F24,simpa,Simpa,Fight-or-flight (sympathetic),brain,free,,,,no,The body’s gas pedal. It speeds up when something feels scary.
-F25,roni,Roni,Neuron,brain,free,,,,no,"The brain’s messengers, passing notes down the line."
-F26,sina,Sina,Synapse,brain,free,,,,no,A handshake between two brain cells that gets stronger with practice.
-F27,mili,Mili,Myelin,brain,free,,,,no,"A speed coat for brain wires, so messages zoom instead of crawl."
-F28,pruni,Pruni,Synaptic pruning,brain,free,,,,no,Trims the brain’s garden so the paths you walk every day grow stronger.
-F29,ino,Ino,Interoception,senses,free,,,,no,"Tells you what your body feels inside, like hungry, thirsty or nervous."
-F30,propi,Propi,Proprioception,senses,free,,,,no,"Knows where your arms and legs are, even with your eyes closed."
-F31,vesti,Vesti,Vestibular sense,senses,free,,,,no,Your balance sense. It tells you when you’re spinning.
-F32,plasti,Plasti,Neuroplasticity,rules,free,,,,yes,The brain changes from what’s repeated.
-F33,duo,Duo,Co-regulation,rules,free,,,,yes,Kids borrow your calm before they can make their own.
-F34,exi,Exi,Executive function,rules,free,,,,no,"Your brain’s manager: remembering the plan, waiting and switching gears."
-F35,regi,Regi,Self-regulation,rules,free,,,,no,When you can calm your own body. It takes lots of practice.
-F36,paci,Paci,Delay of gratification,rules,free,,,,no,Waiting now for something better later. It gets easier with practice.
-F37,mindi,Mindi,Theory of mind,rules,free,,,,no,Knows that you’re thinking different things than I am.
-F38,cirki,Cirki,Circadian rhythm,rules,free,,,,no,"Your inner 24-hour rhythm, like a clock that keeps your day in order."
-F39,remi,Remi,Deep sleep and REM sleep,rules,free,,,,no,"A night tour: deep sleep to rest, dream sleep to sort the day."
-F40,vindi,Vindi,Sensitive period,rules,free,,,,no,Opens windows in your growing brain when some things are easiest to learn.
-F41,temi,Temi,Temperament,rules,free,,,,no,"Your own way of being: loud, quiet, bold or careful. All styles are fine."
-F42,whyzi,Whyzi,Ages 3–6,ages,free,,,,yes,The “why?” years: huge imagination and “I do it myself!”.
-F43,skuli,Skuli,Ages 6–8,ages,free,,,,yes,"School, rules and friends."
-F44,ruli,Ruli,Ages 8–10,ages,free,,,,yes,"Fairness, skills and hobbies."
-F45,tweeni,Tweeni,Ages 10–12,ages,free,,,,yes,"Puberty starts for many, and friends start to matter more."
-F46,sprouti,Sprouti,Ages 12–14,ages,free,,,,yes,"Fast growth, a body clock that shifts later, and rewards that feel bigger."
-F47,seki,Seki,Ages 14–17,ages,free,,,,yes,Friends’ opinions peak while the brakes are still being built.
-F48,bloomi,Bloomi,Puberty,ages,free,,,,no,When your body starts changing into a bigger version of you.
-F49,spurti,Spurti,Growth spurt,ages,free,,,,no,"Makes your body grow fast, so you get hungry and sleepy."
-F50,bedi,Bedi,Phone in bed,villains,free,,,,yes,"A phone in the bedroom is linked with worse sleep, even when nobody’s using it."
-F51,glo,Glo,Bright light late at night,villains,free,,,,yes,Bright evening light turns Mela down and pushes sleep later.
-F52,lupi,Lupi,Autoplay and the endless feed,villains,free,,,,yes,"The next video starts by itself, so the ending never comes."
-F53,pingi,Pingi,Notifications,villains,free,,,,yes,Every ping pulls the spotlight off the task and back to the screen.
-F54,lati,Lati,Late bedtimes that change every night,villains,free,,,,yes,Irregular bedtimes are linked with more behavior struggles in kids.
-F55,kafi,Kafi,Caffeine,villains,free,,,,yes,Caffeine can keep a body awake for hours.
-1,estra,Estra,Estrogen,messengers,locked,Puberty,★,10+,no,"Leads puberty changes, mostly in girls."
-2,progi,Progi,Progesterone,messengers,locked,Puberty,★,10+,no,Estra’s partner in the monthly cycle.
-3,somi,Somi,Growth hormone,messengers,locked,Sleep,★,,no,"Helps you grow at night, mostly in deep sleep."
-4,gluti,Gluti,Glutamate,messengers,locked,Brain City,★,,no,The brain’s gas pedal. Gabi is the brake.
-5,rexi,Rexi,Orexin,messengers,locked,Sleep,★,,no,"Keeps you awake all day, and explains the bedtime second wind."
-6,tiro,Tiro,Thyroid hormones and gland,messengers,locked,Fuel & Body,★,,no,Sets the speed of the whole body.
-7,pepi,Pepi,Kisspeptin,messengers,locked,Puberty,○,,no,Flips the puberty switch in the brain.
-8,kora,Kora,CRH,messengers,locked,Calm,○,,no,Pulls the very first stress switch.
-9,andi,Andi,Endocannabinoids,messengers,locked,Calm,·,,no,The quiet calm after running. Endo’s partner.
-10,aceti,Aceti,Acetylcholine,messengers,locked,Brain City,○,,no,Helps the spotlight stay on and memories stick.
-11,vazo,Vazo,Vasopressin,messengers,locked,Fuel & Body,○,,no,Keeps water in the body and helps dry nights.
-12,gro,Gro,BDNF,messengers,locked,Senses & Moves,○,,no,Brain fertilizer that grows with movement.
-13,fuli,Fuli,"PYY, GLP-1, CCK",messengers,locked,Fuel & Body,○,,no,The “I’m full” team from the gut.
-14,akti,Akti,ACTH,messengers,locked,Calm,·,,no,Passes the stress message on to the adrenals.
-15,rela,Rela,GnRH,messengers,locked,Puberty,·,,no,Sends the start signal for puberty.
-16,elfi,Elfi,LH and FSH,messengers,locked,Puberty,·,,no,Carries puberty messages from brain to body.
-17,ifi,Ifi,IGF-1,messengers,locked,Sleep,·,,no,Somi’s helper that carries “grow” to the bones.
-18,kagi,Kagi,Glucagon,messengers,locked,Fuel & Body,·,,no,Opens the sugar pantry when energy drops.
-19,histi,Histi,Histamine,messengers,locked,Deep Science,·,,no,"A wake-up messenger, also behind sneezes."
-20,enpi,Enpi,Neuropeptide Y,messengers,locked,Deep Science,·,,no,Hunger and staying steady under stress.
-21,glici,Glici,Glycine,messengers,locked,Deep Science,·,,no,A small brake in the spinal cord.
-22,subi,Subi,Substance P,messengers,locked,Deep Science,·,,no,Carries the “ouch” message.
-23,lakti,Lakti,Prolactin,messengers,locked,Deep Science,·,,no,Quiet helper in puberty and sleep.
-24,basa,Basa,Basal ganglia,brain,locked,Brain City,★,,no,Turns repeats into habits that run on their own.
-25,para,Para,Parasympathetic nervous system,brain,locked,Calm,★,,no,"The body’s brake: rest, digest, calm down."
-26,biomi,Biomi,Gut microbiome,brain,locked,Fuel & Body,★,,no,Tiny gut helpers that talk to the brain.
-27,lumi,Lumi,Light-sensing eye cells (ipRGC),brain,locked,Sleep,★,,no,Tells the body clock how bright the day is.
-28,kumbi,Kumbi,Nucleus accumbens,brain,locked,Brain City,○,,no,Where Dopa hands out the gold stars.
-29,vita,Vita,Ventral tegmental area,brain,locked,Brain City,○,,no,Dopa’s home.
-30,ceru,Ceru,Locus coeruleus,brain,locked,Brain City,○,,no,Nora’s home.
-31,rafi,Rafi,Raphe nuclei,brain,locked,Brain City,○,,no,Sero’s home.
-32,insi,Insi,Insula,brain,locked,Calm,○,,no,"Feels what happens inside: butterflies, heartbeat."
-33,cingi,Cingi,Anterior cingulate cortex,brain,locked,Brain City,○,,no,Notices mistakes and “I want two things at once”.
-34,orbi,Orbi,Orbitofrontal cortex,brain,locked,Brain City,○,,no,Weighs what’s worth it right now.
-35,habi,Habi,Habenula,brain,locked,Brain City,·,,no,"The “aww, it’s over” signal when fun stops."
-36,zumi,Zumi,Salience network,brain,locked,Brain City,·,,no,Decides what deserves your attention.
-37,sanji,Sanji,Default mode network,brain,locked,Brain City,·,,no,Busy when you daydream or feel bored.
-38,broki,Broki,Broca’s area,brain,locked,Growing Up,○,,no,Puts words together.
-39,verni,Verni,Wernicke’s area,brain,locked,Growing Up,○,,no,Understands the words you hear.
-40,tipi,Tipi,Temporoparietal junction,brain,locked,Family & Feelings,○,,no,Guesses what others think and want.
-41,moti,Moti,Motor cortex,brain,locked,Senses & Moves,·,,no,Sends move orders to the muscles.
-42,senzi,Senzi,Somatosensory cortex,brain,locked,Senses & Moves,·,,no,"Receives touch, warmth and ouch."
-43,stebi,Stebi,Brainstem,brain,locked,Deep Science,·,,no,"Breathing, heartbeat, awake or asleep."
-44,kalo,Kalo,Corpus callosum,brain,locked,Deep Science,·,,no,The bridge between the two brain halves.
-45,lia,Lia,Glia,brain,locked,Deep Science,·,,no,"Feeds, cleans and protects brain cells."
-46,spini,Spini,Spinal cord,brain,locked,Deep Science,·,,no,The main cable down the back.
-47,limfi,Limfi,Glymphatic system,brain,locked,Sleep,·,,no,The brain’s night cleaning crew.
-48,glu,Glu,Blood sugar,body,locked,Fuel & Body,★,,no,"Brain fuel. When it drops, patience drops."
-49,fizi,Fizi,Pituitary gland,body,locked,Brain City,○,,no,The boss gland that sends orders.
-50,pina,Pina,Pineal gland,body,locked,Sleep,○,,no,Mela’s home.
-51,reni,Reni,Adrenal glands,body,locked,Calm,○,,no,Home of Corti and Adri.
-52,tonzi,Tonzi,Tonsils and adenoids,body,locked,Sleep,○,,no,Big tonsils can block breathing at night.
-53,digi,Digi,Gut and digestion,body,locked,Fuel & Body,○,,no,A blocked tummy can mean a grumpy kid.
-54,beshi,Beshi,Bladder,body,locked,Sleep,○,,no,Dry nights come later than dry days.
-55,termi,Termi,Body temperature,body,locked,Sleep,○,,no,A slightly cooler body falls asleep easier.
-56,mio,Mio,Muscles (myokines),body,locked,Senses & Moves,·,,no,Working muscles send messages around the body.
-57,mazi,Mazi,C-tactile gentle-touch nerves,body,locked,Calm,○,,no,"Loves slow, gentle touch, like a back rub."
-58,cito,Cito,Immune system and cytokines,body,locked,Fuel & Body,○,,no,Why sick kids get tired and cranky.
-59,ritmo,Ritmo,Heart and heart rhythm,body,locked,Calm,○,,no,"Faster on the in-breath, slower on the out-breath."
-60,pulmi,Pulmi,Breathing and lungs,body,locked,Calm,○,,no,Slow breaths tell the body it’s safe.
-61,osi,Osi,Bones and growth plates,body,locked,Sleep,○,,no,Where growing taller really happens.
-62,gona,Gona,Gonads,body,locked,Puberty,·,10+,no,Make puberty hormones.
-63,panki,Panki,Pancreas,body,locked,Fuel & Body,·,,no,Makes Suli.
-64,oti,Oti,Ears,body,locked,Growing Up,·,,no,Ear infections can muffle sound for a while.
-65,derma,Derma,Skin,body,locked,Sleep,·,,no,Itchy skin can steal sleep.
-66,denti,Denti,Teeth,body,locked,Sleep,·,,no,A sore tooth can ruin a night.
-67,ciklo,Ciklo,Menstrual cycle,development,locked,Puberty,★,10+,no,The monthly rhythm that starts in puberty.
-68,empi,Empi,Empathy,development,locked,Family & Feelings,★,,no,Feels what others feel and wants to help.
-69,lingo,Lingo,Language,development,locked,Growing Up,○,,no,From babbling to big words.
-70,soci,Soci,Social-emotional development,development,locked,Growing Up,○,,no,"Sharing, playing together, reading faces."
-71,kogi,Kogi,Cognitive development,development,locked,Growing Up,○,,no,"Solving puzzles, remembering, asking why."
-72,sami,Sami,Self-care and independence,development,locked,Growing Up,○,,no,“I can dress myself!”
-73,bigi,Bigi,Gross motor skills,development,locked,Senses & Moves,○,,no,"Running, jumping, riding a bike."
-74,fini,Fini,Fine motor skills,development,locked,Senses & Moves,○,,no,"Drawing, buttons, scissors, writing."
-75,hapti,Hapti,Touch,development,locked,Senses & Moves,○,,no,"Pressure, warmth and itchy tags."
-76,eko,Eko,Hearing,development,locked,Senses & Moves,○,,no,"Sounds, voices, and too-loud places."
-77,gusti,Gusti,Taste,development,locked,Fuel & Body,○,,no,New tastes take many tries.
-78,olfi,Olfi,Smell,development,locked,Senses & Moves,○,,no,Smells tied to memories and feelings.
-79,vizi,Vizi,Vision,development,locked,Senses & Moves,○,,no,Sees the world and helps Lumi read the light.
-80,linki,Linki,Synapse formation,development,locked,Growing Up,○,,no,The brain builds new connections super fast.
-81,toddi,Toddi,Toddler (1–3),development,locked,Growing Up,·,,no,"“Me do it!” Big feelings, tiny brakes."
-82,gugu,Gugu,Infant (3–12 months),development,locked,Growing Up,·,,no,Learning that someone always comes back.
-83,nubi,Nubi,Newborn (0–3 months),development,locked,Growing Up,·,,no,"Sleeping in short bits, body clock just starting."
-84,pip,Pip,Prenatal,development,locked,Growing Up,·,,no,Before you were born.
-85,fli,Fli,Late adolescence (17–21),development,locked,Growing Up,·,,no,"Almost grown, brakes still finishing."
-86,handi,Handi,Handedness,development,locked,Growing Up,·,,no,Left or right? Usually picked by school age.
-87,dawni,Dawni,Morning daylight,habit_helpers,locked,Habit Helpers,★,,no,Ten minutes of morning light sets the body clock.
-88,plejo,Plejo,Free play and rough play,habit_helpers,locked,Habit Helpers,★,,no,"Free play builds plans, brakes and friends."
-89,rutini,Rutini,Same bedtime routine,habit_helpers,locked,Habit Helpers,★,,no,"Same steps, same order, easier nights."
-90,tajmi,Tajmi,Two warnings before screens off,habit_helpers,locked,Habit Helpers,★,,no,"Five minutes, one minute, then off."
-91,speci,Speci,10 minutes of special time,habit_helpers,locked,Habit Helpers,★,,no,"Your kid picks, you just follow."
-92,bri,Bri,Slow breathing,habit_helpers,locked,Habit Helpers,★,,no,"Smell the flower, blow the candle."
-93,stori,Stori,Reading together,habit_helpers,locked,Habit Helpers,○,,no,"A story together, a calmer night."
-94,hushi,Hushi,Soft white noise for sleep,habit_helpers,locked,Habit Helpers,○,,no,"A soft, steady sound across the room."
-95,cuddi,Cuddi,Hugs and closeness,habit_helpers,locked,Habit Helpers,○,,no,A hug before the hard part.
-96,brekki,Brekki,Breakfast,habit_helpers,locked,Habit Helpers,○,,no,"Fuel before school, fewer crashes."
-97,dinni,Dinni,Phone-free family dinner,habit_helpers,locked,Habit Helpers,○,,no,"Phones away, faces up."
-98,chuzi,Chuzi,Two good choices,habit_helpers,locked,Habit Helpers,○,,no,Red cup or blue cup? Fewer fights.
-99,helpi,Helpi,Chores,habit_helpers,locked,Habit Helpers,○,,no,"Real jobs, real gold stars."
-100,snagi,Snagi,Supervised strength training,habit_helpers,locked,Habit Helpers,○,13+,no,"Strong body, strong confidence."
-101,mori,Mori,Dreams and nightmares,sleep,locked,Sleep,★,,no,What to do when a bad dream wakes you.
-102,kroni,Kroni,Chronotype,sleep,locked,Sleep,○,,no,Early bird or night owl?
-103,snoozi,Snoozi,Naps,sleep,locked,Sleep,○,,no,Naps fade between 3 and 5.
-104,parasi,Parasi,Night terrors and sleepwalking,sleep,locked,Sleep,○,,no,"Scary for parents, forgotten by kids."
-105,aki,Aki,Water,food,locked,Fuel & Body,★,,no,A water bottle on the desk.
-106,fero,Fero,Iron,food,locked,Fuel & Body,★,,no,Carries oxygen. Low iron can mean low energy.
-107,proti,Proti,Protein,food,locked,Fuel & Body,○,,no,Building blocks for Sero and Dopa.
-108,fibi,Fibi,Fiber,food,locked,Fuel & Body,○,,no,Food for Biomi.
-109,omi,Omi,Omega-3 from fish,food,locked,Fuel & Body,○,,no,Part of every brain cell wall.
-110,soli,Soli,Vitamin D,food,locked,Fuel & Body,○,,no,"Made in sunlight, checked by your doctor."
-111,jodi,Jodi,Iodine,food,locked,Fuel & Body,○,,no,"Tiro’s helper, found in iodized salt."
-112,bibi,Bibi,B12 and folate,food,locked,Fuel & Body,·,,no,Healthy nerves and blood.
-113,holi,Holi,Choline,food,locked,Fuel & Body,·,,no,Raw material for Aceti.
-114,zinki,Zinki,Zinc,food,locked,Fuel & Body,·,,no,Growth and fighting germs.
-115,magi,Magi,Magnesium,food,locked,Fuel & Body,·,,no,Often sold “for sleep”. What food can do.
-116,kalci,Kalci,Calcium,food,locked,Fuel & Body,·,,no,Bones need it while you grow.
-117,citri,Citri,Vitamin C,food,locked,Fuel & Body,·,,no,Helps the body take in Fero.
-118,levli,Levli,Video games without a save point,villains,locked,Screen Villains,★,,no,"“Just one more level” never ends. Save, then stop."
-119,distri,Distri,Grown-up phone use around the kid,villains,locked,Screen Villains,★,,no,The grown-up phone that steals your eyes.
-120,skroli,Skroli,Endless scroll and comparison,villains,locked,Screen Villains,★,13+,no,The feed that makes everyone else look better.
-121,indi,Indi,Indoors all day,villains,locked,Screen Villains,★,,no,"No daylight, no running, no Endo."
-122,brumi,Brumi,Background TV always on,villains,locked,Screen Villains,○,,no,"Nobody’s watching, everybody’s distracted."
-123,munchi,Munchi,Eating in front of screens,villains,locked,Screen Villains,○,,no,Eating without noticing you’re full.
-124,skipi,Skipi,Skipped breakfast or snack,villains,locked,Fuel & Body,○,,no,An empty tank by 10 a.m.
-125,rushi,Rushi,Schedule with no gaps,villains,locked,Family & Feelings,○,,no,"Every hour booked, no time to just be."
-126,sedi,Sedi,Long sitting,villains,locked,Senses & Moves,○,,no,The body asks to move after about an hour.
-127,boksi,Boksi,Loot boxes and in-game purchases,villains,locked,Screen Villains,○,10+,no,"Pay to open, hope to win."
-128,dimi,Dimi,Secondhand smoke,villains,locked,Fuel & Body,○,,no,Smoke that sneaks into sleep and lungs.
-129,vejpi,Vejpi,Nicotine and vaping,villains,locked,Screen Villains,○,13+,no,Hooks a brain that’s still growing.
-130,toxi,Toxi,Toxic stress,villains,locked,Deep Science,·,,no,"Only in parent guides, never as a funny villain."
-131,rodi,Rodi,Parent stress and rest,feelings_family,locked,Family & Feelings,★,,no,Your Corti matters too.
-132,nami,Nami,Naming feelings,feelings_family,locked,Family & Feelings,★,,no,Name it to tame it.
-133,brigi,Brigi,Worry loop,feelings_family,locked,Calm,★,,no,When “what if” won’t stop at bedtime.
-134,bondi,Bondi,Secure attachment,feelings_family,locked,Family & Feelings,★,,no,One safe grown-up changes everything.
-135,sibi,Sibi,Siblings,feelings_family,locked,Family & Feelings,★,,no,"First friends, first rivals."
-136,peri,Peri,Peers and friendships,feelings_family,locked,Family & Feelings,○,,no,Friends matter more every year.
-137,bravi,Bravi,Courage to try,feelings_family,locked,Family & Feelings,○,,no,Scared and trying anyway.
-138,bounci,Bounci,Resilience,feelings_family,locked,Family & Feelings,○,,no,"Falling down, bouncing back."
-139,perfi,Perfi,Perfectionism and fear of mistakes,feelings_family,locked,Family & Feelings,○,,no,Mistakes are how Plasti learns.
-140,dosi,Dosi,Boredom,feelings_family,locked,Habit Helpers,○,,no,Bored is where ideas start.
-141,grini,Grini,Nature and green space,feelings_family,locked,Habit Helpers,○,,no,"Green places, calmer minds."
-142,muzi,Muzi,"Music, singing and dance",feelings_family,locked,Habit Helpers,○,,no,Singing together is the easiest ritual.
-143,kuci,Kuci,Pets,feelings_family,locked,Family & Feelings,○,,no,"Gentle hands, daily walks."
-144,uchi,Uchi,School and teacher,feelings_family,locked,Family & Feelings,○,,no,"Rules, routine and one kind teacher."
-145,buki,Buki,Noise,feelings_family,locked,Sleep,·,,no,Constant noise steals sleep and focus.
-146,sezo,Sezo,Seasons,feelings_family,locked,Sleep,·,,no,"Dark winters, late summer sunsets."
-147,geni,Geni,Genes,feelings_family,locked,Deep Science,·,,no,"Sets the range, not the destiny."
-148,epi,Epi,Epigenetics,feelings_family,locked,Deep Science,·,,no,Life experience switches genes up or down.
-149,firmi,Firmi,Warm and firm limits,habit_helpers,locked,Habit Helpers,★,,no,"Kind and firm, at the same time."
-150,yelli,Yelli,Yelling as the default,villains,locked,Family & Feelings,★,,no,"Loud wins the moment, loses the lesson."
-151,tabli,Tabli,Screen used to soothe an upset kid,villains,locked,Screen Villains,★,,no,"A screen that calms now, and skips the practice."
-152,novi,Novi,Fear of new foods (picky eating),development,locked,Fuel & Body,★,,no,New food feels scary. That’s normal.
-153,tasti,Tasti,"Tiny tastes, many times",habit_helpers,locked,Habit Helpers,★,,no,"One tiny taste, many times, no pressure."
-154,kudi,Kudi,Specific praise for effort,habit_helpers,locked,Habit Helpers,○,,no,“You kept trying” beats “you’re so smart”.
-155,darki,Darki,"Dark, cool, quiet bedroom",habit_helpers,locked,Habit Helpers,○,,no,"Dark, cool and quiet: the sleep cave."
-156,mono,Mono,One-task focus block,habit_helpers,locked,Habit Helpers,○,,no,"One task, one timer, phone in another room."
-157,thanki,Thanki,Gratitude and kindness,habit_helpers,locked,Habit Helpers,○,,no,"Noticing the good, saying it out loud."
-158,kvizi,Kvizi,Retrieval practice,habit_helpers,locked,Habit Helpers,○,,no,"Quiz yourself, don’t just reread."
-159,nonni,Nonni,Grandparents and other caregivers,feelings_family,locked,Family & Feelings,○,,no,"Same rules, more homes."
+num,id,name,science_name,group,access,pack,wave,age_flag,has_page_now,teaser_en,sample
+F1,dopa,Dopa,Dopamine,messengers,free,,,,yes,Gives out gold stars when you finish something.,
+F2,sero,Sero,Serotonin,messengers,free,,,,yes,Opens the curtains and keeps the mood steady.,
+F3,endo,Endo,Endorphins,messengers,free,,,,yes,Turns jumping and laughing into good feelings.,
+F4,nora,Nora,Norepinephrine,messengers,free,,,,yes,Switches on the spotlight when something matters.,
+F5,gabi,Gabi,GABA,messengers,free,,,,yes,Presses the brain’s brake and turns the volume down.,
+F6,toci,Toci,Oxytocin,messengers,free,,,,yes,"Builds the feeling “I’m safe, I belong”.",
+F7,corti,Corti,Cortisol,messengers,free,,,,yes,Rings the alarm when there’s danger.,
+F8,mela,Mela,Melatonin,messengers,free,,,,yes,Whispers “night is coming” so the body gets sleepy.,
+F9,greli,Greli,Ghrelin,messengers,free,,,,yes,Rings the hunger bell from the stomach.,
+F10,teo,Teo,Testosterone,messengers,free,,,13+,yes,"Builds strength, energy and confidence in the teen years.",
+F11,adri,Adri,Adrenaline,messengers,free,,,,no,Makes your heart pound so your body is ready to move fast.,
+F12,deno,Deno,Adenosine (sleep pressure),messengers,free,,,,no,Sleep sand that piles up all day until it’s time to sleep.,
+F13,suli,Suli,Insulin,messengers,free,,,,no,"Carries sugar from your blood into your cells, like a delivery truck.",
+F14,lepi,Lepi,Leptin,messengers,free,,,,no,Tells your brain when you’ve had enough to eat.,
+F15,dea,Dea,DHEA / adrenarche,messengers,free,,,,no,The first little signal that your body is starting to grow up.,
+F16,migo,Migo,Amygdala,brain,free,,,,yes,The smoke detector that yells “danger!” in a flash.,
+F17,fronti,Fronti,Prefrontal cortex,brain,free,,,,yes,"Plans, waits and works the brakes, still under construction.",
+F18,kampi,Kampi,Hippocampus,brain,free,,,,no,The librarian who files today’s memories while you sleep.,
+F19,tala,Tala,Hypothalamus,brain,free,,,,no,"The control room that watches hunger, thirst and temperature.",
+F20,belu,Belu,Cerebellum,brain,free,,,,no,Keeps you balanced and helps your moves get smooth with practice.,
+F21,relo,Relo,Thalamus,brain,free,,,,no,The switchboard that passes your senses’ messages to the right place.,
+F22,tiki,Tiki,Master clock (suprachiasmatic nucleus),brain,free,,,,no,The body’s master clock. Morning light helps Tiki keep time.,
+F23,vagi,Vagi,Vagus nerve,brain,free,,,,no,A long cable from your brain to your tummy. Slow breaths help it relax you.,
+F24,simpa,Simpa,Fight-or-flight (sympathetic),brain,free,,,,no,The body’s gas pedal. It speeds up when something feels scary.,
+F25,roni,Roni,Neuron,brain,free,,,,no,"The brain’s messengers, passing notes down the line.",
+F26,sina,Sina,Synapse,brain,free,,,,no,A handshake between two brain cells that gets stronger with practice.,
+F27,mili,Mili,Myelin,brain,free,,,,no,"A speed coat for brain wires, so messages zoom instead of crawl.",
+F28,pruni,Pruni,Synaptic pruning,brain,free,,,,no,Trims the brain’s garden so the paths you walk every day grow stronger.,
+F29,ino,Ino,Interoception,senses,free,,,,no,"Tells you what your body feels inside, like hungry, thirsty or nervous.",
+F30,propi,Propi,Proprioception,senses,free,,,,no,"Knows where your arms and legs are, even with your eyes closed.",
+F31,vesti,Vesti,Vestibular sense,senses,free,,,,no,Your balance sense. It tells you when you’re spinning.,
+F32,plasti,Plasti,Neuroplasticity,rules,free,,,,yes,The brain changes from what’s repeated.,
+F33,duo,Duo,Co-regulation,rules,free,,,,yes,Kids borrow your calm before they can make their own.,
+F34,exi,Exi,Executive function,rules,free,,,,no,"Your brain’s manager: remembering the plan, waiting and switching gears.",
+F35,regi,Regi,Self-regulation,rules,free,,,,no,When you can calm your own body. It takes lots of practice.,
+F36,paci,Paci,Delay of gratification,rules,free,,,,no,Waiting now for something better later. It gets easier with practice.,
+F37,mindi,Mindi,Theory of mind,rules,free,,,,no,Knows that you’re thinking different things than I am.,
+F38,cirki,Cirki,Circadian rhythm,rules,free,,,,no,"Your inner 24-hour rhythm, like a clock that keeps your day in order.",
+F39,remi,Remi,Deep sleep and REM sleep,rules,free,,,,no,"A night tour: deep sleep to rest, dream sleep to sort the day.",
+F40,vindi,Vindi,Sensitive period,rules,free,,,,no,Opens windows in your growing brain when some things are easiest to learn.,
+F41,temi,Temi,Temperament,rules,free,,,,no,"Your own way of being: loud, quiet, bold or careful. All styles are fine.",
+F42,whyzi,Whyzi,Ages 3–6,ages,free,,,,yes,The “why?” years: huge imagination and “I do it myself!”.,
+F43,skuli,Skuli,Ages 6–8,ages,free,,,,yes,"School, rules and friends.",
+F44,ruli,Ruli,Ages 8–10,ages,free,,,,yes,"Fairness, skills and hobbies.",
+F45,tweeni,Tweeni,Ages 10–12,ages,free,,,,yes,"Puberty starts for many, and friends start to matter more.",
+F46,sprouti,Sprouti,Ages 12–14,ages,free,,,,yes,"Fast growth, a body clock that shifts later, and rewards that feel bigger.",
+F47,seki,Seki,Ages 14–17,ages,free,,,,yes,Friends’ opinions peak while the brakes are still being built.,
+F48,bloomi,Bloomi,Puberty,ages,free,,,,no,When your body starts changing into a bigger version of you.,
+F49,spurti,Spurti,Growth spurt,ages,free,,,,no,"Makes your body grow fast, so you get hungry and sleepy.",
+F50,bedi,Bedi,Phone in bed,villains,free,,,,yes,"A phone in the bedroom is linked with worse sleep, even when nobody’s using it.",
+F51,glo,Glo,Bright light late at night,villains,free,,,,yes,Bright evening light turns Mela down and pushes sleep later.,
+F52,lupi,Lupi,Autoplay and the endless feed,villains,free,,,,yes,"The next video starts by itself, so the ending never comes.",
+F53,pingi,Pingi,Notifications,villains,free,,,,yes,Every ping pulls the spotlight off the task and back to the screen.,
+F54,lati,Lati,Late bedtimes that change every night,villains,free,,,,yes,Irregular bedtimes are linked with more behavior struggles in kids.,
+F55,kafi,Kafi,Caffeine,villains,free,,,,yes,Caffeine can keep a body awake for hours.,
+1,estra,Estra,Estrogen,messengers,free,Puberty,★,10+,no,"Leads puberty changes, mostly in girls.",yes
+2,progi,Progi,Progesterone,messengers,locked,Puberty,★,10+,no,Estra’s partner in the monthly cycle.,
+3,somi,Somi,Growth hormone,messengers,locked,Sleep,★,,no,"Helps you grow at night, mostly in deep sleep.",
+4,gluti,Gluti,Glutamate,messengers,locked,Brain City,★,,no,The brain’s gas pedal. Gabi is the brake.,
+5,rexi,Rexi,Orexin,messengers,locked,Sleep,★,,no,"Keeps you awake all day, and explains the bedtime second wind.",
+6,tiro,Tiro,Thyroid hormones and gland,messengers,locked,Fuel & Body,★,,no,Sets the speed of the whole body.,
+7,pepi,Pepi,Kisspeptin,messengers,locked,Puberty,○,,no,Flips the puberty switch in the brain.,
+8,kora,Kora,CRH,messengers,locked,Calm,○,,no,Pulls the very first stress switch.,
+9,andi,Andi,Endocannabinoids,messengers,locked,Calm,·,,no,The quiet calm after running. Endo’s partner.,
+10,aceti,Aceti,Acetylcholine,messengers,locked,Brain City,○,,no,Helps the spotlight stay on and memories stick.,
+11,vazo,Vazo,Vasopressin,messengers,locked,Fuel & Body,○,,no,Keeps water in the body and helps dry nights.,
+12,gro,Gro,BDNF,messengers,locked,Senses & Moves,○,,no,Brain fertilizer that grows with movement.,
+13,fuli,Fuli,"PYY, GLP-1, CCK",messengers,locked,Fuel & Body,○,,no,The “I’m full” team from the gut.,
+14,akti,Akti,ACTH,messengers,locked,Calm,·,,no,Passes the stress message on to the adrenals.,
+15,rela,Rela,GnRH,messengers,locked,Puberty,·,,no,Sends the start signal for puberty.,
+16,elfi,Elfi,LH and FSH,messengers,locked,Puberty,·,,no,Carries puberty messages from brain to body.,
+17,ifi,Ifi,IGF-1,messengers,locked,Sleep,·,,no,Somi’s helper that carries “grow” to the bones.,
+18,kagi,Kagi,Glucagon,messengers,locked,Fuel & Body,·,,no,Opens the sugar pantry when energy drops.,
+19,histi,Histi,Histamine,messengers,locked,Deep Science,·,,no,"A wake-up messenger, also behind sneezes.",
+20,enpi,Enpi,Neuropeptide Y,messengers,locked,Deep Science,·,,no,Hunger and staying steady under stress.,
+21,glici,Glici,Glycine,messengers,locked,Deep Science,·,,no,A small brake in the spinal cord.,
+22,subi,Subi,Substance P,messengers,locked,Deep Science,·,,no,Carries the “ouch” message.,
+23,lakti,Lakti,Prolactin,messengers,locked,Deep Science,·,,no,Quiet helper in puberty and sleep.,
+24,basa,Basa,Basal ganglia,brain,locked,Brain City,★,,no,Turns repeats into habits that run on their own.,
+25,para,Para,Parasympathetic nervous system,brain,locked,Calm,★,,no,"The body’s brake: rest, digest, calm down.",
+26,biomi,Biomi,Gut microbiome,brain,locked,Fuel & Body,★,,no,Tiny gut helpers that talk to the brain.,
+27,lumi,Lumi,Light-sensing eye cells (ipRGC),brain,locked,Sleep,★,,no,Tells the body clock how bright the day is.,
+28,kumbi,Kumbi,Nucleus accumbens,brain,locked,Brain City,○,,no,Where Dopa hands out the gold stars.,
+29,vita,Vita,Ventral tegmental area,brain,locked,Brain City,○,,no,Dopa’s home.,
+30,ceru,Ceru,Locus coeruleus,brain,locked,Brain City,○,,no,Nora’s home.,
+31,rafi,Rafi,Raphe nuclei,brain,locked,Brain City,○,,no,Sero’s home.,
+32,insi,Insi,Insula,brain,locked,Calm,○,,no,"Feels what happens inside: butterflies, heartbeat.",
+33,cingi,Cingi,Anterior cingulate cortex,brain,locked,Brain City,○,,no,Notices mistakes and “I want two things at once”.,
+34,orbi,Orbi,Orbitofrontal cortex,brain,locked,Brain City,○,,no,Weighs what’s worth it right now.,
+35,habi,Habi,Habenula,brain,locked,Brain City,·,,no,"The “aww, it’s over” signal when fun stops.",
+36,zumi,Zumi,Salience network,brain,locked,Brain City,·,,no,Decides what deserves your attention.,
+37,sanji,Sanji,Default mode network,brain,locked,Brain City,·,,no,Busy when you daydream or feel bored.,
+38,broki,Broki,Broca’s area,brain,locked,Growing Up,○,,no,Puts words together.,
+39,verni,Verni,Wernicke’s area,brain,locked,Growing Up,○,,no,Understands the words you hear.,
+40,tipi,Tipi,Temporoparietal junction,brain,locked,Family & Feelings,○,,no,Guesses what others think and want.,
+41,moti,Moti,Motor cortex,brain,locked,Senses & Moves,·,,no,Sends move orders to the muscles.,
+42,senzi,Senzi,Somatosensory cortex,brain,locked,Senses & Moves,·,,no,"Receives touch, warmth and ouch.",
+43,stebi,Stebi,Brainstem,brain,locked,Deep Science,·,,no,"Breathing, heartbeat, awake or asleep.",
+44,kalo,Kalo,Corpus callosum,brain,locked,Deep Science,·,,no,The bridge between the two brain halves.,
+45,lia,Lia,Glia,brain,locked,Deep Science,·,,no,"Feeds, cleans and protects brain cells.",
+46,spini,Spini,Spinal cord,brain,locked,Deep Science,·,,no,The main cable down the back.,
+47,limfi,Limfi,Glymphatic system,brain,locked,Sleep,·,,no,The brain’s night cleaning crew.,
+48,glu,Glu,Blood sugar,body,locked,Fuel & Body,★,,no,"Brain fuel. When it drops, patience drops.",
+49,fizi,Fizi,Pituitary gland,body,locked,Brain City,○,,no,The boss gland that sends orders.,
+50,pina,Pina,Pineal gland,body,locked,Sleep,○,,no,Mela’s home.,
+51,reni,Reni,Adrenal glands,body,locked,Calm,○,,no,Home of Corti and Adri.,
+52,tonzi,Tonzi,Tonsils and adenoids,body,locked,Sleep,○,,no,Big tonsils can block breathing at night.,
+53,digi,Digi,Gut and digestion,body,locked,Fuel & Body,○,,no,A blocked tummy can mean a grumpy kid.,
+54,beshi,Beshi,Bladder,body,locked,Sleep,○,,no,Dry nights come later than dry days.,
+55,termi,Termi,Body temperature,body,locked,Sleep,○,,no,A slightly cooler body falls asleep easier.,
+56,mio,Mio,Muscles (myokines),body,locked,Senses & Moves,·,,no,Working muscles send messages around the body.,
+57,mazi,Mazi,C-tactile gentle-touch nerves,body,locked,Calm,○,,no,"Loves slow, gentle touch, like a back rub.",
+58,cito,Cito,Immune system and cytokines,body,locked,Fuel & Body,○,,no,Why sick kids get tired and cranky.,
+59,ritmo,Ritmo,Heart and heart rhythm,body,locked,Calm,○,,no,"Faster on the in-breath, slower on the out-breath.",
+60,pulmi,Pulmi,Breathing and lungs,body,locked,Calm,○,,no,Slow breaths tell the body it’s safe.,
+61,osi,Osi,Bones and growth plates,body,locked,Sleep,○,,no,Where growing taller really happens.,
+62,gona,Gona,Gonads,body,locked,Puberty,·,10+,no,Make puberty hormones.,
+63,panki,Panki,Pancreas,body,locked,Fuel & Body,·,,no,Makes Suli.,
+64,oti,Oti,Ears,body,locked,Growing Up,·,,no,Ear infections can muffle sound for a while.,
+65,derma,Derma,Skin,body,locked,Sleep,·,,no,Itchy skin can steal sleep.,
+66,denti,Denti,Teeth,body,locked,Sleep,·,,no,A sore tooth can ruin a night.,
+67,ciklo,Ciklo,Menstrual cycle,development,locked,Puberty,★,10+,no,The monthly rhythm that starts in puberty.,
+68,empi,Empi,Empathy,development,locked,Family & Feelings,★,,no,Feels what others feel and wants to help.,
+69,lingo,Lingo,Language,development,locked,Growing Up,○,,no,From babbling to big words.,
+70,soci,Soci,Social-emotional development,development,locked,Growing Up,○,,no,"Sharing, playing together, reading faces.",
+71,kogi,Kogi,Cognitive development,development,locked,Growing Up,○,,no,"Solving puzzles, remembering, asking why.",
+72,sami,Sami,Self-care and independence,development,locked,Growing Up,○,,no,“I can dress myself!”,
+73,bigi,Bigi,Gross motor skills,development,locked,Senses & Moves,○,,no,"Running, jumping, riding a bike.",
+74,fini,Fini,Fine motor skills,development,locked,Senses & Moves,○,,no,"Drawing, buttons, scissors, writing.",
+75,hapti,Hapti,Touch,development,locked,Senses & Moves,○,,no,"Pressure, warmth and itchy tags.",
+76,eko,Eko,Hearing,development,locked,Senses & Moves,○,,no,"Sounds, voices, and too-loud places.",
+77,gusti,Gusti,Taste,development,locked,Fuel & Body,○,,no,New tastes take many tries.,
+78,olfi,Olfi,Smell,development,locked,Senses & Moves,○,,no,Smells tied to memories and feelings.,
+79,vizi,Vizi,Vision,development,locked,Senses & Moves,○,,no,Sees the world and helps Lumi read the light.,
+80,linki,Linki,Synapse formation,development,locked,Growing Up,○,,no,The brain builds new connections super fast.,
+81,toddi,Toddi,Toddler (1–3),development,locked,Growing Up,·,,no,"“Me do it!” Big feelings, tiny brakes.",
+82,gugu,Gugu,Infant (3–12 months),development,locked,Growing Up,·,,no,Learning that someone always comes back.,
+83,nubi,Nubi,Newborn (0–3 months),development,locked,Growing Up,·,,no,"Sleeping in short bits, body clock just starting.",
+84,pip,Pip,Prenatal,development,locked,Growing Up,·,,no,Before you were born.,
+85,fli,Fli,Late adolescence (17–21),development,locked,Growing Up,·,,no,"Almost grown, brakes still finishing.",
+86,handi,Handi,Handedness,development,locked,Growing Up,·,,no,Left or right? Usually picked by school age.,
+87,dawni,Dawni,Morning daylight,habit_helpers,locked,Habit Helpers,★,,no,Ten minutes of morning light sets the body clock.,
+88,plejo,Plejo,Free play and rough play,habit_helpers,locked,Habit Helpers,★,,no,"Free play builds plans, brakes and friends.",
+89,rutini,Rutini,Same bedtime routine,habit_helpers,locked,Habit Helpers,★,,no,"Same steps, same order, easier nights.",
+90,tajmi,Tajmi,Two warnings before screens off,habit_helpers,locked,Habit Helpers,★,,no,"Five minutes, one minute, then off.",
+91,speci,Speci,10 minutes of special time,habit_helpers,locked,Habit Helpers,★,,no,"Your kid picks, you just follow.",
+92,bri,Bri,Slow breathing,habit_helpers,locked,Habit Helpers,★,,no,"Smell the flower, blow the candle.",
+93,stori,Stori,Reading together,habit_helpers,locked,Habit Helpers,○,,no,"A story together, a calmer night.",
+94,hushi,Hushi,Soft white noise for sleep,habit_helpers,locked,Habit Helpers,○,,no,"A soft, steady sound across the room.",
+95,cuddi,Cuddi,Hugs and closeness,habit_helpers,locked,Habit Helpers,○,,no,A hug before the hard part.,
+96,brekki,Brekki,Breakfast,habit_helpers,locked,Habit Helpers,○,,no,"Fuel before school, fewer crashes.",
+97,dinni,Dinni,Phone-free family dinner,habit_helpers,locked,Habit Helpers,○,,no,"Phones away, faces up.",
+98,chuzi,Chuzi,Two good choices,habit_helpers,locked,Habit Helpers,○,,no,Red cup or blue cup? Fewer fights.,
+99,helpi,Helpi,Chores,habit_helpers,locked,Habit Helpers,○,,no,"Real jobs, real gold stars.",
+100,snagi,Snagi,Supervised strength training,habit_helpers,locked,Habit Helpers,○,13+,no,"Strong body, strong confidence.",
+101,mori,Mori,Dreams and nightmares,sleep,locked,Sleep,★,,no,What to do when a bad dream wakes you.,
+102,kroni,Kroni,Chronotype,sleep,locked,Sleep,○,,no,Early bird or night owl?,
+103,snoozi,Snoozi,Naps,sleep,locked,Sleep,○,,no,Naps fade between 3 and 5.,
+104,parasi,Parasi,Night terrors and sleepwalking,sleep,locked,Sleep,○,,no,"Scary for parents, forgotten by kids.",
+105,aki,Aki,Water,food,locked,Fuel & Body,★,,no,A water bottle on the desk.,
+106,fero,Fero,Iron,food,locked,Fuel & Body,★,,no,Carries oxygen. Low iron can mean low energy.,
+107,proti,Proti,Protein,food,locked,Fuel & Body,○,,no,Building blocks for Sero and Dopa.,
+108,fibi,Fibi,Fiber,food,locked,Fuel & Body,○,,no,Food for Biomi.,
+109,omi,Omi,Omega-3 from fish,food,locked,Fuel & Body,○,,no,Part of every brain cell wall.,
+110,soli,Soli,Vitamin D,food,locked,Fuel & Body,○,,no,"Made in sunlight, checked by your doctor.",
+111,jodi,Jodi,Iodine,food,locked,Fuel & Body,○,,no,"Tiro’s helper, found in iodized salt.",
+112,bibi,Bibi,B12 and folate,food,locked,Fuel & Body,·,,no,Healthy nerves and blood.,
+113,holi,Holi,Choline,food,locked,Fuel & Body,·,,no,Raw material for Aceti.,
+114,zinki,Zinki,Zinc,food,locked,Fuel & Body,·,,no,Growth and fighting germs.,
+115,magi,Magi,Magnesium,food,locked,Fuel & Body,·,,no,Often sold “for sleep”. What food can do.,
+116,kalci,Kalci,Calcium,food,locked,Fuel & Body,·,,no,Bones need it while you grow.,
+117,citri,Citri,Vitamin C,food,locked,Fuel & Body,·,,no,Helps the body take in Fero.,
+118,levli,Levli,Video games without a save point,villains,locked,Screen Villains,★,,no,"“Just one more level” never ends. Save, then stop.",
+119,distri,Distri,Grown-up phone use around the kid,villains,locked,Screen Villains,★,,no,The grown-up phone that steals your eyes.,
+120,skroli,Skroli,Endless scroll and comparison,villains,locked,Screen Villains,★,13+,no,The feed that makes everyone else look better.,
+121,indi,Indi,Indoors all day,villains,locked,Screen Villains,★,,no,"No daylight, no running, no Endo.",
+122,brumi,Brumi,Background TV always on,villains,locked,Screen Villains,○,,no,"Nobody’s watching, everybody’s distracted.",
+123,munchi,Munchi,Eating in front of screens,villains,locked,Screen Villains,○,,no,Eating without noticing you’re full.,
+124,skipi,Skipi,Skipped breakfast or snack,villains,locked,Fuel & Body,○,,no,An empty tank by 10 a.m.,
+125,rushi,Rushi,Schedule with no gaps,villains,locked,Family & Feelings,○,,no,"Every hour booked, no time to just be.",
+126,sedi,Sedi,Long sitting,villains,locked,Senses & Moves,○,,no,The body asks to move after about an hour.,
+127,boksi,Boksi,Loot boxes and in-game purchases,villains,locked,Screen Villains,○,10+,no,"Pay to open, hope to win.",
+128,dimi,Dimi,Secondhand smoke,villains,locked,Fuel & Body,○,,no,Smoke that sneaks into sleep and lungs.,
+129,vejpi,Vejpi,Nicotine and vaping,villains,locked,Screen Villains,○,13+,no,Hooks a brain that’s still growing.,
+130,toxi,Toxi,Toxic stress,villains,locked,Deep Science,·,,no,"Only in parent guides, never as a funny villain.",
+131,rodi,Rodi,Parent stress and rest,feelings_family,locked,Family & Feelings,★,,no,Your Corti matters too.,
+132,nami,Nami,Naming feelings,feelings_family,locked,Family & Feelings,★,,no,Name it to tame it.,
+133,brigi,Brigi,Worry loop,feelings_family,locked,Calm,★,,no,When “what if” won’t stop at bedtime.,
+134,bondi,Bondi,Secure attachment,feelings_family,locked,Family & Feelings,★,,no,One safe grown-up changes everything.,
+135,sibi,Sibi,Siblings,feelings_family,locked,Family & Feelings,★,,no,"First friends, first rivals.",
+136,peri,Peri,Peers and friendships,feelings_family,locked,Family & Feelings,○,,no,Friends matter more every year.,
+137,bravi,Bravi,Courage to try,feelings_family,locked,Family & Feelings,○,,no,Scared and trying anyway.,
+138,bounci,Bounci,Resilience,feelings_family,locked,Family & Feelings,○,,no,"Falling down, bouncing back.",
+139,perfi,Perfi,Perfectionism and fear of mistakes,feelings_family,locked,Family & Feelings,○,,no,Mistakes are how Plasti learns.,
+140,dosi,Dosi,Boredom,feelings_family,locked,Habit Helpers,○,,no,Bored is where ideas start.,
+141,grini,Grini,Nature and green space,feelings_family,locked,Habit Helpers,○,,no,"Green places, calmer minds.",
+142,muzi,Muzi,"Music, singing and dance",feelings_family,locked,Habit Helpers,○,,no,Singing together is the easiest ritual.,
+143,kuci,Kuci,Pets,feelings_family,locked,Family & Feelings,○,,no,"Gentle hands, daily walks.",
+144,uchi,Uchi,School and teacher,feelings_family,locked,Family & Feelings,○,,no,"Rules, routine and one kind teacher.",
+145,buki,Buki,Noise,feelings_family,locked,Sleep,·,,no,Constant noise steals sleep and focus.,
+146,sezo,Sezo,Seasons,feelings_family,locked,Sleep,·,,no,"Dark winters, late summer sunsets.",
+147,geni,Geni,Genes,feelings_family,locked,Deep Science,·,,no,"Sets the range, not the destiny.",
+148,epi,Epi,Epigenetics,feelings_family,locked,Deep Science,·,,no,Life experience switches genes up or down.,
+149,firmi,Firmi,Warm and firm limits,habit_helpers,locked,Habit Helpers,★,,no,"Kind and firm, at the same time.",
+150,yelli,Yelli,Yelling as the default,villains,locked,Family & Feelings,★,,no,"Loud wins the moment, loses the lesson.",
+151,tabli,Tabli,Screen used to soothe an upset kid,villains,locked,Screen Villains,★,,no,"A screen that calms now, and skips the practice.",
+152,novi,Novi,Fear of new foods (picky eating),development,locked,Fuel & Body,★,,no,New food feels scary. That’s normal.,
+153,tasti,Tasti,"Tiny tastes, many times",habit_helpers,locked,Habit Helpers,★,,no,"One tiny taste, many times, no pressure.",
+154,kudi,Kudi,Specific praise for effort,habit_helpers,locked,Habit Helpers,○,,no,“You kept trying” beats “you’re so smart”.,
+155,darki,Darki,"Dark, cool, quiet bedroom",habit_helpers,locked,Habit Helpers,○,,no,"Dark, cool and quiet: the sleep cave.",
+156,mono,Mono,One-task focus block,habit_helpers,locked,Habit Helpers,○,,no,"One task, one timer, phone in another room.",
+157,thanki,Thanki,Gratitude and kindness,habit_helpers,locked,Habit Helpers,○,,no,"Noticing the good, saying it out loud.",
+158,kvizi,Kvizi,Retrieval practice,habit_helpers,locked,Habit Helpers,○,,no,"Quiz yourself, don’t just reread.",
+159,nonni,Nonni,Grandparents and other caregivers,feelings_family,locked,Family & Feelings,○,,no,"Same rules, more homes.",
