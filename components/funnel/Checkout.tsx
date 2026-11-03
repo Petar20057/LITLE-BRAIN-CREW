@@ -11,6 +11,7 @@ import AB from "@/components/AB";
 import CrewArt from "./CrewArt";
 import Steps from "./Steps";
 import PersonalHelp from "./PersonalHelp";
+import PersonalPlanLink from "./PersonalPlanLink";
 import { trackAdCheckout } from "@/lib/ad-pixels";
 
 // Gifts are closed (design/gift.html): nothing sends the gift card yet, so ?gift=1 is ignored until it does.
@@ -160,7 +161,8 @@ export default function Checkout({ slug }: { slug: Product["slug"] }) {
             <li>{recurring ? "Pause or cancel yourself, anytime" : "One payment, yours to keep. Instant access by email."}</li>
           </ul>
           {!recurring && <p className="fine">Digital product with instant access, so all sales are final.</p>}
-          {!recurring && <PersonalHelp />}
+          {/* The seven-evening help comes with the Reset; other orders point at the paid Personal plan. */}
+          {!recurring && (slug === "program" ? <PersonalHelp /> : <PersonalPlanLink place={`checkout-${slug}`} />)}
 
           {/* What's inside sits below the button, so on a phone the email field and the button are on the first screen. */}
           <details className="fx-inside">

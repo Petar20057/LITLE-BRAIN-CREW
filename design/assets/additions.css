@@ -134,6 +134,18 @@
 .fx-field{display:flex;flex-direction:column;gap:6px;font-weight:700;font-size:15px;margin-bottom:12px}
 .fx-field input,.fx-field textarea{border:2px solid var(--ink);border-radius:var(--r-s);min-height:52px;padding:12px 14px;font:500 17px var(--body);background:#fff;color:var(--ink);width:100%}
 .fx-field small{font-weight:500;color:var(--ink-soft)}
+/* The Personal plan form (/personal-plan): selects, longer textareas and checkbox rows in the checkout's field style. */
+.fx-field select{border:2px solid var(--ink);border-radius:var(--r-s);min-height:52px;padding:0 14px;font:500 17px var(--body);background:#fff;color:var(--ink);width:100%}
+.fx-field textarea{resize:vertical;min-height:110px}
+.fx-field [aria-invalid=true]{border-color:var(--cta)}
+fieldset.fx-field{border:0;padding:0;margin:0 0 12px;min-width:0}
+fieldset.fx-field legend{padding:0;margin-bottom:6px}
+.pp-check{display:flex;align-items:center;gap:10px;font-weight:500;min-height:44px}
+.pp-check input{width:22px;height:22px;flex:none;accent-color:var(--cta)}
+.pp-opt{font-weight:500;color:var(--ink-soft)}
+.pp-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
+@media(max-width:640px){.pp-grid{grid-template-columns:1fr}}
+.pp-link{margin-top:12px}
 .total{display:flex;justify-content:space-between;font:800 22px var(--head);padding:14px 0 4px}
 .pay{display:grid;gap:10px;margin-top:var(--s2)}
 .pay .btn{width:100%;justify-content:center}
@@ -474,6 +486,13 @@ html.dad .top .logo .on-dark,html.dad .ad-top .logo .on-dark{display:block}
 .adm-list{font-size:14px}
 .adm-list td,.adm-list th{word-break:break-word}
 .adm-list td:first-child{white-space:nowrap}
+/* /admin/personal-plans: the answers fold out under each request; the two status buttons sit side by side. */
+.adm-plan-actions form{display:inline-block;margin-right:12px}
+.adm-plan-answers td{padding-top:0;border-top:0}
+.adm-plan-answers summary{cursor:pointer;font-weight:700}
+.adm-plan-answers dl{display:grid;grid-template-columns:minmax(120px,max-content) 1fr;gap:6px 16px;margin:8px 0 4px}
+.adm-plan-answers dt{font-weight:700}
+.adm-plan-answers dd{margin:0;white-space:pre-wrap}
 @media(max-width:560px){.adm-grid{grid-template-columns:1fr}.adm-who{margin-left:0}}
 /* /code v2: "who's behind it?", sleep check, three result cards */
 .q-guess{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:var(--s2)}
@@ -549,8 +568,8 @@ html.dad .top .logo .on-dark,html.dad .ad-top .logo .on-dark{display:block}
   .value-stack li::before{left:14px;top:15px;width:26px;height:26px;font-size:14px;line-height:26px}
 }
 
-/* ---------- home plans: two cards you can buy, the Club as one waitlist line under them ---------- */
-@media(min-width:1001px){#plans .plans{grid-template-columns:1fr 1.12fr;max-width:900px;margin:0 auto}}
+/* ---------- home plans: three cards you can buy (Toolkit, Reset, Personal plan), the Club as one waitlist line under them ---------- */
+@media(min-width:1001px){#plans .plans{grid-template-columns:1fr 1.12fr 1fr;max-width:1100px;margin:0 auto}}
 .club-line{max-width:900px;margin:var(--s4) auto 0;padding:var(--s3);border:2px dashed var(--ink-soft);border-radius:var(--r-s);display:grid;gap:12px}
 .club-line p{margin:0}
 .club-line .waitlist{margin-top:0}

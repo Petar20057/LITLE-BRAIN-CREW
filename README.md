@@ -52,18 +52,20 @@ SEO content, rendered as server components with the same global CSS classes as t
 | `/offer/upgrade`, `/offer/screen-off-week`, `/offer/club` | Post-purchase offers with a prefilled Creem checkout |
 | `/account/affiliate`, `/affiliate` | Members-only affiliate program (20%) on Creem: rules, invite request, share kit |
 | `/thank-you` | Order summary and next steps |
+| `/personal-plan`, `/personal-plan/thanks` | The Personal plan ($199): the intake form (in `app/(learn)/`, with the site header), then a Creem checkout; paid requests go to `/admin/personal-plans` and the team inbox (`lib/personal-plan.ts`) |
 | `/support` | “Support the crew”, pay what you want (not a donation) |
 | `/account`, `/account/cancel` | Crew Club account and the cancel flow (pause, downgrade, save offers) |
 
-- Prices, products and the order of offers: `lib/funnel.ts`.
+- Prices, products and the order of offers: `lib/funnel.ts`. The Personal plan ($199) is form-only: `/api/checkout` refuses it and there is no `/checkout/personal-plan`.
 - Order state across the steps: `lib/order.ts` (sessionStorage for now).
 - Payments: `lib/payments.ts`. Payments are live through Creem; PREVIEW is false. Offers still require confirmation on Creem.
 
 ## Characters (`/crew`, `/crew/<slug>`)
 
-Every character the site knows is in `content/characters.json`, imported from Luka's CSV with
-`node scripts/import-characters.mjs <lbc-likovi.csv> [--dry]` (it also copies the SVGs from `../characters/svg` into
-`public/crew-art/`). The 26 drawn in `crew-art.js` are built in (`lib/characters.ts`) and always free. Rules live in
+Every character the site knows is in `content/characters.json`, built by `node scripts/import-characters.mjs [--dry]`
+from `content/characters.csv` (the registry: name, pack, access) plus one content file per character,
+`content/characters/<slug>.json` (the written page; format and rules in `content/characters/BRIEF.md`). The import
+also copies the SVGs from `../characters/svg` into `public/crew-art/`. The 26 drawn in `crew-art.js` are built in (`lib/characters.ts`) and always free. Rules live in
 `lib/character-rules.ts`: a locked character's explanation, "What to say", printable and cartoon render only inside
 `<Suspense>` after `lib/viewer.ts` has checked the reader (Crew Club via `has_club_access()`, packs from phase 4), so
 that text never reaches a browser without the right. Import `@/lib/characters` in server code only. Details and the
@@ -165,7 +167,7 @@ GitHub (`Petar20057/LITLE-BRAIN-CREW`, this folder is the repo root) → Vercel,
 
 ## Catalogue v2 (2 November 2026)
 
-Current bundles and prices: Toolkit $19 with its bonuses; Reset $39 with the Reset PDF, tracker and Science Edition; Bedtime $7 as one PDF; Club waitlist $8/month or $80/year. See FUNNEL.md §17. Edit the source design and run npm run sync. The retired marketing HTML lives under design/retired and is not generated.
+Current bundles and prices: Toolkit $19 with its bonuses; Reset $39 with the Reset PDF, tracker and Science Edition; Bedtime $7 as one PDF; Club waitlist $8/month or $80/year. See FUNNEL.md §17. Edit the source design and run npm run sync. The retired marketing HTML lives under design/retired and is not generated. The Personal plan is $199, sold only through its form at `/personal-plan`. Since 2026-11-03 the v2 Toolkit no longer includes the 4 crew cartoons (catalogue v1 buyers keep theirs; the v2 zip must be rebuilt without `Bonuses/Crew-Cartoons/`).
 
 Buyer downloads resolve the catalogue version stored on the paid order. Preserve all v1 paths and ZIPs. New files are under ../products/delivery/v2. The upload script checks both catalogues before upload. Creem product IDs are in lib/creem-products.json. Migration 20261102170000 adds versioned purchases and verified Reset upgrades.
 

@@ -2,6 +2,7 @@ import { ITEMS, MOMENTS, PRODUCTS, per, total, usd, type Item } from "@/lib/funn
 import { renderEmail, type Block, type Email } from "./layout";
 import { hoursLabel, offerLinks, type QuizResult } from "@/lib/quiz-plan";
 import { DISCLAIMER } from "@/content/quiz";
+import { PLAN_FIELDS, PLAN_REPLY_DAYS, answerLabel, momentTitle } from "@/lib/personal-plan-form";
 
 // Every email we send. Copy follows the site (English, calm, no hype, no promises about a child): words like
 // "free", "guaranteed", ALL CAPS and piles of exclamation marks are spam signals as much as they're off-brand.
@@ -97,6 +98,77 @@ export function orderReceipt(items: Item[], sections: ReceiptSection[], amountCe
     blocks,
     reason: "You’re getting this email because you bought from littlebraincrew.com.",
     campaign: "order-receipt",
+  });
+}
+
+/** After a paid Personal plan (lib/personal-plan.ts): what was paid and what happens next. No files, no button: the plan
+ *  itself arrives by email within PLAN_REPLY_DAYS working days. */
+export function planConfirmation(name: string | undefined, amountCents = ITEMS.personalPlan.price * 100): Email {
+  const item = ITEMS.personalPlan;
+  const adjustment = amountCents - item.price * 100;
+  const rows: [string, string][] = [[item.name, usd(item.price)]];
+  if (adjustment) rows.push(["Discounts & taxes", `${adjustment < 0 ? "−" : "+"}${usd(Math.abs(adjustment) / 100)}`]);
+  const days = `${PLAN_REPLY_DAYS} working days`;
+  return renderEmail({
+    subject: "Your Personal plan: we got your answers",
+    preheader: `We read every word. Your plan lands within ${days}, from hello@littlebraincrew.com.`,
+    kick: "thank you",
+    title: "We’ve got your answers",
+    art: "fronti",
+    blocks: [
+      { rows, total: ["Total paid", usd(amountCents / 100)] },
+      { p: `Thanks${name ? `, ${name}` : ""}. Here’s what happens next:` },
+      {
+        list: [
+          "We read your answers and write your plan: the crew member behind the moment, one small move for each evening and the exact words for your kid’s age.",
+          `It lands in this inbox within ${days}, from ${HELLO}. Add us to your contacts so it doesn’t end up in Promotions.`,
+          "Questions once you have it? Reply to that email. We answer every one.",
+        ],
+      },
+      { note: "Something to add? Reply to this email and we’ll put it in the plan." },
+      { p: "Creem, our payment partner, sends your official payment receipt in a separate email." },
+    ],
+    reason: "You’re getting this email because you ordered a Personal plan at littlebraincrew.com.",
+    campaign: "plan-confirmation",
+  });
+}
+
+/** What the team needs to write one plan: who paid, and every answer from the form. */
+export type PlanSummary = { name: string; kid_age: number; moment: string; answers: Record<string, string | string[]> };
+
+/** To the team inbox after a paid Personal plan (lib/personal-plan.ts TEAM_EMAIL). `request` is null when the form behind the
+ *  payment wasn't found: the email then says so, with the Creem order to look up. */
+export function planTeamNotification(o: { request: PlanSummary | null; email: string; amountCents: number; providerOrderId: string; requestId: string | null }): Email {
+  const r = o.request;
+  const rows: [string, string][] = [
+    ["Name", r?.name ?? "—"],
+    ["Email", o.email],
+    ["Kid’s age", r ? String(r.kid_age) : "—"],
+    ["Hardest moment", r ? momentTitle(r.moment) : "—"],
+    ["Paid", usd(o.amountCents / 100)],
+    ["Creem order", o.providerOrderId],
+    ["Form", o.requestId ?? "none in the checkout metadata"],
+  ];
+  const blocks: Block[] = [{ rows }];
+  if (r) {
+    for (const f of PLAN_FIELDS) {
+      const v = r.answers[f.key];
+      if (v == null || (Array.isArray(v) && v.length === 0)) continue;
+      blocks.push({ note: f.label }, { p: answerLabel(f, v) });
+    }
+  } else {
+    blocks.push({ p: "The form for this payment was not found. Look up the Creem order above and write to the parent at this email before the reply deadline." });
+  }
+  blocks.push({ button: { label: "Open in admin", url: "/admin/personal-plans" } });
+  return renderEmail({
+    subject: `Personal plan paid: ${o.email}`.slice(0, 62),
+    preheader: `New Personal plan request. The answers are below; the plan is due within ${PLAN_REPLY_DAYS} working days.`,
+    kick: "team",
+    title: "New Personal plan request",
+    art: "duo",
+    blocks,
+    reason: "Sent to the team inbox for every paid Personal plan.",
+    campaign: "plan-team",
   });
 }
 

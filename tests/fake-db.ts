@@ -24,6 +24,10 @@ const DEFAULTS: Record<string, () => Row> = {
   checkout_starts: () => ({ id: Math.floor(Math.random() * 1e9), token: randomUUID(), crew: null, moment: null, reminded_at: null, unsubscribed_at: null, created_at: now() }),
   page_views: () => ({ id: Math.floor(Math.random() * 1e9), view_id: null, utm_content: null, app: null, seconds: null, max_scroll: null, created_at: now() }),
   funnel_events: () => ({ id: randomUUID(), visitor_id: null, session_id: null, place: null, path: null, amount_cents: null, created_at: now() }),
+  plan_requests: () => ({
+    id: randomUUID(), status: "new", answers: {}, order_id: null, checkout_url: null, visitor_id: null, session_id: null, utm_source: null,
+    created_at: now(), checkout_at: null, paid_at: null, replied_at: null, closed_at: null,
+  }),
 };
 
 const CONFLICT_KEYS: Record<string, string[]> = { signups: ["email", "form"], quiz_sessions: ["id"], quiz_leads: ["email"], orders: ["provider_order_id"], order_upgrades: ["parent_order_id"] };

@@ -19,7 +19,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: when(newest(entriesOf(s.key).map((e) => e.updated))),
   }));
   const entries = ENTRIES.map((e) => ({ url: url(pathOf(e)), lastModified: when(e.updated) }));
-  const fixed = ["/learn", "/crew", "/glossary", "/sources"].map((p) => ({ url: url(p), lastModified: when(newest(all)) }));
+  const fixed = ["/learn", "/crew", "/glossary", "/sources", "/personal-plan"].map((p) => ({ url: url(p), lastModified: when(newest(all)) }));
   const site = SITE_PAGES.map((p) => ({ url: url(`/${p.slug}`), lastModified: when(p.updated) }));
   // Character pages (unpublished ones are noindex and stay out).
   const crew = CHARACTERS.filter((c) => c.published).map((c) => ({ url: url(characterPath(c)) }));

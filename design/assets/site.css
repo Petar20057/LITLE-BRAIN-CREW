@@ -463,7 +463,7 @@ body[data-serif="on"] .serif-h{font-family:var(--serif);font-weight:600;letter-s
 .mini-form input{border:2px solid var(--ink);border-radius:var(--r-pill);min-height:52px;padding:0 16px;font:500 16px var(--body);width:100%}
 .mini-form .ok{display:none;color:var(--ok);font-weight:700}
 .compare{margin-top:var(--s6);background:#fff;border-radius:var(--r-l);box-shadow:var(--sh-1);overflow-x:auto;--fg:var(--ink);color:var(--ink)}
-.compare table{width:100%;border-collapse:collapse;min-width:620px}
+.compare table{width:100%;border-collapse:collapse;min-width:760px}
 .compare th,.compare td{padding:14px 16px;text-align:center;border-bottom:2px solid var(--paper);font-size:16px}
 .compare th:first-child,.compare td:first-child{text-align:left;font-weight:600}
 .compare thead th{font:800 18px var(--head);background:var(--paper)}

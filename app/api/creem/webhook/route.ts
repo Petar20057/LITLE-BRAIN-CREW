@@ -13,7 +13,8 @@ import type { Database } from "@/lib/supabase/database.types";
 // Creem → us. Set this URL as the webhook in the Creem dashboard: <site>/api/creem/webhook.
 // Mirrors Crew Club subscriptions into Supabase (the source of truth stays Creem), so pages can check access with
 // has_club_access(), and sends the Crew Club welcome email the first time a subscription shows up. One-time products
-// (Toolkit, Bedtime Kit) are saved to `orders` once, with their purchase event and receipt email (lib/delivery.ts).
+// (Toolkit, Bedtime Kit) are saved to `orders` once, with their purchase event and receipt email (lib/delivery.ts); a paid
+// Personal plan marks its form row paid and emails the team instead (lib/personal-plan.ts).
 // Any failure answers 500 so Creem retries; writes are idempotent (one row per Creem subscription id).
 // Creem doesn't promise delivery order, so each row remembers the time of the newest event applied
 // (provider_event_at) and an older event arriving late is skipped instead of overwriting a newer status.

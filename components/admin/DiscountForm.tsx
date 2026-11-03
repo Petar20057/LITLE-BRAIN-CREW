@@ -2,6 +2,7 @@
 
 import { useActionState } from "react";
 import { addDiscount } from "@/app/(admin)/admin/discounts/actions";
+import { ITEMS } from "@/lib/funnel";
 
 export default function DiscountForm({ products }: { products: { id: string; name: string }[] }) {
   const [state, action, pending] = useActionState(addDiscount, {});
@@ -17,9 +18,9 @@ export default function DiscountForm({ products }: { products: { id: string; nam
       </div>
       <fieldset className="adm-discount-products">
         <legend>Applies to</legend>
-        {products.map((product) => <label key={product.id}><input type="checkbox" name="products" value={product.id} defaultChecked />{product.name}</label>)}
+        {products.map((product) => <label key={product.id}><input type="checkbox" name="products" value={product.id} defaultChecked={product.name !== ITEMS.personalPlan.name} />{product.name}</label>)}
       </fieldset>
-      <p className="fine">The discount applies once per purchase. A 100% code makes the selected order free. Codes become active when created.</p>
+      <p className="fine">The discount applies once per purchase. A 100% code makes the selected order free. Codes become active when created. The Personal plan starts unticked: tick it only for a code meant for it.</p>
       <button className="btn btn-main" type="submit" disabled={pending || !products.length}>{pending ? "Creating…" : "Create & activate code"}</button>
       {state.error && <p role="alert" className="adm-error">{state.error}</p>}
       {state.success && <p role="status" className="adm-discount-success">{state.success}</p>}

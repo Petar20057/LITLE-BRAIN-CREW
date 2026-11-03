@@ -8,7 +8,7 @@ vi.mock("@/lib/email/send", () => ({ sendEmail: vi.fn(async () => "message-id") 
 // Provider fixtures are isolated from the production product catalogue.
 vi.mock("@/lib/creem", async (original) => ({
   ...(await original<typeof import("@/lib/creem")>()),
-  keyForProduct: (id: string) => ({ prod_monthly: "club-monthly", prod_yearly: "club-yearly", prod_guide_v2: "guide" })[id],
+  keyForProduct: (id: string) => ({ prod_monthly: "club-monthly", prod_yearly: "club-yearly", prod_guide_v2: "guide", prod_plan: "personal-plan" })[id],
 }));
 
 const { POST } = await import("@/app/api/creem/webhook/route");
@@ -252,5 +252,78 @@ describe("Creem webhook", () => {
     expect(fake.table("orders")).toHaveLength(0);
     expect(sendEmail).not.toHaveBeenCalled();
     spy.mockRestore();
+  });
+});
+
+describe("Creem webhook: a paid Personal plan", () => {
+  const REQUEST = "0a1b2c3d-4e5f-4a6b-8c7d-9e0f1a2b3c4d";
+  const VISITOR = "6f1c2a3b-4d5e-4f60-8a7b-9c0d1e2f3a4b";
+  const planPaid = (metadata: Record<string, unknown> = {}, object: Record<string, unknown> = {}) => ({
+    id: "evt_plan",
+    eventType: "checkout.completed",
+    created_at: T0,
+    object: {
+      id: "chk_plan", product: { id: "prod_plan" }, order: { id: "ord_plan", amount_paid: 19900 },
+      customer: { id: "cust_p", email: "Ana@Example.com" },
+      metadata: { order: "personal-plan", catalog_version: "2", request_id: REQUEST, delivery: "tok-plan", visitor: VISITOR, ...metadata },
+      ...object,
+    },
+  });
+  const seedForm = () =>
+    fake.seed("plan_requests", {
+      id: REQUEST, email: "ana@example.com", name: "Ana", kid_age: 7, moment: "screen-off", status: "checkout",
+      answers: { when_happens: "Most school nights, right after the tablet goes off.", tried: "Timers and a warning.", good_week: "No tears by Friday.", owns: ["toolkit"] },
+    });
+
+  it("records the order, marks the form paid, counts the purchase and emails the parent and the team", async () => {
+    seedForm();
+    expect((await deliver(planPaid())).status).toBe(200);
+    const [order] = fake.table("orders");
+    expect(order).toMatchObject({ provider_order_id: "ord_plan", email: "ana@example.com", order_key: "personal-plan", items: ["personal-plan"], amount_cents: 19900, catalog_version: 2 });
+    expect(order.delivery_hash).toBe(createHash("sha256").update("tok-plan").digest("hex"));
+    expect(fake.table("funnel_events")).toMatchObject([{ name: "purchase", place: "personal-plan", amount_cents: 19900, visitor_id: VISITOR }]);
+    expect(fake.table("plan_requests")[0]).toMatchObject({ status: "paid", order_id: order.id });
+    expect(fake.table("plan_requests")[0].paid_at).toBeTruthy();
+
+    expect(sendEmail).toHaveBeenCalledTimes(2);
+    const [[parentTo, parentMail], [teamTo, teamMail]] = vi.mocked(sendEmail).mock.calls;
+    expect(parentTo).toBe("ana@example.com");
+    expect(parentMail.subject).toContain("Personal plan");
+    expect(parentMail.text).toContain("3 working days");
+    expect(parentMail.text).toContain("Total paid: $199");
+    expect(teamTo).toBe("hello@littlebraincrew.com");
+    expect(teamMail.subject).toContain("ana@example.com");
+    expect(teamMail.text).toContain("Most school nights, right after the tablet goes off.");
+    expect(teamMail.text).toContain("Tears when screen time ends");
+    expect(teamMail.text).toContain("The Kid Brain Toolkit");
+  });
+
+  it("a retried delivery writes nothing more and sends nothing twice", async () => {
+    seedForm();
+    await deliver(planPaid());
+    await deliver(planPaid());
+    expect(fake.table("orders")).toHaveLength(1);
+    expect(fake.table("funnel_events")).toHaveLength(1);
+    expect(sendEmail).toHaveBeenCalledTimes(2);
+    expect(fake.table("plan_requests")[0]).toMatchObject({ status: "paid" });
+  });
+
+  it("a payment whose form can't be found still records the order and tells the team", async () => {
+    expect((await deliver(planPaid({ request_id: "ffffffff-ffff-4fff-8fff-ffffffffffff" }))).status).toBe(200);
+    expect(fake.table("orders")).toHaveLength(1);
+    expect(sendEmail).toHaveBeenCalledTimes(2);
+    const teamMail = vi.mocked(sendEmail).mock.calls[1][1];
+    expect(teamMail.text).toContain("was not found");
+    expect(teamMail.text).toContain("ord_plan");
+  });
+
+  it("a cheaper product cannot be passed off as a Personal plan", async () => {
+    seedForm();
+    const spy = vi.spyOn(console, "error").mockImplementation(() => {});
+    expect((await deliver(planPaid({}, { product: { id: "prod_guide_v2" } }))).status).toBe(500);
+    spy.mockRestore();
+    expect(fake.table("orders")).toHaveLength(0);
+    expect(fake.table("plan_requests")[0]).toMatchObject({ status: "checkout" });
+    expect(sendEmail).not.toHaveBeenCalled();
   });
 });

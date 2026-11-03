@@ -1,6 +1,6 @@
 import { ITEMS, MOMENTS } from "@/lib/funnel";
 import type { Email } from "./layout";
-import { challengeDay, checkoutReminder, clubWelcome, confirmSignup, freeScreenList, freeStickerPack, orderReceipt, quizResultEmail, renewalReminder } from "./templates";
+import { challengeDay, checkoutReminder, clubWelcome, confirmSignup, freeScreenList, freeStickerPack, orderReceipt, planConfirmation, planTeamNotification, quizResultEmail, renewalReminder } from "./templates";
 import { quizData } from "@/lib/quiz";
 import { quizResult } from "@/lib/quiz-plan";
 
@@ -20,6 +20,22 @@ export const SAMPLES: Record<string, () => Email> = {
       ],
     ),
   "renewal-reminder": () => renewalReminder("November 26, 2026"),
+  "plan-confirmation": () => planConfirmation("Ana"),
+  "plan-team": () =>
+    planTeamNotification({
+      request: {
+        name: "Ana", kid_age: 7, moment: "screen-off",
+        answers: {
+          when_happens: "Most school nights, right after the tablet goes off. Weekends are fine.",
+          how_long: "months",
+          tried: "Timers, a 5-minute warning, taking the tablet away. The warning helps a little; taking it away ends in a 20-minute meltdown.",
+          good_week: "Screens off at 7 with some grumbling but no tears, and in bed by 8:30.",
+          owns: ["toolkit"],
+          timezone: "America/New_York",
+        },
+      },
+      email: "ana@example.com", amountCents: 19900, providerOrderId: "ord_sample", requestId: "6f1c2a3b-4d5e-4f60-8a7b-9c0d1e2f3a4b",
+    }),
   "quiz-result": () => quizResultEmail(quizResult(quizData(), { age: "6-7", moments: ["screens", "after-school", "wired"], sleep: { bed: 21 * 60 + 30, wake: 6 * 60 + 30 }, villains: ["bedi", "lupi"] })!),
   "quiz-result-tips": () =>
     quizResultEmail(quizResult(quizData(), { age: "8-9", moments: ["screens", "cant-sleep"], sleep: null, villains: null })!, { confirmTipsUrl: SAMPLE_CONFIRM }),

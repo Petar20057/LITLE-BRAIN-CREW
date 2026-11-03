@@ -45,6 +45,17 @@ describe("download route", () => {
     expect((await get("t=good-token&f=reset-pdf")).status).toBe(403);
   });
 
+  it("a new Toolkit buyer cannot open the cartoons, a legacy buyer still can", async () => {
+    expect((await get("t=good-token&f=cartoon-dopa-mp4")).headers.get("location")).toContain("/signed/Kid-Brain-Toolkit/Bonuses/Crew-Cartoons/");
+    fake.table("orders")[0].catalog_version = 2;
+    expect((await get("t=good-token&f=cartoon-dopa-mp4")).status).toBe(403);
+  });
+
+  it("a Personal plan order has no files behind its token", async () => {
+    Object.assign(fake.table("orders")[0], { catalog_version: 2, order_key: "personal-plan", items: ["personal-plan"] });
+    for (const id of ["toolkit-pdf", "reset-pdf", "toolkit-zip"]) expect((await get(`t=good-token&f=${id}`)).status).toBe(403);
+  });
+
   it("a new Reset buyer gets its three PDFs without the standalone Toolkit", async () => {
     Object.assign(fake.table("orders")[0], { catalog_version: 2, items: ["program"] });
     for (const id of ["reset-pdf", "reset-tracker-pdf", "science-edition-pdf"]) expect((await get(`t=good-token&f=${id}`)).status).toBe(302);

@@ -126,7 +126,7 @@ export const SITE_PAGES: SitePage[] = [
     metaTitle: "Privacy Policy | Little Brain Crew",
     description: "What Little Brain Crew collects, what stays in your browser, how forms and payments work, and why we never ask for kids’ names.",
     dek: "Plain words about what this site collects and what it doesn’t.",
-    updated: "2026-10-30",
+    updated: "2026-11-03",
     sections: [
       {
         h2: "The short version",
@@ -138,11 +138,12 @@ export const SITE_PAGES: SitePage[] = [
       {
         h2: "What we collect when you fill in a form",
         paras: [
-          "Several pages have forms: the free list, the sticker pack and the 5-day Screen-Off Challenge, the founding-parents program, “what’s coming next” and shop waitlists, school and business inquiries, and (planned) gift cards. Depending on the form, we ask for:",
+          "Several pages have forms: the free list, the sticker pack and the 5-day Screen-Off Challenge, the founding-parents program, “what’s coming next” and shop waitlists, school and business inquiries, the Personal plan form, and (planned) gift cards. Depending on the form, we ask for:",
         ],
         bullets: [
           "Your email address.",
           "For school and business inquiries, your name, your organization, the type and size of your group, and a message.",
+          "For the Personal plan, your first name, your email address, your child’s age, which hard moment you want help with, and your answers about when it happens, what you have tried, what a good week would look like, your routine and anything else you choose to tell us. We don’t ask for your child’s name or health details. We keep these answers with your order so we can write and follow up on your plan, and we delete forms that were never paid for after 30 days.",
           "For the founding-parents form, an age range for your child (such as 3 to 5), and whether you would be open to recording a short video. We don’t ask for children’s names, birthdays, photos or schools.",
           "For the “coming next” form, which topics and language you want.",
           "For gifts, your name, the recipient’s name and email, a short message and the date to send it.",
@@ -218,7 +219,7 @@ export const SITE_PAGES: SitePage[] = [
           "Vercel hosts the website. It handles every page request, which includes your IP address, and tells us the country it comes from.",
           "Meta and TikTok receive advertising measurement events when their pixels are enabled and you allow ad cookies. Their own privacy policies describe how they process those events.",
           "Microsoft Clarity records how visitors use our pages (scrolls, clicks, page changes, device type and approximate location) for heatmaps and visit replays, with form entries hidden.",
-          "Supabase stores our database: form entries, quiz answers, visit counts and, later, Crew Club accounts.",
+          "Supabase stores our database: form entries, Personal plan answers, quiz answers, visit counts and, later, Crew Club accounts.",
           "Amazon Web Services (Amazon SES) sends our emails, such as quiz results and confirmation links. It receives your email address and the email we send you.",
           "Hostinger runs our hello@littlebraincrew.com inbox, so it holds any email you write to us.",
           "Creem handles payments (see Payments).",
@@ -250,7 +251,7 @@ export const SITE_PAGES: SitePage[] = [
     metaTitle: "Terms of Use and Sale | Little Brain Crew",
     description: "The rules for using Little Brain Crew and buying our digital products: educational use only, all sales final, Crew Club membership and US audience.",
     dek: "What you can expect from us and what we ask of you.",
-    updated: "2026-10-30",
+    updated: "2026-11-03",
     sections: [
       {
         h2: "Using this site",
@@ -270,13 +271,14 @@ export const SITE_PAGES: SitePage[] = [
         paras: [
           "We sell digital products, such as the Kid Brain Toolkit and the 30-Day Reset, and may sell more over time. You get a link or files by email after you pay. A purchase gives you a personal, non-transferable license to use the content with your own family. Please don’t resell, share, copy or post it. Classroom, school and business use needs a separate license.",
           "Prices and what is included are shown at checkout. The 30-Day Reset costs $39 as a one-time purchase.",
+          "The Personal plan ($199) is a written plan for your family, prepared by hand from the answers you give in our form and sent by email within three working days of payment. It is educational guidance about everyday habits and the words to use; it is not medical advice, therapy or a diagnosis, and we do not promise a particular outcome. Because work on it starts when you pay, all sales are final.",
         ],
       },
       {
         h2: "All sales are final",
         paras: [
           "Because you get instant access to digital content, all sales are final. We do not offer refunds or money-back terms, and we do not guarantee results. If a link or a file doesn’t work, contact us and we will fix it or resend it.",
-          "Personal help is included with the Toolkit, the 30-Day Reset and the Bedtime & Screen-Off Kit. Try it for seven evenings. If it’s not working, email your hardest moment to hello@littlebraincrew.com and we will send you a personal plan. This is a promise of support; it does not change our final-sales policy or guarantee a particular outcome.",
+          "Personal help by email is included with the 30-Day Reset. Try it for seven evenings. If it’s not working, email your hardest moment to hello@littlebraincrew.com and we will send you a short personal plan. This is a promise of support; it does not change our final-sales policy or guarantee a particular outcome. The Kid Brain Toolkit and the Bedtime & Screen-Off Kit do not include it; the Personal plan is sold separately (see Digital products).",
         ],
       },
       {
