@@ -7,7 +7,8 @@
 //   content/pages/<name>.json holds its metadata, robots, JSON-LD, body attributes, scripts and body HTML
 // - <!-- include:partials/x.html --> pulls in a shared piece (header, footer) before anything else
 // - content/pages/manifest.ts lists all pages for the app
-// - content/partials/header.json and footer.json ({ html }): the same header and footer, link-rewritten, for the
+// - content/partials/header.json and footer.json ({ html }), plus sales-header.json and sales-footer.json (no menu,
+//   no links away, for the sales pages): the same header and footer, link-rewritten, for the
 //   React templates (components/learn/LearnShell.tsx). Learn routes are not in design/, so partials link to them
 //   with absolute paths (/crew, /why, ...).
 // - content/art.json: the crew drawn on the server, { [key]: { main, happy, tired } }. Each value is the INNER
@@ -90,7 +91,8 @@ const clean = (html, label) => {
 const partialsDir = path.join(web, "content", "partials");
 fs.rmSync(partialsDir, { recursive: true, force: true });
 fs.mkdirSync(partialsDir, { recursive: true });
-for (const part of ["header", "footer"]) {
+// sales-header / sales-footer: the no-exit version for the sales pages (design/toolkit.html, /personal-plan).
+for (const part of ["header", "footer", "sales-header", "sales-footer"]) {
   const html = rewrite(clean(fs.readFileSync(path.join(src, "partials", `${part}.html`), "utf8"), `partials/${part}.html`))
     .replace(/\n{3,}/g, "\n\n")
     .trim();

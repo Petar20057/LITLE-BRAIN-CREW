@@ -1,4 +1,5 @@
 import PersonalPlanForm from "@/components/funnel/PersonalPlanForm";
+import StickyBuy from "@/components/funnel/StickyBuy";
 import CharArt from "@/components/learn/CharArt";
 import JsonLd from "@/components/learn/JsonLd";
 import LearnShell from "@/components/learn/LearnShell";
@@ -27,7 +28,7 @@ export const metadata = simpleMetadata({ metaTitle: "The Personal Plan: Written 
 export default function Page() {
   const open = creemConfigured && Boolean(productIdFor(ITEMS.personalPlan.id));
   return (
-    <LearnShell>
+    <LearnShell sales>
       <JsonLd data={[webPageLd({ path: "/personal-plan", name: "The Personal plan", description: DESCRIPTION }), breadcrumbLd([{ name: "Home", path: "/" }, { name: "The Personal plan", path: "/personal-plan" }])]} />
 
       {/* 1 · The offer */}
@@ -44,12 +45,12 @@ export default function Page() {
               </div>
               <p className="hc-say">You don’t have to figure<br />this out alone.</p>
             </div>
-            <span className="kick">the personal plan · {PRICE}, once</span>
+            <span className="kick">for parents with one moment that keeps going wrong</span>
             <h1 className="serif-h">Tell us the one moment. We write the plan for your house.</h1>
             <p className="lede">Stop guessing what to try next. Within {DAYS} a person writes what’s going on, one small move for each evening and the exact words for your kid’s age.</p>
             <div className="offer-buy">
               <a className="btn btn-main btn-lg" href="#plan-form">Start my plan · {PRICE}</a>
-              <span className="per">Ten minutes of answers first, then Creem’s secure checkout · no subscription</span>
+              <span className="per">{PRICE} once · ten minutes of answers first, then Creem’s secure checkout · no subscription</span>
             </div>
             <div className="trust-row" style={{ justifyContent: "center" }}>
               <span><svg aria-hidden="true"><use href="#i-check" /></svg>Written by a person, not generated</span>
@@ -117,28 +118,6 @@ export default function Page() {
         </div>
       </section>
 
-      {/* 4 · Why not just the Toolkit? The honest answer, and the downsell */}
-      <section className="sec s-white" id="why-not" data-c="var(--sero)">
-        <div className="wrap" style={{ maxWidth: 900 }}>
-          <div className="center-head"><span className="kick">be honest with yourself</span><h2>Why not just the {TOOLKIT} Toolkit?</h2>
-            <p className="lede">Maybe you should. The Toolkit has the same science for every family: the 12 moments with the exact words, the 30-day plan, the Science Edition, all 214 crew members. If one page and one evening are enough for your house, start there and keep your {PRICE}.</p></div>
-          <div className="two-way" data-reveal>
-            <div className="surface" style={{ "--c": "var(--dopa)" } as React.CSSProperties}>
-              <span className="kick">the toolkit · {TOOLKIT}</span>
-              <h3>You read the page and run the plan yourself.</h3>
-              <p>Everything in one download, tonight. Best when you can see your moment on page 4 and you have the energy to adapt the words to your kid.</p>
-              <a className="btn" href="/toolkit">See inside the Toolkit →</a>
-            </div>
-            <div className="surface" style={{ "--c": "var(--toci)" } as React.CSSProperties}>
-              <span className="kick">the personal plan · {PRICE}</span>
-              <h3>A person adapts it to your house, and answers when it doesn’t go to plan.</h3>
-              <p>Best when the moment is specific and stubborn, you’ve already tried the obvious things, and you want it done for you. If you have the Toolkit, say so in the form: the plan builds on it instead of repeating it.</p>
-              <a className="btn btn-main" href="#plan-form">Start with the form ↓</a>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* 5 · How it works */}
       <section className="sec s-plain" id="how" data-c="var(--endo)">
         <div className="wrap" style={{ maxWidth: 900 }}>
@@ -191,6 +170,29 @@ export default function Page() {
           <PersonalPlanForm open={open} />
         </div>
       </section>
+      {/* After the form: the honest downsell, for the parent who isn't ready for $199 (Hormozi: never before the main offer is seen). */}
+      <section className="sec s-white" id="why-not" data-c="var(--sero)">
+        <div className="wrap" style={{ maxWidth: 900 }}>
+          <div className="center-head"><span className="kick">be honest with yourself</span><h2>Why not just the {TOOLKIT} Toolkit?</h2>
+            <p className="lede">Maybe you should. The Toolkit has the same science for every family: the 12 moments with the exact words, the 30-day plan, the Science Edition, all 214 crew members. If one page and one evening are enough for your house, start there and keep your {PRICE}.</p></div>
+          <div className="two-way" data-reveal>
+            <div className="surface" style={{ "--c": "var(--dopa)" } as React.CSSProperties}>
+              <span className="kick">the toolkit · {TOOLKIT}</span>
+              <h3>You read the page and run the plan yourself.</h3>
+              <p>Everything in one download, tonight. Best when you can see your moment on page 4 and you have the energy to adapt the words to your kid.</p>
+              <a className="btn" href="/toolkit">See inside the Toolkit →</a>
+            </div>
+            <div className="surface" style={{ "--c": "var(--toci)" } as React.CSSProperties}>
+              <span className="kick">the personal plan · {PRICE}</span>
+              <h3>A person adapts it to your house, and answers when it doesn’t go to plan.</h3>
+              <p>Best when the moment is specific and stubborn, you’ve already tried the obvious things, and you want it done for you. If you have the Toolkit, say so in the form: the plan builds on it instead of repeating it.</p>
+              <a className="btn btn-main" href="#plan-form">Start with the form ↓</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <StickyBuy href="#plan-form" label={`Start my plan · ${PRICE}`} hide={["plan-form-section", "why-not", "site-foot"]} />
     </LearnShell>
   );
 }

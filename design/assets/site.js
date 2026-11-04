@@ -348,7 +348,7 @@ if (mm) {
       buy.href = `/checkout/guide?crew=${encodeURIComponent(d.crew)}&moment=${encodeURIComponent(d.moment)}`;
       buy.dataset.place = a.dataset.place;
     });
-    mm.querySelector('.mm-sci').href = a.getAttribute('href');
+    const sci = mm.querySelector('.mm-sci'); if (sci) sci.href = a.getAttribute('href');
     mm.hidden = false; mm.classList.add('open'); document.body.classList.add('modal-open');
     mm.querySelector('.mclose').focus();
   });
