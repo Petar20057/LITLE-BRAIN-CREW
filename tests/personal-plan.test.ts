@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { fake } from "./fake-db";
+import { FakeDb, fake } from "./fake-db";
 
 vi.mock("@/lib/supabase/admin", () => ({ createAdminClient: () => fake.client() }));
 vi.mock("@/lib/supabase/env", () => ({ supabaseConfigured: true }));
@@ -59,10 +59,34 @@ function payFor(id: unknown, from = `203.0.113.${++ip}`) {
   );
 }
 
+/** The email sent to one address in this test: its content and the send options (replyTo). */
+function mailTo(address: string) {
+  const call = vi.mocked(sendEmail).mock.calls.find(([to]) => to === address);
+  if (!call) throw new Error(`no email to ${address}`);
+  return { email: call[1], options: call[2] };
+}
+
+/** plan_requests doesn't exist yet: inserts answer PostgREST's PGRST205, everything else works (rate limits included). */
+function missingTable() {
+  const real = FakeDb.prototype.client.bind(fake);
+  vi.spyOn(fake, "client").mockImplementation(() => {
+    const c = real();
+    return {
+      ...c,
+      from: (table: string) =>
+        table === "plan_requests"
+          ? ({ insert: () => ({ select: async () => ({ data: null, error: { code: "PGRST205", message: "Could not find the table" } }) }) } as unknown as ReturnType<typeof c.from>)
+          : c.from(table),
+    };
+  });
+}
+
 beforeEach(() => {
   fake.reset();
+  vi.restoreAllMocks();
   createCheckout.mockClear();
-  vi.mocked(sendEmail).mockClear();
+  vi.mocked(sendEmail).mockReset();
+  vi.mocked(sendEmail).mockResolvedValue("message-id");
   planProductId = "prod_plan";
 });
 
@@ -84,12 +108,42 @@ describe("Personal plan form", () => {
       timezone: "Europe/Belgrade",
     });
     expect(createCheckout).not.toHaveBeenCalled();
-    expect(sendEmail).toHaveBeenCalledOnce();
-    const [to, mail] = vi.mocked(sendEmail).mock.calls[0];
-    expect(to).toBe("ana@example.com");
-    expect(mail.subject).toContain("answers are saved");
-    expect(mail.text).toContain(`/personal-plan?r=${row.id}`);
-    expect(mail.text).toContain("Continue to payment · $199");
+    // One email to the team with every answer (reply goes to the parent), one to the parent with the link to pay later.
+    expect(sendEmail).toHaveBeenCalledTimes(2);
+    const [team, parent] = [mailTo("hello@littlebraincrew.com"), mailTo("ana@example.com")];
+    expect(team.email.subject).toBe("New Personal plan request: ana@example.com");
+    expect(team.email.text).toContain("Most school nights, right after the tablet goes off.");
+    expect(team.email.text).toContain("Tears when screen time ends");
+    expect(team.options).toMatchObject({ replyTo: "ana@example.com" });
+    expect(parent.email.subject).toContain("answers are saved");
+    expect(parent.email.text).toContain(`/personal-plan?r=${row.id}`);
+    expect(parent.email.text).toContain("Continue to payment · $199");
+  });
+
+  it("when the table isn't there, the answers still reach the team by email and the parent gets a thank-you", async () => {
+    missingTable();
+    const spy = vi.spyOn(console, "error").mockImplementation(() => {});
+    const res = await send(valid());
+    spy.mockRestore();
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ id: null, payable: false });
+    const team = mailTo("hello@littlebraincrew.com");
+    expect(team.email.text).toContain("this email is the only copy");
+    expect(team.email.text).toContain("Timers and a five-minute warning.");
+    const parent = mailTo("ana@example.com");
+    expect(parent.email.subject).toBe("Thank you for ordering your Personal plan");
+    expect(parent.email.text).toContain("as soon as possible");
+    expect(parent.email.text).not.toContain("/personal-plan?r=");
+  });
+
+  it("fails, so the parent can try again, when neither the database nor the email took the answers", async () => {
+    missingTable();
+    vi.mocked(sendEmail).mockResolvedValue(null);
+    const spy = vi.spyOn(console, "error").mockImplementation(() => {});
+    const res = await send(valid());
+    spy.mockRestore();
+    expect(res.status).toBe(500);
+    expect((await res.json()).error).toContain("hello@littlebraincrew.com");
   });
 
   it("the optional second step starts the $199 checkout for the saved answers, with the form's id in the metadata", async () => {
@@ -162,7 +216,8 @@ describe("Personal plan form", () => {
     const { id, payable } = await res.json();
     expect(payable).toBe(false);
     expect(fake.table("plan_requests")).toMatchObject([{ status: "new" }]);
-    expect(vi.mocked(sendEmail).mock.calls[0][1].text).toContain("Payment for the Personal plan opens in a few days");
+    expect(mailTo("ana@example.com").email.subject).toBe("Thank you for ordering your Personal plan");
+    expect(mailTo("hello@littlebraincrew.com").email.subject).toBe("New Personal plan request: ana@example.com");
     const paid = await payFor(id);
     expect(paid.status).toBe(503);
     expect(await paid.json()).toMatchObject({ closed: true, error: expect.stringContaining("Payment opens in a few days") });

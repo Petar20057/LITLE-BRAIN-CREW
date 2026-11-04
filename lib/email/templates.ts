@@ -148,11 +148,7 @@ export function planTeamNotification(o: { request: PlanSummary | null; email: st
   ];
   const blocks: Block[] = [{ rows }];
   if (r) {
-    for (const f of PLAN_FIELDS) {
-      const v = r.answers[f.key];
-      if (v == null || (Array.isArray(v) && v.length === 0)) continue;
-      blocks.push({ note: f.label }, { p: answerLabel(f, v) });
-    }
+    blocks.push(...planAnswerBlocks(r));
   } else {
     blocks.push({ p: "The form for this payment was not found. Look up the Creem order above and write to the parent at this email before the reply deadline." });
   }
@@ -166,6 +162,64 @@ export function planTeamNotification(o: { request: PlanSummary | null; email: st
     blocks,
     reason: "Sent to the team inbox for every paid Personal plan.",
     campaign: "plan-team",
+  });
+}
+
+/** Every answer from the form, label then answer, in the order the form asks. */
+function planAnswerBlocks(r: PlanSummary): Block[] {
+  return PLAN_FIELDS.flatMap((f): Block[] => {
+    const v = r.answers[f.key];
+    if (v == null || (Array.isArray(v) && v.length === 0)) return [];
+    return [{ note: f.label }, { p: answerLabel(f, v) }];
+  });
+}
+
+/** To the team inbox (lib/personal-plan.ts TEAM_EMAIL) the moment a parent sends the Personal plan form, paid or not. Sent with
+ *  the parent's address as Reply-To, so "Reply" in the inbox answers the parent. `requestId` null: the database row couldn't be
+ *  saved (or the table isn't there yet), so this email is the only copy of the answers. */
+export function planRequestTeam(o: { request: PlanSummary; email: string; requestId: string | null }): Email {
+  const r = o.request;
+  const rows: [string, string][] = [
+    ["Name", r.name],
+    ["Email", o.email],
+    ["Kid’s age", String(r.kid_age)],
+    ["Hardest moment", momentTitle(r.moment)],
+    ["Paid", "not yet"],
+    ["Saved in admin", o.requestId ? "yes" : "no: this email is the only copy"],
+  ];
+  return renderEmail({
+    subject: `New Personal plan request: ${o.email}`.slice(0, 62),
+    preheader: `${r.name}, kid aged ${r.kid_age}, “${momentTitle(r.moment)}”. All the answers are below; reply to write to the parent.`.slice(0, 120),
+    kick: "team",
+    title: "New Personal plan request",
+    art: "duo",
+    blocks: [
+      { rows },
+      ...planAnswerBlocks(r),
+      { note: "The parent got a thank-you email saying we’ll send the plan as soon as possible. Reply to this email to write to them." },
+      ...(o.requestId ? [{ button: { label: "Open in admin", url: "/admin/personal-plans" } }] : []),
+    ],
+    reason: "Sent to the team inbox for every Personal plan form.",
+    campaign: "plan-request-team",
+  });
+}
+
+/** To the parent right after they send the Personal plan form while there is no online payment for it: thank you, we have your
+ *  answers, the plan comes as soon as possible. (With online payment the form sends planSaved, which links to the payment.) */
+export function planThanks(name: string | undefined, moment: string): Email {
+  return renderEmail({
+    subject: "Thank you for ordering your Personal plan",
+    preheader: "We have your answers, and a person on our team is already on it. Your plan comes as soon as possible.",
+    kick: "thank you",
+    title: `Thank you${name ? `, ${name}` : ""}`,
+    art: "toci",
+    blocks: [
+      { p: `Thank you for ordering your Personal plan. We have your answers about “${momentTitle(moment)}”, and a person on our team reads every word.` },
+      { p: `We’ll send your plan to this address as soon as possible, within ${PLAN_REPLY_DAYS} working days at the latest: the crew member behind the moment, one small move for each evening and the exact words for your kid’s age.` },
+      { note: "Something to add, or a question? Just reply to this email. A real person answers." },
+    ],
+    reason: "You’re getting this email because you filled in the Personal plan form at littlebraincrew.com.",
+    campaign: "plan-thanks",
   });
 }
 

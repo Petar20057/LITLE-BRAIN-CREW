@@ -2,7 +2,7 @@ import "server-only";
 
 import { tokenHash } from "./delivery";
 import { CURRENT_CATALOG_VERSION } from "./delivery-files";
-import { sendEmail } from "./email/send";
+import { emailConfigured, sendEmail } from "./email/send";
 import { planConfirmation, planTeamNotification } from "./email/templates";
 import { ITEMS } from "./funnel";
 import { recordServerEvent, type Visit } from "./funnel-events";
@@ -17,13 +17,13 @@ import { supabaseConfigured } from "./supabase/env";
 // plan_requests is read with the loose client until supabase/migrations/20261103120000_plan_requests.sql is applied and
 // `npm run db:types` has run (lib/supabase/loose.ts).
 
-/** Whether the form can be saved: Supabase is configured and plan_requests exists (the migration is applied). Checked at most
- *  once a minute per server instance; once true it stays true. Until then /personal-plan shows the "email us" card instead of
- *  a form that would fail after ten minutes of answers. */
+/** Whether the form can take answers: email is configured (the answers go to the team inbox through SES), or plan_requests
+ *  exists. The table is checked at most once a minute per server instance; once true it stays true. With neither,
+ *  /personal-plan shows the "email us" card instead of a form that would fail after ten minutes of answers. */
 let formReady = false;
 let formCheckedAt = 0;
 export async function planFormReady(): Promise<boolean> {
-  if (formReady) return true;
+  if (formReady || emailConfigured) return true;
   // Local design work without a database (the web-nodb preview): show the form; saving answers 503 there.
   if (!supabaseConfigured && process.env.NODE_ENV === "development") return true;
   if (!supabaseConfigured || Date.now() - formCheckedAt < 60_000) return false;

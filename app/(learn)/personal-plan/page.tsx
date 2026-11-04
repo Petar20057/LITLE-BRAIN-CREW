@@ -144,7 +144,11 @@ export default function Page() {
           <div className="center-head"><span className="kick">how it works</span><h2>Ten minutes from you. {DAYS} from us.</h2></div>
           <ol className="ty-next">
             <li><b>You fill in the form</b> (about 10 minutes): your kid’s age, the moment, when it happens, what you’ve tried and what a good week would look like. Then your first name and email. No child’s name, no medical details. The more concrete, the better the plan.</li>
-            <li><b>You choose.</b> Continue to payment, {PRICE} on Creem’s secure checkout (card, Apple Pay or Google Pay), and work starts the moment it goes through. Or not now: your answers stay saved for {UNPAID_KEEP_DAYS} days, and the email we send you has the link back.</li>
+            {payable ? (
+              <li><b>You choose.</b> Continue to payment, {PRICE} on Creem’s secure checkout (card, Apple Pay or Google Pay), and work starts the moment it goes through. Or not now: your answers stay saved for {UNPAID_KEEP_DAYS} days, and the email we send you has the link back.</li>
+            ) : (
+              <li><b>Your answers go straight to our team.</b> You get a thank-you email right away, and a person starts on your plan.</li>
+            )}
             <li><b>Your plan lands in your inbox within {DAYS}</b>, from hello@littlebraincrew.com. You try it. You reply with what happened. We answer.</li>
           </ol>
         </div>
@@ -172,8 +176,12 @@ export default function Page() {
             <details><summary>What if my moment isn’t on the list?</summary><p>Pick “Something else” in the form and describe it in a sentence or two. The 12 moments on the list are the most common ones; the plan is written for whatever is happening at your house.</p></details>
             <details><summary>I have two kids. Can one plan cover both?</summary><p>One plan is for one kid and one moment, so the words fit the age. If the same moment plays out with two kids, say so in the form and the plan covers how to run it with both in the room.</p></details>
             <details><summary>I already have the Toolkit. Is this different?</summary><p>Yes. The Toolkit explains the moments for every family; the plan applies them to yours. Tick what you have in the form, and the plan builds on it instead of repeating it.</p></details>
-            <details><summary>Do I have to pay right away?</summary><p>No. You fill in the form and leave your email first, and nothing is charged. Then you choose: continue to payment, or come back later from the link in the email we send you. Unpaid answers are deleted after {UNPAID_KEEP_DAYS} days.</p></details>
-            <details><summary>How long until I have it?</summary><p>Within {DAYS} of paying, by email. The first move in it is for the evening you read it.</p></details>
+            {payable ? (
+              <details><summary>Do I have to pay right away?</summary><p>No. You fill in the form and leave your email first, and nothing is charged. Then you choose: continue to payment, or come back later from the link in the email we send you. Unpaid answers are deleted after {UNPAID_KEEP_DAYS} days.</p></details>
+            ) : (
+              <details><summary>What happens after I send the form?</summary><p>Your answers go straight to our team, and you get a thank-you email right away. A person writes your plan and sends it to the same address as soon as possible, within {PLAN_REPLY_DAYS} working days at the latest. Reply to the thank-you email if you want to add something.</p></details>
+            )}
+            <details><summary>How long until I have it?</summary><p>As soon as possible, within {DAYS} of {payable ? "paying" : "sending the form"} at the latest, by email. The first move in it is for the evening you read it.</p></details>
             <details><summary>Can I ask questions once I have it?</summary><p>Yes. Reply to the email your plan came in with what happened, and we answer.</p></details>
             <details><summary>Can I get a refund?</summary><p>Work on your plan starts the moment you pay, so all sales are final (see our <a href="/terms">Terms</a>). That’s why a shortened example is on this page: you can see what you’re getting before you decide.</p></details>
             <details><summary>Is this medical advice or therapy?</summary><p>No. It’s educational guidance about everyday habits and the words to use, built on published research and pediatric guidelines. We don’t diagnose, treat or promise results. If something about your child worries you, your pediatrician is the right first call.</p></details>

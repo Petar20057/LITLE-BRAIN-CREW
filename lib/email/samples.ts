@@ -1,6 +1,6 @@
 import { ITEMS, MOMENTS } from "@/lib/funnel";
 import type { Email } from "./layout";
-import { challengeDay, checkoutReminder, confirmSignup, freeScreenList, freeStickerPack, orderReceipt, planConfirmation, planSaved, planTeamNotification, quizResultEmail } from "./templates";
+import { challengeDay, checkoutReminder, confirmSignup, freeScreenList, freeStickerPack, orderReceipt, planConfirmation, planRequestTeam, planSaved, planTeamNotification, planThanks, quizResultEmail } from "./templates";
 import { quizData } from "@/lib/quiz";
 import { quizResult } from "@/lib/quiz-plan";
 
@@ -19,6 +19,16 @@ export const SAMPLES: Record<string, () => Email> = {
     ),
   "plan-saved": () => planSaved("Ana", "screen-off", "https://www.littlebraincrew.com/personal-plan?r=6f1c2a3b-4d5e-4f60-8a7b-9c0d1e2f3a4b#plan-form"),
   "plan-saved-closed": () => planSaved("Ana", "screen-off", "https://www.littlebraincrew.com/personal-plan?r=6f1c2a3b-4d5e-4f60-8a7b-9c0d1e2f3a4b#plan-form", false),
+  "plan-thanks": () => planThanks("Ana", "screen-off"),
+  "plan-request-team": () =>
+    planRequestTeam({
+      email: "ana@example.com",
+      requestId: null,
+      request: {
+        name: "Ana", kid_age: 7, moment: "screen-off",
+        answers: { when_happens: "Most school nights, right after the tablet goes off.", how_long: "months", tried: "Timers and a warning.", good_week: "No tears by Friday.", owns: ["toolkit"], timezone: "America/New_York" },
+      },
+    }),
   "plan-confirmation": () => planConfirmation("Ana"),
   "plan-team": () =>
     planTeamNotification({

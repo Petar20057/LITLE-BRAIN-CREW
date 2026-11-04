@@ -26,10 +26,12 @@ type Options = {
   unsubscribeUrl?: string;
   /** Shows up in SES events (bounces, complaints) when a configuration set is used. */
   tag?: string;
+  /** Where a reply goes instead of EMAIL_REPLY_TO / the From, e.g. the parent's address on a team notification. */
+  replyTo?: string;
 };
 
 /** Sends one email. Returns the SES message id, or null when email isn't configured (preview). */
-export async function sendEmail(to: string, email: Email, { unsubscribeUrl, tag }: Options = {}): Promise<string | null> {
+export async function sendEmail(to: string, email: Email, { unsubscribeUrl, tag, replyTo }: Options = {}): Promise<string | null> {
   if (!emailConfigured) {
     console.info("[email] not configured, not sent", { to, subject: email.subject });
     return null;
@@ -45,7 +47,7 @@ export async function sendEmail(to: string, email: Email, { unsubscribeUrl, tag 
     new SendEmailCommand({
       FromEmailAddress: FROM,
       Destination: { ToAddresses: [to] },
-      ReplyToAddresses: REPLY_TO ? [REPLY_TO] : undefined,
+      ReplyToAddresses: replyTo ? [replyTo] : REPLY_TO ? [REPLY_TO] : undefined,
       ConfigurationSetName: CONFIGURATION_SET || undefined,
       EmailTags: tag ? [{ Name: "type", Value: tag }] : undefined,
       Content: {

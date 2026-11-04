@@ -143,7 +143,7 @@ export const SITE_PAGES: SitePage[] = [
         bullets: [
           "Your email address.",
           "For school and business inquiries, your name, your organization, the type and size of your group, and a message.",
-          "For the Personal plan, your first name, your email address, your child’s age, which hard moment you want help with, and your answers about when it happens, what you have tried, what a good week would look like, your routine and anything else you choose to tell us. We don’t ask for your child’s name or health details. We keep these answers with your order so we can write and follow up on your plan, and we delete forms that were never paid for after 30 days.",
+          "For the Personal plan, your first name, your email address, your child’s age, which hard moment you want help with, and your answers about when it happens, what you have tried, what a good week would look like, your routine and anything else you choose to tell us. We don’t ask for your child’s name or health details. We email these answers to our team inbox and keep them with your order, only to write and follow up on your plan. Forms that were never paid for are deleted from our database after 30 days.",
           "For the founding-parents form, an age range for your child (such as 3 to 5), and whether you would be open to recording a short video. We don’t ask for children’s names, birthdays, photos or schools.",
           "For the “coming next” form, which topics and language you want.",
           "For gifts, your name, the recipient’s name and email, a short message and the date to send it.",

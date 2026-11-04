@@ -7,15 +7,16 @@ import { saveOrder, useQueryParam } from "@/lib/order";
 import { AGE_MAX, AGE_MIN, MOMENT_OPTIONS, NAME_MAX, PLAN_FIELDS, PLAN_REPLY_DAYS, UNPAID_KEEP_DAYS, momentTitle, type PlanField } from "@/lib/personal-plan-form";
 import { trackEvent } from "@/lib/track-event";
 
-// The Personal plan form (/personal-plan), in two steps:
-//   1. the answers about the kid and the moment, then the parent's first name and email → POST /api/personal-plan saves them
-//      (nothing is charged) and emails an "answers saved" note with a link back to step 2;
-//   2. optional: "Continue to payment" → POST /api/personal-plan/checkout → Creem. "Not now" leaves the answers saved.
+// The Personal plan form (/personal-plan):
+//   1. the answers about the kid and the moment, then the parent's first name and email → POST /api/personal-plan, which
+//      emails the answers to the team inbox and a thank-you to the parent (and saves the row when the table exists);
+//   2. without online payment (`payable` false, today): a thank-you, "we'll send your plan as soon as possible";
+//      with it: optional "Continue to payment" → POST /api/personal-plan/checkout → Creem, or "Not now".
 // The email link (/personal-plan?r=<id>) opens step 2 directly. Like lib/payments.ts, the order is kept in sessionStorage so
 // the thanks page can confirm the payment.
 
 type Answers = Record<string, string | string[]>;
-type Saved = { id: string; email?: string; name?: string };
+type Saved = { id: string; email?: string; name?: string; payable?: boolean };
 
 const EMAIL = /^\S+@\S+\.\S+$/;
 const AGES = Array.from({ length: AGE_MAX - AGE_MIN + 1 }, (_, i) => AGE_MIN + i);
@@ -56,10 +57,10 @@ export default function PersonalPlanForm({ payable }: { payable: boolean }) {
 
   const current = saved ?? (resumeId && UUID.test(resumeId) && !fresh ? { id: resumeId } : null);
   if (current) return <PayStep saved={current} payable={payable} resumed={!saved} onNew={() => { setSaved(null); setFresh(true); }} />;
-  return <AnswersStep onSaved={setSaved} />;
+  return <AnswersStep onSaved={setSaved} payable={payable} />;
 }
 
-function AnswersStep({ onSaved }: { onSaved: (s: Saved) => void }) {
+function AnswersStep({ onSaved, payable }: { onSaved: (s: Saved) => void; payable: boolean }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [age, setAge] = useState("");
@@ -105,12 +106,12 @@ function AnswersStep({ onSaved }: { onSaved: (s: Saved) => void }) {
     } catch {
       return fail("That didn’t go through. Please check your connection and try again.");
     }
-    const data = (await res.json().catch(() => ({}))) as { id?: string; error?: string; field?: string };
+    const data = (await res.json().catch(() => ({}))) as { id?: string | null; payable?: boolean; error?: string; field?: string };
     if (res.status === 429) return fail("Too many tries from this connection. Please wait a few minutes and try again.");
-    if (!res.ok || !data.id) return fail(data.error || "That didn’t go through on our side. Please try again in a minute.", data.field);
+    if (!res.ok) return fail(data.error || "That didn’t go through on our side. Please try again in a minute.", data.field);
     trackEvent("email_signup", "personal-plan");
     setBusy(false);
-    onSaved({ id: data.id, email: email.trim(), name: name.trim() });
+    onSaved({ id: data.id ?? "", email: email.trim(), name: name.trim(), payable: Boolean(data.payable && data.id) });
     document.getElementById("plan-form")?.scrollIntoView({ block: "start" });
   }
 
@@ -119,7 +120,7 @@ function AnswersStep({ onSaved }: { onSaved: (s: Saved) => void }) {
   return (
     <form className="fx-card pp-form" id="plan-form" onSubmit={submit} noValidate>
       <h2 style={{ marginTop: 0 }}>Tell us about your kid</h2>
-      <p className="fx-sub">About 10 minutes. The more concrete, the better the plan. Nothing to pay at this step.</p>
+      <p className="fx-sub">About 10 minutes. The more concrete, the better the plan.{payable ? " Nothing to pay at this step." : ""}</p>
       <div className="pp-grid">
         <label className="fx-field" htmlFor="pp-kid_age">
           Your kid’s age
@@ -154,19 +155,30 @@ function AnswersStep({ onSaved }: { onSaved: (s: Saved) => void }) {
         </label>
       </div>
       <div className="pay">
-        <button className="btn btn-main btn-lg" type="submit" disabled={busy}>{busy ? "Saving…" : "Save my answers"}</button>
+        <button className="btn btn-main btn-lg" type="submit" disabled={busy}>{busy ? "Sending…" : payable ? "Save my answers" : "Send my answers"}</button>
       </div>
       {error && <p className="fx-err" role="alert">{error}</p>}
       <ul className="fx-trust">
-        <li>Nothing is charged at this step. Next, you choose: continue to payment ({PRICE} once), or not now.</li>
-        <li>Unpaid answers are deleted after {UNPAID_KEEP_DAYS} days. See our <a href="/privacy">Privacy policy</a>.</li>
+        {payable ? (
+          <>
+            <li>Nothing is charged at this step. Next, you choose: continue to payment ({PRICE} once), or not now.</li>
+            <li>Unpaid answers are deleted after {UNPAID_KEEP_DAYS} days. See our <a href="/privacy">Privacy policy</a>.</li>
+          </>
+        ) : (
+          <>
+            <li>Your answers go straight to our team. You get a thank-you email right away, and your plan as soon as possible.</li>
+            <li>We use your answers only to write your plan. See our <a href="/privacy">Privacy policy</a>.</li>
+          </>
+        )}
       </ul>
       <p className="fine">The plan is educational guidance about habits and words, not medical advice, therapy or a diagnosis. If something about your child’s health worries you, call your pediatrician first.</p>
     </form>
   );
 }
 
-function PayStep({ saved, payable, resumed, onNew }: { saved: Saved; payable: boolean; resumed: boolean; onNew: () => void }) {
+function PayStep({ saved, payable: pagePayable, resumed, onNew }: { saved: Saved; payable: boolean; resumed: boolean; onNew: () => void }) {
+  // After sending, the server says whether this request can be paid online; a link from the email goes by the page.
+  const payable = saved.payable ?? pagePayable;
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [later, setLater] = useState(false);
@@ -199,7 +211,7 @@ function PayStep({ saved, payable, resumed, onNew }: { saved: Saved; payable: bo
 
   return (
     <div className="fx-card pp-form pp-pay" id="plan-form">
-      <p className="pp-saved" role="status">✓ {resumed ? "Your answers are saved." : `Saved${saved.name ? `, ${saved.name}` : ""}. Your answers are with us.`}</p>
+      <p className="pp-saved" role="status">✓ {resumed ? "Your answers are saved." : "Your answers are with us."}</p>
       {later ? (
         <>
           <h2 style={{ marginTop: 0 }}>No problem.</h2>
@@ -222,11 +234,12 @@ function PayStep({ saved, payable, resumed, onNew }: { saved: Saved; payable: bo
         </>
       ) : (
         <>
-          <h2 style={{ marginTop: 0 }}>Payment opens in a few days.</h2>
-          <p className="fx-sub">Your answers are saved for {UNPAID_KEEP_DAYS} days. We’ll email {saved.email ?? "you"} as soon as you can continue to payment, and the link brings you straight back here. Nothing is charged until then.</p>
+          <h2 style={{ marginTop: 0 }}>Thank you{saved.name ? `, ${saved.name}` : ""}!</h2>
+          <p className="fx-sub">Thank you for ordering your Personal plan. A person on our team is already reading your answers. We’ll send your plan to {saved.email ?? "your inbox"} as soon as possible, within {PLAN_REPLY_DAYS} working days at the latest.</p>
+          <p className="fine">A thank-you email is on its way from hello@littlebraincrew.com. Something to add? Reply to it, a real person answers.</p>
         </>
       )}
-      <p className="fine" style={{ marginTop: 16 }}>Not your answers, or want to start over? <button className="link-button" type="button" onClick={onNew}>Fill in a new form</button></p>
+      <p className="fine" style={{ marginTop: 16 }}>A plan for another kid, or want to start over? <button className="link-button" type="button" onClick={onNew}>Fill in a new form</button></p>
     </div>
   );
 }
