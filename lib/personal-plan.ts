@@ -29,7 +29,8 @@ export async function planFormReady(): Promise<boolean> {
   if (!supabaseConfigured || Date.now() - formCheckedAt < 60_000) return false;
   formCheckedAt = Date.now();
   try {
-    const { error } = await looseAdmin().from("plan_requests").select("id", { count: "exact", head: true }).limit(1);
+    // A GET, not a HEAD: postgrest-js reads a HEAD 404 (no body) for a missing table as "204 No Content" with no error.
+    const { error } = await looseAdmin().from("plan_requests").select("id").limit(1);
     if (error) console.info("[personal-plan] form closed: plan_requests is not readable", error.code);
     formReady = !error;
   } catch (err) {
