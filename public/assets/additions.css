@@ -775,6 +775,23 @@ html.dad .top .logo .on-dark,html.dad .ad-top .logo .on-dark{display:block}
 .unlock-box .btn{margin-top:8px}
 @media(max-width:760px){.unlock-box{grid-template-columns:1fr}.unlock-box img{max-width:220px}.locked-grid{grid-template-columns:repeat(auto-fill,minmax(56px,1fr))}}
 
+/* ---------- home: the padlocked crew under the roster (same silhouettes as /crew) ---------- */
+.home-locked{margin-top:var(--s5);background:#fff;border-radius:var(--r-l);box-shadow:var(--sh-1);padding:var(--s4)}
+.home-locked-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--s2) var(--s4)}
+.home-locked-head>div{flex:1 1 420px;max-width:62ch}
+.home-locked-head h3{font-size:clamp(24px,3.4vw,32px);margin:4px 0 8px}
+.home-locked-head p{margin:0;color:var(--ink-soft)}
+.home-locked .locked-grid{grid-template-columns:repeat(auto-fill,minmax(54px,1fr));gap:8px;margin-top:var(--s3)}
+.home-locked .locked-grid .crew-face,.home-locked .locked-grid .crew-face img,.home-locked .locked-grid .crew-face svg{width:42px;height:42px}
+.home-locked .lock-badge{right:3px;bottom:3px;width:20px;height:20px}
+.home-locked .lock-badge svg{width:12px;height:12px}
+@media(max-width:760px){
+  .home-locked{padding:var(--s3)}
+  /* phones: three rows that swipe sideways, like the roster above */
+  .home-locked .locked-grid{grid-template-columns:none;grid-template-rows:repeat(3,56px);grid-auto-flow:column;grid-auto-columns:56px;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none;margin-inline:calc(var(--s3)*-1);padding:2px var(--s3) 6px}
+  .home-locked .locked-grid::-webkit-scrollbar{display:none}
+}
+
 /* ---------- two plan cards (the Toolkit and the Personal plan), the four-page gallery and the price anchor on /toolkit ---------- */
 .plans.two{grid-template-columns:1.12fr 1fr;max-width:900px;margin:0 auto}
 @media(min-width:1001px){#plans .plans.two{grid-template-columns:1.12fr 1fr;max-width:900px}}
