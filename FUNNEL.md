@@ -560,3 +560,17 @@ Luka: „spojimo Toolkit sa 30-day Reset i sve prodajemo kao Toolkit“; likovi:
 
 **Status posle deploya (4. novembar 2026):** Upload u privatni bucket `delivery` uspeo za svih 22 fajla; `v2/Complete-Crew-Guide/The-Complete-Crew-Guide.pdf` = 2.988.010 B i `v2/Kid-Brain-Toolkit-Complete.zip` = 6.764.133 B (iste lokalne i bucket veličine, oba potpisana URL-a `HEAD 200`). Produkcija (`a90615c`, Vercel Ready): `/toolkit` 200 („Four books, one tracker, three printables“, `$19`); `/crew` 200 (152 zaključana bez vidljivog teksta i sa checkout linkom, 62 besplatna); `/crew/somi` 404, `/crew/dopa` 200; redirekti `/reset`→`/toolkit`, `/checkout/program`→`/checkout/guide`, `/offer/upgrade`→`/thank-you`, `/affiliate`→`/`, `/account/affiliate`→`/account`, `/account/cancel`→`/account`, `/checkout/club`→`/#plans`; `/personal-plan` 200 sa „Why not just the $19 Toolkit?“; `/`, `/pricing`, `/terms` bez „Crew Club“, „affiliate“ i `$39`; oba uzorka 200. Creem dashboard je bio otvoren, ali browser kontrola je vraćala timeout pre prikaza stranice, pa arhiviranje nije završeno; Luka treba da arhivira `prod_3mmyLBzga7NpdbgE3WZmzP` (The 30-Day Reset), `prod_6d142HGVXIBWDbZCmMRYBn` (Reset + cards) i `prod_PWUqmqrxx9yjrMRWFC6tI` (Upgrade).
 
+## 22. Personal plan: prvo odgovori i mejl, plaćanje po želji — 4. novembar 2026 (veče)
+
+Luka: „formular da popune, kada popune da upišu svoj mail i onda da idu na checkout, ako hoće“.
+
+**Tok:** `/personal-plan` → formular (uzrast, trenutak, pitanja, pa na kraju ime i mejl) → **„Save my answers“** → `POST /api/personal-plan` čuva red u `plan_requests` (status `new`), **ništa ne naplaćuje**, i šalje mejl „Your Personal plan answers are saved“ (`planSaved` u `lib/email/templates.ts`, preview `/dev/emails/plan-saved`) sa linkom `/personal-plan?r=<id>#plan-form` → odmah ispod: korak plaćanja „Want your plan written? · Continue to payment · $199“ ili „Not now, keep my answers“. Plaćanje: `POST /api/personal-plan/checkout` `{ id }` → Creem checkout sa mejlom iz forme i `metadata.request_id` → status `checkout` → webhook kao i pre (`recordPlanPurchase`). Link iz mejla otvara direktno korak plaćanja. Neplaćeni odgovori se brišu posle 30 dana (`UNPAID_KEEP_DAYS`, `prune_old_data`).
+
+**Dok Creem proizvod ne postoji** (`personal-plan` u `lib/creem-products.json` prazan): odgovori se ipak čuvaju, korak plaćanja kaže „Payment opens in a few days… we’ll email you“, mejl isto. Admin (`/admin/personal-plans`) za neplaćene ima „Payment link to send“ (`planPayPath`), pa tim šalje link kad plaćanje proradi.
+
+**Dok tabela ne postoji:** `planFormReady()` (`lib/personal-plan.ts`) proverava `plan_requests` najviše jednom u minuti; dok je nema, strana pokazuje staru karticu „opens in a few days, email us“ umesto formulara (formular je u `<Suspense>` posle `connection()`). **Stanje 4. 11. uveče: tabela NE postoji u produkciji** (REST: `PGRST205`), pa je formular i dalje zatvoren. Lokalno bez baze (`web-nodb`) formular se prikazuje radi dizajna.
+
+**Luka / Codex:** (1) primeniti `supabase/migrations/20261103120000_plan_requests.sql` u produkcijsku bazu (pa `npm run db:types`) → formular se sam otvara u roku od minut; (2) Creem: proizvod „The Personal plan“ $199 i id u `lib/creem-products.json` → `personal-plan`, pa push → plaćanje radi.
+
+Napomena za testiranje u Claude pregledaču: u **sakrivenom** pregledaču React ne zamenjuje „Loading the form…“ (nema animacionih okvira); na vidljivom ekranu radi.
+

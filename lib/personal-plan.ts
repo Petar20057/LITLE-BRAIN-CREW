@@ -8,11 +8,35 @@ import { ITEMS } from "./funnel";
 import { recordServerEvent, type Visit } from "./funnel-events";
 import { AGE_MAX, AGE_MIN, MAX_ANSWERS_BYTES, MOMENT_OPTIONS, NAME_MAX, PLAN_FIELDS, type PlanStatus } from "./personal-plan-form";
 import { looseAdmin } from "./supabase/loose";
+import { supabaseConfigured } from "./supabase/env";
 
-// The Personal plan ($199): a parent fills in the form on /personal-plan, the row is saved (app/api/personal-plan), they pay
-// on Creem, and the webhook (app/api/creem/webhook) lands here to mark the form paid, record the order and tell the team.
+// The Personal plan ($199): a parent fills in the form on /personal-plan and leaves an email, the row is saved
+// (app/api/personal-plan, status new) and they get an "answers saved" email with a link to pay. Paying is a second, optional
+// step (app/api/personal-plan/checkout → Creem, status checkout); the webhook (app/api/creem/webhook) lands here to mark the
+// form paid, record the order and tell the team.
 // plan_requests is read with the loose client until supabase/migrations/20261103120000_plan_requests.sql is applied and
 // `npm run db:types` has run (lib/supabase/loose.ts).
+
+/** Whether the form can be saved: Supabase is configured and plan_requests exists (the migration is applied). Checked at most
+ *  once a minute per server instance; once true it stays true. Until then /personal-plan shows the "email us" card instead of
+ *  a form that would fail after ten minutes of answers. */
+let formReady = false;
+let formCheckedAt = 0;
+export async function planFormReady(): Promise<boolean> {
+  if (formReady) return true;
+  // Local design work without a database (the web-nodb preview): show the form; saving answers 503 there.
+  if (!supabaseConfigured && process.env.NODE_ENV === "development") return true;
+  if (!supabaseConfigured || Date.now() - formCheckedAt < 60_000) return false;
+  formCheckedAt = Date.now();
+  try {
+    const { error } = await looseAdmin().from("plan_requests").select("id", { count: "exact", head: true }).limit(1);
+    if (error) console.info("[personal-plan] form closed: plan_requests is not readable", error.code);
+    formReady = !error;
+  } catch (err) {
+    console.info("[personal-plan] form closed", err);
+  }
+  return formReady;
+}
 
 /** Where every paid request is announced, with the parent's answers. Empty env = the hello@ inbox. */
 export const TEAM_EMAIL = process.env.TEAM_NOTIFY_EMAIL || "hello@littlebraincrew.com";

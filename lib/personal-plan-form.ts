@@ -7,6 +7,10 @@ import { MOMENTS } from "./funnel";
 
 /** Working days in which the written plan lands in the parent's inbox (site copy, emails, Terms). */
 export const PLAN_REPLY_DAYS = 3;
+/** An unpaid form is deleted after this many days (prune_old_data(), the Privacy page, the "answers saved" email). */
+export const UNPAID_KEEP_DAYS = 30;
+/** Where a parent who saved the form pays later (the "answers saved" email, the admin panel): the payment step of /personal-plan. */
+export const planPayPath = (id: string) => `/personal-plan?r=${encodeURIComponent(id)}#plan-form`;
 export const AGE_MIN = 3;
 export const AGE_MAX = 17;
 export const NAME_MAX = 80;

@@ -2,7 +2,7 @@ import { ITEMS, MOMENTS, PRODUCTS, total, usd, type Item } from "@/lib/funnel";
 import { renderEmail, type Block, type Email } from "./layout";
 import { hoursLabel, offerLinks, type QuizResult } from "@/lib/quiz-plan";
 import { DISCLAIMER } from "@/content/quiz";
-import { PLAN_FIELDS, PLAN_REPLY_DAYS, answerLabel, momentTitle } from "@/lib/personal-plan-form";
+import { PLAN_FIELDS, PLAN_REPLY_DAYS, UNPAID_KEEP_DAYS, answerLabel, momentTitle } from "@/lib/personal-plan-form";
 
 // Every email we send. Copy follows the site (English, calm, no hype, no promises about a child): words like
 // "free", "guaranteed", ALL CAPS and piles of exclamation marks are spam signals as much as they're off-brand.
@@ -102,6 +102,31 @@ export function planConfirmation(name: string | undefined, amountCents = ITEMS.p
     ],
     reason: "You’re getting this email because you ordered a Personal plan at littlebraincrew.com.",
     campaign: "plan-confirmation",
+  });
+}
+
+/** Right after a parent saves the Personal plan form (app/api/personal-plan). Nothing is paid yet: the button opens the payment
+ *  step for this request (lib/personal-plan-form.ts planPayPath). `payable` false while the Creem product doesn't exist yet. */
+export function planSaved(name: string | undefined, moment: string, payUrl: string, payable = true): Email {
+  const days = `${PLAN_REPLY_DAYS} working days`;
+  return renderEmail({
+    subject: "Your Personal plan answers are saved",
+    preheader: payable ? `Nothing is charged yet. Continue to payment whenever you’re ready, and your plan lands within ${days}.` : "Nothing is charged yet. We’ll email you as soon as you can continue to payment.",
+    kick: "answers saved",
+    title: "We’ve got your answers",
+    art: "toci",
+    blocks: [
+      { p: `Thanks${name ? `, ${name}` : ""}. Your answers about “${momentTitle(moment)}” are saved. Nothing has been charged.` },
+      ...(payable
+        ? [
+            { p: `When you’re ready, the Personal plan is ${usd(ITEMS.personalPlan.price)}, once. A person writes it from your answers and it lands in this inbox within ${days} of payment.` },
+            { button: { label: `Continue to payment · ${usd(ITEMS.personalPlan.price)}`, url: payUrl } },
+          ]
+        : [{ p: "Payment for the Personal plan opens in a few days. We’ll email you as soon as it does, and this link will take you straight to it." }, { link: { label: "Open my saved plan", url: payUrl } }]),
+      { note: `Changed your mind? Do nothing: unpaid answers are deleted after ${UNPAID_KEEP_DAYS} days. Something to add? Reply to this email.` },
+    ],
+    reason: "You’re getting this email because you filled in the Personal plan form at littlebraincrew.com.",
+    campaign: "plan-saved",
   });
 }
 

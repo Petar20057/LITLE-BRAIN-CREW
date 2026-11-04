@@ -1,6 +1,6 @@
 import { ITEMS, MOMENTS } from "@/lib/funnel";
 import type { Email } from "./layout";
-import { challengeDay, checkoutReminder, confirmSignup, freeScreenList, freeStickerPack, orderReceipt, planConfirmation, planTeamNotification, quizResultEmail } from "./templates";
+import { challengeDay, checkoutReminder, confirmSignup, freeScreenList, freeStickerPack, orderReceipt, planConfirmation, planSaved, planTeamNotification, quizResultEmail } from "./templates";
 import { quizData } from "@/lib/quiz";
 import { quizResult } from "@/lib/quiz-plan";
 
@@ -17,6 +17,8 @@ export const SAMPLES: Record<string, () => Email> = {
         { label: "For tonight: a calmer bedtime and screen-off", files: [{ name: "Seven evenings, the screen-off scripts and a bedtime story", url: "https://www.littlebraincrew.com/api/download" }] },
       ],
     ),
+  "plan-saved": () => planSaved("Ana", "screen-off", "https://www.littlebraincrew.com/personal-plan?r=6f1c2a3b-4d5e-4f60-8a7b-9c0d1e2f3a4b#plan-form"),
+  "plan-saved-closed": () => planSaved("Ana", "screen-off", "https://www.littlebraincrew.com/personal-plan?r=6f1c2a3b-4d5e-4f60-8a7b-9c0d1e2f3a4b#plan-form", false),
   "plan-confirmation": () => planConfirmation("Ana"),
   "plan-team": () =>
     planTeamNotification({

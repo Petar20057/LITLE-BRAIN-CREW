@@ -848,3 +848,9 @@ html.dad .top .logo .on-dark,html.dad .ad-top .logo .on-dark{display:block}
 .why-short{max-width:720px;margin:var(--s4) auto 0;text-align:center;color:var(--ink-soft)}
 @media(max-width:760px){.promise{font-size:14px}}
 
+/* ---------- /personal-plan form: the email step, the "saved" line and the optional payment step ---------- */
+.pp-form .pp-step{font-size:22px;margin:var(--s4) 0 var(--s2);padding-top:var(--s3);border-top:2px dashed var(--hair)}
+.pp-saved{display:inline-block;margin:0 0 var(--s2);padding:6px 14px;border-radius:var(--r-pill);background:var(--endo-t,#e6f7ee);font-weight:700;color:var(--ink)}
+.pp-pay .no-thanks{display:block;margin:12px auto 0}
+.link-button{background:none;border:0;padding:0;font:inherit;color:inherit;text-decoration:underline;cursor:pointer}
+

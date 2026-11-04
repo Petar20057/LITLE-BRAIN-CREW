@@ -1,3 +1,5 @@
+import { connection } from "next/server";
+import { Suspense } from "react";
 import PersonalPlanForm from "@/components/funnel/PersonalPlanForm";
 import StickyBuy from "@/components/funnel/StickyBuy";
 import CharArt from "@/components/learn/CharArt";
@@ -6,12 +8,15 @@ import LearnShell from "@/components/learn/LearnShell";
 import { creemConfigured, productIdFor } from "@/lib/creem";
 import { ITEMS, usd } from "@/lib/funnel";
 import { breadcrumbLd, webPageLd } from "@/lib/jsonld";
-import { PLAN_REPLY_DAYS } from "@/lib/personal-plan-form";
+import { planFormReady } from "@/lib/personal-plan";
+import { PLAN_REPLY_DAYS, UNPAID_KEEP_DAYS } from "@/lib/personal-plan-form";
 import { simpleMetadata } from "@/lib/seo";
 
 // The Personal plan ($199): the sales page and the intake form. A React page (not design/) because the form must talk to
 // /api/personal-plan and then leave for Creem; LearnShell gives it the site's header and footer. The form is closed until
-// the Creem product id is filled in (lib/creem-products.json), so the page can be deployed before the product exists.
+// the plan_requests table exists (planFormReady, checked at request time in <FormGate>); paying is a second, optional step
+// that works once the Creem product id is filled in (lib/creem-products.json). Until then the form saves the answers and says
+// payment opens soon, so the page can be deployed before either exists.
 // The copy (2026-11-04, the Hormozi pass): the done-for-you promise, what a plan looks like (a shortened example, because
 // there are no reviews and no refunds), the honest "why not just the $19 Toolkit", who it's for, the questions, the form.
 // Rules: no promise about the child, no guarantee, no invented reference prices, no fake scarcity.
@@ -25,8 +30,23 @@ const DESCRIPTION = `A plan written for your family for ${PRICE}: tell us about 
 
 export const metadata = simpleMetadata({ metaTitle: "The Personal Plan: Written for Your Family", description: DESCRIPTION, path: "/personal-plan" });
 
+/** Shown instead of the form until plan_requests exists: nothing to save the answers in yet. */
+function PlanClosed() {
+  return (
+    <div className="fx-card" id="plan-form">
+      <h2 style={{ marginTop: 0 }}>The Personal plan opens in a few days.</h2>
+      <p className="fx-sub">Want one now? Email <a href="mailto:hello@littlebraincrew.com?subject=Personal%20plan">hello@littlebraincrew.com</a> with your kid’s age and the moment that keeps going wrong, and we’ll take it from there.</p>
+    </div>
+  );
+}
+
+async function FormGate({ payable }: { payable: boolean }) {
+  await connection();
+  return (await planFormReady()) ? <PersonalPlanForm payable={payable} /> : <PlanClosed />;
+}
+
 export default function Page() {
-  const open = creemConfigured && Boolean(productIdFor(ITEMS.personalPlan.id));
+  const payable = creemConfigured && Boolean(productIdFor(ITEMS.personalPlan.id));
   return (
     <LearnShell sales>
       <JsonLd data={[webPageLd({ path: "/personal-plan", name: "The Personal plan", description: DESCRIPTION }), breadcrumbLd([{ name: "Home", path: "/" }, { name: "The Personal plan", path: "/personal-plan" }])]} />
@@ -50,7 +70,7 @@ export default function Page() {
             <p className="lede">Stop guessing what to try next. Within {DAYS} a person writes what’s going on, one small move for each evening and the exact words for your kid’s age.</p>
             <div className="offer-buy">
               <a className="btn btn-main btn-lg" href="#plan-form">Start my plan · {PRICE}</a>
-              <span className="per">{PRICE} once · ten minutes of answers first, then Creem’s secure checkout · no subscription</span>
+              <span className="per">{PRICE} once · your answers first, you pay only if you want the plan · no subscription</span>
             </div>
             <div className="trust-row" style={{ justifyContent: "center" }}>
               <span><svg aria-hidden="true"><use href="#i-check" /></svg>Written by a person, not generated</span>
@@ -123,8 +143,8 @@ export default function Page() {
         <div className="wrap" style={{ maxWidth: 900 }}>
           <div className="center-head"><span className="kick">how it works</span><h2>Ten minutes from you. {DAYS} from us.</h2></div>
           <ol className="ty-next">
-            <li><b>You fill in the form</b> (about 10 minutes): your kid’s age, the moment, when it happens, what you’ve tried and what a good week would look like. No child’s name, no medical details. The more concrete, the better the plan.</li>
-            <li><b>You pay {PRICE}</b> on Creem’s secure checkout: card, Apple Pay or Google Pay. Work starts the moment it goes through.</li>
+            <li><b>You fill in the form</b> (about 10 minutes): your kid’s age, the moment, when it happens, what you’ve tried and what a good week would look like. Then your first name and email. No child’s name, no medical details. The more concrete, the better the plan.</li>
+            <li><b>You choose.</b> Continue to payment, {PRICE} on Creem’s secure checkout (card, Apple Pay or Google Pay), and work starts the moment it goes through. Or not now: your answers stay saved for {UNPAID_KEEP_DAYS} days, and the email we send you has the link back.</li>
             <li><b>Your plan lands in your inbox within {DAYS}</b>, from hello@littlebraincrew.com. You try it. You reply with what happened. We answer.</li>
           </ol>
         </div>
@@ -152,6 +172,7 @@ export default function Page() {
             <details><summary>What if my moment isn’t on the list?</summary><p>Pick “Something else” in the form and describe it in a sentence or two. The 12 moments on the list are the most common ones; the plan is written for whatever is happening at your house.</p></details>
             <details><summary>I have two kids. Can one plan cover both?</summary><p>One plan is for one kid and one moment, so the words fit the age. If the same moment plays out with two kids, say so in the form and the plan covers how to run it with both in the room.</p></details>
             <details><summary>I already have the Toolkit. Is this different?</summary><p>Yes. The Toolkit explains the moments for every family; the plan applies them to yours. Tick what you have in the form, and the plan builds on it instead of repeating it.</p></details>
+            <details><summary>Do I have to pay right away?</summary><p>No. You fill in the form and leave your email first, and nothing is charged. Then you choose: continue to payment, or come back later from the link in the email we send you. Unpaid answers are deleted after {UNPAID_KEEP_DAYS} days.</p></details>
             <details><summary>How long until I have it?</summary><p>Within {DAYS} of paying, by email. The first move in it is for the evening you read it.</p></details>
             <details><summary>Can I ask questions once I have it?</summary><p>Yes. Reply to the email your plan came in with what happened, and we answer.</p></details>
             <details><summary>Can I get a refund?</summary><p>Work on your plan starts the moment you pay, so all sales are final (see our <a href="/terms">Terms</a>). That’s why a shortened example is on this page: you can see what you’re getting before you decide.</p></details>
@@ -167,7 +188,9 @@ export default function Page() {
             <CharArt char="toci" mood="happy" />
             <p><b>Toci says: no wrong answers here.</b> Write it the way you’d tell a friend over coffee. The messy details are the useful ones, and nobody is grading you.</p>
           </div>
-          <PersonalPlanForm open={open} />
+          <Suspense fallback={<div className="fx-card" id="plan-form"><p className="fx-sub">Loading the form…</p></div>}>
+            <FormGate payable={payable} />
+          </Suspense>
         </div>
       </section>
       {/* After the form: the honest downsell, for the parent who isn't ready for $199 (Hormozi: never before the main offer is seen). */}

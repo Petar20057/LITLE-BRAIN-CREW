@@ -4,7 +4,7 @@ import { AdminHeader, Tiles } from "@/components/admin/Admin";
 import { rangeFrom, requireAdmin } from "@/lib/admin";
 import { ITEMS, usd } from "@/lib/funnel";
 import type { PlanRequestRow } from "@/lib/personal-plan";
-import { PLAN_FIELDS, PLAN_REPLY_DAYS, answerLabel, momentTitle, type PlanStatus } from "@/lib/personal-plan-form";
+import { PLAN_FIELDS, PLAN_REPLY_DAYS, answerLabel, momentTitle, planPayPath, type PlanStatus } from "@/lib/personal-plan-form";
 import { looseAdmin } from "@/lib/supabase/loose";
 import { setPlanStatus } from "./actions";
 
@@ -17,7 +17,7 @@ export const instant = false;
 const LATEST = 100;
 const when = (iso: string | null) => (iso ? new Date(iso).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "Europe/Belgrade" }) : "");
 const STATUS: Record<PlanStatus, string> = {
-  new: "Form saved, no checkout yet",
+  new: "Answers saved, not at checkout",
   checkout: "At checkout, not paid",
   paid: "Paid · waiting for the plan",
   replied: "Plan sent",
@@ -93,7 +93,7 @@ export default async function Page({ searchParams }: PageProps<"/admin/personal-
                       {(r.status === "paid" || r.status === "replied") && (
                         <form action={setPlanStatus}><input type="hidden" name="id" value={r.id} /><input type="hidden" name="status" value="closed" /><button type="submit" className="adm-link">Close</button></form>
                       )}
-                      {(r.status === "new" || r.status === "checkout") && r.checkout_url && <a href={r.checkout_url} rel="noreferrer">Checkout link</a>}
+                      {(r.status === "new" || r.status === "checkout") && <a href={planPayPath(r.id)}>Payment link to send</a>}
                     </td>
                   </tr>
                   <tr className="adm-plan-answers">
