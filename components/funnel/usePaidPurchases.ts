@@ -8,7 +8,7 @@ type Delivery = { token: string; items: string[] };
 type State = { key: string; byToken: Record<string, PaidPurchase[]>; pending: boolean; error: string };
 
 /** Session storage only identifies the order; its paid contents always come from the server. */
-export function usePaidPurchases(deliveries: Delivery[] | undefined, waitForUpgrade = false) {
+export function usePaidPurchases(deliveries: Delivery[] | undefined) {
   const key = JSON.stringify([...new Set((deliveries ?? []).map((d) => d.token))]);
   const [state, setState] = useState<State>({ key: "", byToken: {}, pending: true, error: "" });
   useEffect(() => {
@@ -35,14 +35,13 @@ export function usePaidPurchases(deliveries: Delivery[] | undefined, waitForUpgr
           error = "Your payment is still being confirmed. Your email will have the download links.";
         }
       }));
-      if (waitForUpgrade && !Object.values(confirmed).flat().some((p) => p.items.includes("upgrade"))) pending = true;
       if (controller.signal.aborted) return;
       setState({ key, byToken: confirmed, pending: pending && attempt < 14, error });
       if (pending && ++attempt < 14) timer = setTimeout(poll, 1500);
     }
     void poll();
     return () => { controller.abort(); clearTimeout(timer); };
-  }, [key, waitForUpgrade]);
+  }, [key]);
   useEffect(() => {
     if (state.key !== key) return;
     const track = () => Object.values(state.byToken).flat().forEach(trackAdPurchase);

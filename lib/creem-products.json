@@ -11,26 +11,6 @@
     "test": "",
     "live": "prod_E1gP0yZAWuMeqWpmawo0s"
   },
-  "program": {
-    "test": "",
-    "live": "prod_3mmyLBzga7NpdbgE3WZmzP"
-  },
-  "program+cards": {
-    "test": "",
-    "live": "prod_6d142HGVXIBWDbZCmMRYBn"
-  },
-  "upgrade": {
-    "test": "",
-    "live": "prod_PWUqmqrxx9yjrMRWFC6tI"
-  },
-  "club-monthly": {
-    "test": "",
-    "live": "prod_1S0reIotNSNBB7rUZvMmi6"
-  },
-  "club-yearly": {
-    "test": "",
-    "live": "prod_62M16BhebPTkZHOFX9jd7C"
-  },
   "personal-plan": {
     "test": "",
     "live": ""

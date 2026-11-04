@@ -3,7 +3,7 @@
 
 export type Access = "free" | "locked";
 
-/** The parts of a page that only members and pack buyers may read. Never sent to the browser for a locked character. */
+/** The parts of a character that live only in the Complete Crew Guide PDF (it comes with the Toolkit). Never sent to the browser. */
 export type LockedContent = {
   explanation?: string;
   whatToSay?: string;
@@ -19,11 +19,11 @@ export type Character = {
   real: string;
   /** The CSV's group code ("messengers", "brain", "habit_helpers"...); groupTitle() makes it readable. */
   group?: string;
-  /** The pack that sells this character ("" for the free core crew). */
+  /** The CSV's pack name ("" for the core crew). Packs stopped being sold on 2026-11-04; the field is kept for the data. */
   pack: string;
   packSlug: string;
   access: Access;
-  /** The free sample of its pack (one per pack). */
+  /** The CSV's "sample" flag (one free character per former pack). */
   sample: boolean;
   /** A glossary row links to this page. */
   inGlossary: boolean;
@@ -59,16 +59,10 @@ export const LOCKED_CONTENT_FIELDS = ["explanation", "whatToSay", "print", "cart
 /** What a card or a locked page may show: everything but the locked content. */
 export type PublicCharacter = Omit<Character, "locked">;
 
-/** Who is reading: an active Crew Club member and/or the owner of some packs (lib/viewer.ts). */
-export type Viewer = { club: boolean; packs: readonly string[] };
-export const NO_VIEWER: Viewer = { club: false, packs: [] };
-
-/** Every pack costs the same, forever. The Club prices live in lib/funnel.ts (ITEMS). */
-export const PACK_PRICE = 7;
-/** Pack checkouts arrive with phase 5 (Creem products per pack); until then a pack is "coming". */
-export const PACK_CHECKOUT_OPEN = false;
-/** The Crew Club is a waitlist until phases 4–6 (next.config.ts sends /checkout/club back to the plans). */
-export const CLUB_OPEN = false;
+/** A character is open on the site when the CSV marks it free or it has a finished page. Everything else is locked
+ *  (2026-11-04, Luka): on /crew it is a grey silhouette with a padlock and no name, its card leads to the Toolkit checkout,
+ *  and its text is only in the Complete Crew Guide PDF that comes with the Toolkit. No packs, no Club, no sign-in. */
+export const isUnlocked = (c: Pick<Character, "access" | "published">): boolean => c.access === "free" || c.published;
 
 /** Readable names for the CSV's group codes (the free crew is grouped by these on /crew). */
 export const GROUP_TITLES: Record<string, string> = {
@@ -103,43 +97,10 @@ export const waveRank = (wave: string | undefined): number => {
 export const sortByWave = <T extends Pick<Character, "wave">>(chars: readonly T[]): T[] =>
   chars.map((c, i) => ({ c, i })).sort((a, b) => waveRank(a.c.wave) - waveRank(b.c.wave) || a.i - b.i).map((x) => x.c);
 
-export const canRead = (c: Pick<Character, "access" | "published" | "packSlug">, v: Viewer): boolean =>
-  c.published && (c.access === "free" || v.club || (c.packSlug !== "" && v.packs.includes(c.packSlug)));
-
 export function publicOf(c: Character): PublicCharacter {
   const { locked: _locked, ...rest } = c;
   void _locked;
   return rest;
-}
-
-export type Pack = {
-  slug: string;
-  name: string;
-  total: number;
-  /** Characters with published = true. */
-  ready: number;
-  /** A pack goes on sale only when every character in it is ready. */
-  onSale: boolean;
-  /** Slugs of the free samples in this pack. */
-  samples: string[];
-};
-
-/** Packs in order of first appearance. The free core crew (pack "") is not a pack. */
-export function packsOf(chars: readonly Pick<Character, "pack" | "packSlug" | "published" | "sample" | "slug">[]): Pack[] {
-  const out: Pack[] = [];
-  for (const c of chars) {
-    if (!c.packSlug) continue;
-    let p = out.find((x) => x.slug === c.packSlug);
-    if (!p) {
-      p = { slug: c.packSlug, name: c.pack, total: 0, ready: 0, onSale: false, samples: [] };
-      out.push(p);
-    }
-    p.total += 1;
-    if (c.published) p.ready += 1;
-    if (c.sample) p.samples.push(c.slug);
-  }
-  for (const p of out) p.onSale = p.total > 0 && p.ready === p.total;
-  return out;
 }
 
 /** "Vitamin D" -> "vitamin-d"; Serbian letters become ASCII (Đ -> dj). */
@@ -165,7 +126,6 @@ export function validate(chars: readonly Character[], siteBacked: ReadonlySet<st
     seen.add(c.slug);
     if (!c.name) problems.push(`${where}: no name`);
     if (c.access !== "free" && c.access !== "locked") problems.push(`${where}: access must be free or locked, got "${String(c.access)}"`);
-    if (c.access === "locked" && !c.packSlug) problems.push(`${where}: locked but in no pack`);
     if (c.sample && c.access !== "free") problems.push(`${where}: a sample must be free`);
     if (!c.sentence) problems.push(`${where}: no card sentence`);
     if (c.published && !siteBacked.has(c.slug)) {
@@ -173,22 +133,12 @@ export function validate(chars: readonly Character[], siteBacked: ReadonlySet<st
       if (!c.whenToTalk) problems.push(`${where}: published but no "When to talk to your pediatrician"`);
     }
   }
-  for (const p of packsOf(chars)) {
-    if (p.samples.length > 1) problems.push(`pack ${p.name}: ${p.samples.length} samples, expected one`);
-  }
   return problems;
 }
 
-/** Things worth a look that don't block the import. */
-export function warnings(chars: readonly Character[]): string[] {
-  const out: string[] = [];
-  for (const p of packsOf(chars)) if (p.samples.length === 0) out.push(`pack ${p.name}: no free sample marked`);
-  return out;
-}
-
-/** Counts for the /crew filters. */
-export function countsOf(chars: readonly Pick<Character, "access">[]) {
-  const free = chars.filter((c) => c.access === "free").length;
+/** Counts for the /crew filters: open on the site vs. locked (in the Complete Crew Guide). */
+export function countsOf(chars: readonly Pick<Character, "access" | "published">[]) {
+  const free = chars.filter(isUnlocked).length;
   return { all: chars.length, free, locked: chars.length - free };
 }
 

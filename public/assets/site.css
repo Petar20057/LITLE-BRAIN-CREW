@@ -401,7 +401,7 @@ html.dad .trust-row svg{color:#fff}
   .stop .dot svg{width:70px;height:70px}
   .interviews{grid-template-columns:1fr}
 }
-/* serif trial for program + club headings (owner decides) */
+/* serif trial for program headings (owner decides) */
 body[data-serif="on"] .serif-h{font-family:var(--serif);font-weight:600;letter-spacing:-.01em}
 
 /* ---------- guide preview ---------- */
@@ -457,8 +457,6 @@ body[data-serif="on"] .serif-h{font-family:var(--serif);font-weight:600;letter-s
 .bill{display:inline-flex;align-self:flex-start;background:var(--paper);border-radius:var(--r-pill);padding:4px;box-shadow:0 0 0 2px var(--ink) inset}
 .bill button{border:0;background:none;min-height:44px;padding:0 14px;border-radius:var(--r-pill);font-weight:700;font-size:14px;cursor:pointer;color:var(--ink)}
 .bill button[aria-pressed="true"]{background:var(--ink);color:#fff}
-.club-faces{display:flex;margin:2px 0}
-.club-faces svg{width:44px;height:44px;margin-right:-10px}
 .mini-form{display:flex;flex-direction:column;gap:8px;margin-top:auto}
 .mini-form input{border:2px solid var(--ink);border-radius:var(--r-pill);min-height:52px;padding:0 16px;font:500 16px var(--body);width:100%}
 .mini-form .ok{display:none;color:var(--ok);font-weight:700}

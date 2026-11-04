@@ -7,7 +7,7 @@ import "server-only";
 import data from "@/content/characters.json";
 import { GLOSSARY, entryAt } from "@/content/learn";
 import { CHARS, CREW_GROUPS, charPage, type CharGroup } from "@/lib/learn";
-import { packsOf, publicOf, type Character, type PublicCharacter } from "./character-rules";
+import { isUnlocked, publicOf, type Character, type PublicCharacter } from "./character-rules";
 
 /** The CSV's group codes for the built-in crew (the same ones the CSV uses). */
 const GROUP_CODE: Record<CharGroup, string> = { chemical: "messengers", "brain-part": "brain", rule: "rules", villain: "villains", age: "ages" };
@@ -60,10 +60,10 @@ const importedSlugs = new Set(imported.map((c) => c.slug));
 /** Every character: the CSV in its own order, then any built-in one the CSV doesn't mention. */
 export const CHARACTERS: readonly Character[] = [...imported, ...builtIn.filter((c) => !importedSlugs.has(c.slug))];
 export const PUBLIC_CHARACTERS: readonly PublicCharacter[] = CHARACTERS.map(publicOf);
-export const PACKS = packsOf(CHARACTERS);
+/** The characters with a page on the site (free, or published): the rest are silhouettes on /crew. */
+export const UNLOCKED: readonly Character[] = CHARACTERS.filter(isUnlocked);
 
 export const characterAt = (slug: string): Character | undefined => CHARACTERS.find((c) => c.slug === slug);
-export const packAt = (slug: string) => PACKS.find((p) => p.slug === slug);
 export const characterPath = (c: Pick<Character, "slug">) => `/crew/${c.slug}`;
 /** The character a glossary row points at, by the name in its `char` field. */
 export const characterNamed = (name: string | undefined) => (name ? CHARACTERS.find((c) => c.name === name && c.inGlossary && c.published) : undefined);

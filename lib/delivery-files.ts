@@ -18,7 +18,9 @@ export const DELIVERY_SECTIONS = catalog.sections as DeliverySection[];
 export const LEGACY_DELIVERY_SECTIONS = catalog.legacySections as DeliverySection[];
 export const DELIVERY_FILES = [...DELIVERY_SECTIONS, ...LEGACY_DELIVERY_SECTIONS].flatMap((s) => s.files);
 
-// Version 1 bundles retain their original files. In version 2, the Reset upgrade unlocks only the Reset bundle.
+// Version 1 bundles retain their original files. In version 2, the Reset upgrade unlocks only the Reset bundle; since
+// 2026-11-04 the Toolkit's own sections hold everything (the Reset, the Science Edition, the Complete Crew Guide), so a
+// Toolkit order needs no includes and old Reset orders keep their sections.
 const LEGACY_INCLUDES: Record<string, string[]> = { program: ["guide"], upgrade: ["program", "guide"] };
 const INCLUDES: Record<string, string[]> = { upgrade: ["program"] };
 

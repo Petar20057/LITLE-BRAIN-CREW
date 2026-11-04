@@ -1,4 +1,4 @@
-import { ITEMS, MOMENTS, PRODUCTS, per, total, usd, type Item } from "@/lib/funnel";
+import { ITEMS, MOMENTS, PRODUCTS, total, usd, type Item } from "@/lib/funnel";
 import { renderEmail, type Block, type Email } from "./layout";
 import { hoursLabel, offerLinks, type QuizResult } from "@/lib/quiz-plan";
 import { DISCLAIMER } from "@/content/quiz";
@@ -22,38 +22,10 @@ const HELLO = "hello@littlebraincrew.com";
 const SCREEN_OFF = MOMENTS["screen-off"];
 const SCREEN_OFF_CHECKOUT = "/checkout/guide?crew=dopa&moment=screen-off";
 
-/** Sent once, when a parent's Crew Club subscription first shows up in the Creem webhook. */
-export function clubWelcome(plan: "monthly" | "yearly"): Email {
-  const item = plan === "yearly" ? ITEMS.clubYearly : ITEMS.clubMonthly;
-  const includes = PRODUCTS.club.get.filter((g) => !g.startsWith("Pause or cancel"));
-  return renderEmail({
-    subject: "Welcome to the Crew Club",
-    preheader: "What your membership includes, and how to pause or cancel anytime.",
-    kick: "you're in",
-    title: "Welcome to the Crew Club",
-    art: "duo",
-    blocks: [
-      { p: "Thanks for joining. The crew keeps growing with your kid, and members meet every new crew member first." },
-      { p: "Here’s what your membership includes:" },
-      { list: includes },
-      { rows: [["Your plan", plan === "yearly" ? "Yearly" : "Monthly"], ["Price", per(item)]] },
-      { button: { label: "Open my account", url: "/account" } },
-      {
-        note:
-          plan === "yearly"
-            ? "We email you a week before your membership renews. Pause or cancel anytime in your account, in 2 clicks."
-            : "Pause or cancel anytime in your account, in 2 clicks. No calls, no emails needed.",
-      },
-    ],
-    reason: "You’re getting this email because you joined the Crew Club at littlebraincrew.com.",
-    campaign: "club-welcome",
-  });
-}
-
-const ART: Record<string, string> = { guide: PRODUCTS.guide.art, program: PRODUCTS.program.art, upgrade: PRODUCTS.program.art, "bedtime-kit": PRODUCTS.bedtime.art, "screen-off-week": "dopa" };
+const ART: Record<string, string> = { guide: PRODUCTS.guide.art, program: "endo", upgrade: "endo", "bedtime-kit": PRODUCTS.bedtime.art, "screen-off-week": "dopa" };
 const TONIGHT: Record<string, string> = {
   "bedtime-kit": "Tonight: try Day 1 of Screen-Off Week, then read The Crew Goes to Sleep together.",
-  guide: "Tonight: find what’s hardest at home right now on The code on one page (p. 4) and read that moment’s page. Ten minutes.",
+  guide: "Tonight: find what’s hardest at home right now on The code on one page (p. 4 of the Toolkit) and read that moment’s page. Ten minutes. Tomorrow: Day 0 of the 30-Day Reset, and the Complete Crew Guide for the character behind any moment.",
   program: "Tonight: read Day 1 of the Reset and choose your bedtime. 10 minutes.",
   upgrade: "Tonight: read Day 1 of the Reset and choose your bedtime. 10 minutes.",
   "screen-off-week": "Tonight: watch evening 1 with your kid before the screen goes off. 3 minutes.",
@@ -172,25 +144,6 @@ export function planTeamNotification(o: { request: PlanSummary | null; email: st
   });
 }
 
-/** Before every yearly renewal (the site promises it). Needs a daily job to send; not scheduled yet. */
-export function renewalReminder(renewsOn: string): Email {
-  return renderEmail({
-    subject: `Your Crew Club renews on ${renewsOn}`,
-    preheader: "Nothing to do if you want to stay. Here’s how to change or cancel.",
-    kick: "a quick heads-up",
-    title: "Your Crew Club renews soon",
-    art: "teo",
-    blocks: [
-      { p: `Your yearly membership renews on ${renewsOn} for ${usd(ITEMS.clubYearly.price)}.` },
-      { p: "If you want to keep it, there’s nothing to do." },
-      { button: { label: "Manage my membership", url: "/account" } },
-      { note: "Want to pause or cancel? Do it in your account, in 2 clicks, before that date and you won’t be charged." },
-    ],
-    reason: "You’re getting this email because you have a yearly Crew Club membership. We send it before every renewal.",
-    campaign: "renewal-reminder",
-  });
-}
-
 /** The /code quiz result, sent when a parent leaves their email at the gate. Same result and offers as the screen
  *  (lib/quiz-plan.ts). confirmTipsUrl: the parent ticked the weekly tips; nothing is sent until they confirm with this link
  *  (double opt-in). sid: the quiz visit, so a purchase from this email counts on /admin/quiz. */
@@ -214,10 +167,8 @@ export function quizResultEmail(r: QuizResult, { confirmTipsUrl, sid }: { confir
   );
   if (r.lead.kid) blocks.push({ note: `Say it to your kid: ${r.lead.kid}` });
   blocks.push(
-    { p: `Want the habits behind it? The Kid Brain Toolkit: 12 crew members, the 12 hardest moments decoded with the exact words, 6 villains and what’s normal at every age, with printable bonuses.${page ? ` “${page.title}”: the plan is on page ${page.page}.` : ""}` },
+    { p: `Want the habits behind it? The Kid Brain Toolkit: the 12 hardest moments decoded with the exact words, the 30-day plan with the fridge tracker, the Science Edition and all 214 crew members in the Complete Crew Guide, with printable bonuses.${page ? ` “${page.title}”: the plan is on page ${page.page}.` : ""}` },
     { button: { label: `Get the Toolkit · ${usd(ITEMS.guide.price)}`, url: links.guide } },
-    { p: "Want it to stick? The 30-Day Reset is one 10-minute habit a day for 30 days, with the exact words to say, a fridge tracker and the Science Edition included." },
-    { button: { label: `Start the 30-Day Reset · ${usd(ITEMS.program.price)}`, url: links.program, secondary: true } },
     { p: "Not ready to buy? Start with the free printable: 15 ways to end screen time without tears." },
     { link: { label: "Get the free screen-time printable", url: "/#free" } },
   );
@@ -454,7 +405,6 @@ function challengeExtras(day: number): Block[] {
   if (day === 5) {
     return [
       { button: { label: `Get the Toolkit · ${usd(ITEMS.guide.price)}`, url: SCREEN_OFF_CHECKOUT } },
-      { button: { label: `Start the 30-Day Reset · ${usd(ITEMS.program.price)}`, url: "/checkout/program?crew=dopa", secondary: true } },
     ];
   }
   return [];

@@ -17,7 +17,6 @@ const DEFAULTS: Record<string, () => Row> = {
   }),
   quiz_sessions: () => ({ emailed_at: null, purchased_at: null, started_at: now() }),
   quiz_events: () => ({ created_at: now() }),
-  subscriptions: () => ({ id: randomUUID(), provider_event_at: null, current_period_start: null, current_period_end: null, canceled_at: null, created_at: now() }),
   members: () => ({ creem_customer_id: null, created_at: now() }),
   orders: () => ({ id: randomUUID(), delivery_hash: null, catalog_version: 1, parent_order_id: null, download_until: "2999-01-01T00:00:00Z", created_at: now() }),
   order_upgrades: () => ({ checkout_url: null, state: "creating", created_at: now() }),

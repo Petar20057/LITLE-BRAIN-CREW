@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { supabaseConfigured } from "@/lib/supabase/env";
 
 // /admin is for the team only. An admin is a Supabase auth user with app_metadata.role = "admin", which only the
-// secret key can set (scripts/create-admin.mjs). Parents who sign in to their Club account never have it.
+// secret key can set (scripts/create-admin.mjs). Parents who sign in to their own account never have it.
 
 export async function getAdmin() {
   if (!supabaseConfigured) return null;

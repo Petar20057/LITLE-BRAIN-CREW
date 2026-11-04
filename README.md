@@ -18,7 +18,7 @@ CI (`.github/workflows/ci.yml`) runs the same checks on every push and pull requ
 
 ## Marketing pages (from `design/`)
 
-Every `design/<name>.html` is served at `/<name>` (`index.html` is `/`): `/`, `/pricing`, `/ask`, `/free`, `/gift`, `/shop`, `/founding`, `/schools`, `/faq`, `/dopa`. A page's `<meta name="robots">` is honored (`/dopa` is `noindex,follow` and left out of the sitemap). The home page sells the ebook, the 30-Day Reset and the Crew Club side by side. `dopa` is an ad landing page (`data-ad="1"`, no links that leave the page). The free quiz was removed; `/quiz` redirects to `/#plans` (`next.config.ts`).
+Every `design/<name>.html` is served at `/<name>` (`index.html` is `/`): `/`, `/toolkit`, `/reset`, `/pricing`, `/ask`, `/free`, `/gift`, `/shop`, `/founding`, `/schools`, `/faq`, `/dopa`. `/toolkit` is the sales page for the one product (the Toolkit holds the Reset, the Science Edition, the Complete Crew Guide and the bonuses since 2026-11-04; real PDF pages in `design/assets/samples/`, FUNNEL.md §20–21); `/pricing` is the plans overview (Toolkit and Personal plan). A page's `<meta name="robots">` is honored (`/dopa` is `noindex,follow` and left out of the sitemap). The home page sells the ebook, the 30-Day Reset and the Crew Club side by side. `dopa` is an ad landing page (`data-ad="1"`, no links that leave the page). The free quiz was removed; `/quiz` redirects to `/#plans` (`next.config.ts`).
 
 - Edit copy in `design/*.html`, shared header and footer in `design/partials/`, styles in `design/assets/site.css` (the original design) and `design/assets/additions.css` (everything added since), behavior in `design/assets/site.js`.
 - `npm run sync` copies `design/assets`, `stickers`, `og.jpg` and `favicon.svg` into `public/`, and turns each page into `content/pages/<name>.json`, writes `content/partials/` and `content/art.json` (see Learn pages), and fills the empty `data-char` divs with the drawn crew so crawlers see them. Don't hand-edit `content/pages/`, `content/partials/`, `content/art.json` or `public/assets/`.
@@ -48,13 +48,12 @@ SEO content, rendered as server components with the same global CSS classes as t
 
 | Route | What |
 |---|---|
-| `/checkout/guide`, `/checkout/program`, `/checkout/club` | Order page with order bump and email, then Creem checkout (card, Apple Pay, Google Pay) |
-| `/offer/upgrade`, `/offer/screen-off-week`, `/offer/club` | Post-purchase offers with a prefilled Creem checkout |
-| `/account/affiliate`, `/affiliate` | Members-only affiliate program (20%) on Creem: rules, invite request, share kit |
+| `/checkout/guide`, `/checkout/bedtime` | Order page with order bump and email, then Creem checkout (card, Apple Pay, Google Pay) |
+| `/offer/bedtime`, `/offer/screen-off-week` | Post-purchase offers with a prefilled Creem checkout |
 | `/thank-you` | Order summary and next steps |
 | `/personal-plan`, `/personal-plan/thanks` | The Personal plan ($199): the intake form (in `app/(learn)/`, with the site header), then a Creem checkout; paid requests go to `/admin/personal-plans` and the team inbox (`lib/personal-plan.ts`) |
 | `/support` | “Support the crew”, pay what you want (not a donation) |
-| `/account`, `/account/cancel` | Crew Club account and the cancel flow (pause, downgrade, save offers) |
+| `/account` | Account preview (what was bought); real data comes with phase 4 of FUNNEL.md §18. The Crew Club membership and its cancel flow were removed on 2026-11-04 (§19) |
 
 - Prices, products and the order of offers: `lib/funnel.ts`. The Personal plan ($199) is form-only: `/api/checkout` refuses it and there is no `/checkout/personal-plan`.
 - Order state across the steps: `lib/order.ts` (sessionStorage for now).
@@ -67,14 +66,14 @@ from `content/characters.csv` (the registry: name, pack, access) plus one conten
 `content/characters/<slug>.json` (the written page; format and rules in `content/characters/BRIEF.md`). The import
 also copies the SVGs from `../characters/svg` into `public/crew-art/`. The 26 drawn in `crew-art.js` are built in (`lib/characters.ts`) and always free. Rules live in
 `lib/character-rules.ts`: a locked character's explanation, "What to say", printable and cartoon render only inside
-`<Suspense>` after `lib/viewer.ts` has checked the reader (Crew Club via `has_club_access()`, packs from phase 4), so
+`<Suspense>` after `lib/viewer.ts` has checked the reader (since 2026-11-04 there is no gating at all: an open character has a page, a locked one is a silhouette on /crew whose card leads to the Toolkit checkout, and its text is only in the Complete Crew Guide PDF), so
 that text never reaches a browser without the right. Import `@/lib/characters` in server code only. Details and the
 state of the phases: `FUNNEL.md` section 18.
 
 ## Known gaps
 
 - `/downloads/crew-stickers.zip` is linked on `/free` but the file doesn't exist yet.
-- Yellow “draft” labels mark text waiting for an OK: the Privacy policy and Terms, Club content and launch date, guide page numbers.
+- Yellow “draft” labels mark text waiting for an OK: the Privacy policy and Terms, guide page numbers.
 - Testimonials stay empty until there are real ones.
 
 ## Environment
@@ -95,9 +94,9 @@ Before using purchase optimization, verify a consenting test visit and purchase 
 
 Sending goes through Amazon SES in `eu-north-1`, where `littlebraincrew.com` is a verified domain (Easy DKIM, MAIL FROM `mail.littlebraincrew.com`, records in Vercel DNS). Receiving stays on Hostinger (root MX). The account is out of the SES sandbox.
 
-- Code: `lib/email/send.ts` (SES), `lib/email/layout.ts` (the site's look, HTML and text from the same blocks), `lib/email/templates.ts` (Club welcome, order receipt, renewal reminder).
-- Wired: the Creem webhook sends the Club welcome once per new subscription. The order receipt waits for file delivery; the renewal reminder waits for a daily job.
-- Preview in dev: `/dev/emails` (404 in production). Send yourself one: `curl -X POST "localhost:3000/dev/emails/club-welcome?to=you@example.com"`.
+- Code: `lib/email/send.ts` (SES), `lib/email/layout.ts` (the site's look, HTML and text from the same blocks), `lib/email/templates.ts` (order receipt, quiz result, confirmations, the free offers and the challenge, the checkout reminder, the Personal plan).
+- Wired: the Creem webhook sends the order receipt (with the download links) once per paid order, and the Personal plan emails.
+- Preview in dev: `/dev/emails` (404 in production). Send yourself one: `curl -X POST "localhost:3000/dev/emails/order-receipt?to=you@example.com"`.
 - Crew images for email are PNGs in `public/email/crew/` (`npm run email:art` re-renders them from the site's art, macOS).
 
 **Design, opens and clicks** (`lib/email/layout.ts`, copy in `templates.ts`, checked by `tests/email.test.ts`):
@@ -167,7 +166,7 @@ GitHub (`Petar20057/LITLE-BRAIN-CREW`, this folder is the repo root) → Vercel,
 
 ## Catalogue v2 (2 November 2026)
 
-Current bundles and prices: Toolkit $19 with its bonuses; Reset $39 with the Reset PDF, tracker and Science Edition; Bedtime $7 as one PDF; Club waitlist $8/month or $80/year. See FUNNEL.md §17. Edit the source design and run npm run sync. The retired marketing HTML lives under design/retired and is not generated. The Personal plan is $199, sold only through its form at `/personal-plan`. Since 2026-11-03 the v2 Toolkit no longer includes the 4 crew cartoons (catalogue v1 buyers keep theirs; the v2 zip must be rebuilt without `Bonuses/Crew-Cartoons/`).
+Current bundles and prices: Toolkit $19 with its bonuses; Reset $39 with the Reset PDF, tracker and Science Edition; Bedtime $7 as one PDF. The Crew Club waitlist was removed on 2026-11-04 (FUNNEL.md §19). See FUNNEL.md §17. Edit the source design and run npm run sync. The retired marketing HTML lives under design/retired and is not generated. The Personal plan is $199, sold only through its form at `/personal-plan`. Since 2026-11-03 the v2 Toolkit no longer includes the 4 crew cartoons (catalogue v1 buyers keep theirs; the v2 zip must be rebuilt without `Bonuses/Crew-Cartoons/`).
 
 Buyer downloads resolve the catalogue version stored on the paid order. Preserve all v1 paths and ZIPs. New files are under ../products/delivery/v2. The upload script checks both catalogues before upload. Creem product IDs are in lib/creem-products.json. Migration 20261102170000 adds versioned purchases and verified Reset upgrades.
 

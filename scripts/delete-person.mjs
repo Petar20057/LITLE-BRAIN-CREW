@@ -4,8 +4,8 @@
 //   node scripts/delete-person.mjs parent@example.com --yes    deletes it, in the database .env.local points at
 //
 // Removes, by email: every form signup, the quiz lead and the quiz visit it came from (its clicks go with it), and the
-// Supabase account (its members row, subscriptions and cancel feedback cascade). Refuses while a Crew Club
-// subscription is live: cancel it in Creem first. What this can't reach is printed at the end, to do by hand.
+// Supabase account (its members row and what hangs off it cascade). What this can't reach is printed at the end, to
+// do by hand.
 // Reads NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SECRET_KEY from .env.local, like scripts/create-admin.mjs.
 import fs from "node:fs";
 import path from "node:path";
@@ -39,19 +39,11 @@ const must = ({ data, error }) => {
 const signups = must(await db.from("signups").select("id, form").eq("email", email));
 const lead = must(await db.from("quiz_leads").select("id, session_id").eq("email", email).maybeSingle());
 const member = must(await db.from("members").select("id").eq("email", email).maybeSingle());
-const live = member
-  ? must(await db.from("subscriptions").select("id, status").eq("member_id", member.id).in("status", ["trialing", "active", "past_due", "unpaid", "paused", "scheduled_cancel"]))
-  : [];
 
 console.log(`${email} (${new URL(url).host})`);
 console.log(`  form signups:  ${signups.length}${signups.length ? ` (${signups.map((s) => s.form).join(", ")})` : ""}`);
 console.log(`  quiz lead:     ${lead ? `yes${lead.session_id ? ", with its quiz visit" : ""}` : "no"}`);
 console.log(`  account:       ${member ? "yes" : "no"}`);
-
-if (live.length) {
-  console.error(`\nNot deleting: ${live.length} live Crew Club subscription(s). Cancel in the Creem dashboard first, then run this again.`);
-  process.exit(1);
-}
 
 if (!really) {
   console.log("\nDry run. Add --yes to delete.");

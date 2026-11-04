@@ -42,7 +42,7 @@ const POST_PURCHASE = new Set(["bedtime-kit", "upgrade", "screen-off-week"]);
 export async function recordPaidOrder(order: PaidOrder): Promise<boolean> {
   const ids = order.orderKey.split("+");
   const items = itemsFor(ids);
-  if (!items || items.some((i) => i.every)) return false;
+  if (!items) return false;
   // A paid Personal plan has no files; lib/personal-plan.ts records it (the webhook branches there first).
   if (ids.includes(ITEMS.personalPlan.id)) return false;
 

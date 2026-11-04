@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ageLabel, packLabel, canRead, countsOf, groupTitle, packsOf, paragraphs, parseSayPairs, publicOf, slugify, sortByWave, splitReference, validate, warnings, type Character } from "@/lib/character-rules";
+import { ageLabel, packLabel, isUnlocked, countsOf, groupTitle, paragraphs, parseSayPairs, publicOf, slugify, sortByWave, splitReference, validate, type Character } from "@/lib/character-rules";
 import { accessOf, applyContent, mapHeaders, parseCsv, rowToCharacter, yes } from "../scripts/import-characters.mjs";
 
 const base: Character = {
@@ -10,19 +10,14 @@ const base: Character = {
 };
 const free: Character = { ...base, slug: "dopa", name: "Dopa", access: "free", pack: "", packSlug: "", sample: false };
 
-describe("who may read a character", () => {
-  it("free pages are open to everyone", () => {
-    expect(canRead(free, { club: false, packs: [] })).toBe(true);
+describe("which characters are open on the site", () => {
+  it("free characters are open, published or not", () => {
+    expect(isUnlocked(free)).toBe(true);
+    expect(isUnlocked({ ...free, published: false })).toBe(true);
   });
-  it("locked pages need the Club or the character's own pack", () => {
-    expect(canRead(base, { club: false, packs: [] })).toBe(false);
-    expect(canRead(base, { club: true, packs: [] })).toBe(true);
-    expect(canRead(base, { club: false, packs: ["fuel-body-pack"] })).toBe(true);
-    expect(canRead(base, { club: false, packs: ["puberty-pack"] })).toBe(false);
-  });
-  it("nothing is readable before it is published, even for members", () => {
-    expect(canRead({ ...base, published: false }, { club: true, packs: ["fuel-body-pack"] })).toBe(false);
-    expect(canRead({ ...free, published: false }, { club: true, packs: [] })).toBe(false);
+  it("a locked character is open only once it has a finished page; otherwise it is a silhouette in the Crew Guide", () => {
+    expect(isUnlocked(base)).toBe(true);
+    expect(isUnlocked({ ...base, published: false })).toBe(false);
   });
   it("the public view has no locked text at all", () => {
     const pub = publicOf(base);
@@ -33,7 +28,7 @@ describe("who may read a character", () => {
   });
 });
 
-describe("packs", () => {
+describe("the crew list", () => {
   const chars: Character[] = [
     free,
     { ...base, slug: "a", name: "A", sample: true, access: "free" },
@@ -42,41 +37,27 @@ describe("packs", () => {
     { ...base, slug: "p1", name: "P1", pack: "Puberty Pack", packSlug: "puberty-pack", sample: true, access: "free" },
     { ...base, slug: "p2", name: "P2", pack: "Puberty Pack", packSlug: "puberty-pack" },
   ];
-  it("go on sale only when every character is ready, and keep CSV order", () => {
-    const packs = packsOf(chars);
-    expect(packs.map((p) => p.slug)).toEqual(["fuel-body-pack", "puberty-pack"]);
-    expect(packs[0]).toMatchObject({ total: 3, ready: 2, onSale: false, samples: ["a"] });
-    expect(packs[1]).toMatchObject({ total: 2, ready: 2, onSale: true, samples: ["p1"] });
-  });
   it("count free and locked for the filters", () => {
-    expect(countsOf(chars)).toEqual({ all: 6, free: 3, locked: 3 });
+    expect(countsOf(chars)).toEqual({ all: 6, free: 5, locked: 1 });
   });
   it("validation catches the rules from the brief", () => {
     expect(validate(chars)).toEqual([]);
     const bad: Character[] = [
       { ...base, slug: "x", name: "X", sample: true },
       { ...base, slug: "x", name: "X2", access: "nope" as Character["access"], sample: true },
-      { ...base, slug: "y", name: "Y", pack: "", packSlug: "" },
       { ...base, slug: "z", name: "Z", shortAnswer: "", whenToTalk: "" },
     ];
     const problems = validate(bad);
     expect(problems).toContain("X (x): a sample must be free");
     expect(problems).toContain("X2 (x): duplicate slug");
     expect(problems.some((p) => p.includes("access must be free or locked"))).toBe(true);
-    expect(problems).toContain("Y (y): locked but in no pack");
     expect(problems).toContain("Z (z): published but no short answer");
     expect(problems).toContain('Z (z): published but no "When to talk to your pediatrician"');
-    expect(problems).toContain("pack Fuel & Body Pack: 2 samples, expected one");
   });
   it("a built-in character may be published without CSV text (the site has it)", () => {
     const dopa: Character = { ...free, shortAnswer: "", whenToTalk: "" };
     expect(validate([dopa]).length).toBe(2);
     expect(validate([dopa], new Set(["dopa"]))).toEqual([]);
-  });
-  it("a pack without a marked sample is a warning, not a problem", () => {
-    const noSample: Character[] = [base, { ...base, slug: "b", name: "B" }];
-    expect(validate(noSample)).toEqual([]);
-    expect(warnings(noSample)).toEqual(["pack Fuel & Body Pack: no free sample marked"]);
   });
   it("orders ★ before ○ before · and keeps the CSV order inside a wave", () => {
     const rows = [{ wave: "·", n: 1 }, { wave: "○", n: 2 }, { wave: "★", n: 3 }, { wave: "○", n: 4 }, { wave: undefined, n: 5 }];

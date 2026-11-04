@@ -27,8 +27,9 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   turbopack: { root: import.meta.dirname },
-  // The free quiz was removed; old links and ads land on the plans. Crew Club Lite was removed too:
-  // its old offer page goes straight to the order.
+  // The free quiz was removed; old links and ads land on the plans. The Crew Club (a membership, removed 2026-11-04)
+  // and Club Lite before it: their old checkout and offer links go to the plans or the order, the old cancel page to
+  // the account.
   async redirects() {
     return [
       { source: "/schools", destination: "/", permanent: true },
@@ -41,12 +42,19 @@ const nextConfig: NextConfig = {
             { source: "/offer/:path*", destination: "/#plans", permanent: false },
           ]
         : []),
-      // The Toolkit and the 30-Day Reset are sold. The Club stays closed (waitlist on the plans) even when payments go live.
-      { source: "/checkout/club", destination: "/#plans", permanent: false },
+      { source: "/checkout/club", destination: "/#plans", permanent: true },
+      // Since 2026-11-04 the Toolkit is everything: the Reset, its page and the $20 upgrade are no longer sold on their own.
+      { source: "/checkout/program", destination: "/checkout/guide", permanent: true },
+      { source: "/reset", destination: "/toolkit", permanent: true },
+      { source: "/offer/upgrade", destination: "/thank-you", permanent: false },
       { source: "/quiz", destination: "/#plans", permanent: false },
       { source: "/offer/club-lite", destination: "/thank-you", permanent: false },
-      // Until UPSELL_OPEN no offer is sold (the Toolkit and the Reset go straight to the thank-you page). After it, only
-      // the upgrade and the Bedtime Kit are: the Club offer and Screen-Off Week (no cartoons yet) still go to the order.
+      { source: "/account/cancel", destination: "/account", permanent: true },
+      // The affiliate program (a Club perk) went with the Club.
+      { source: "/affiliate", destination: "/", permanent: true },
+      { source: "/account/affiliate", destination: "/account", permanent: true },
+      // Until UPSELL_OPEN no offer is sold (the Toolkit goes straight to the thank-you page). After it, only the Bedtime
+      // Kit is: the old Club offer and Screen-Off Week (no cartoons yet) still go to the order.
       ...(UPSELL_OPEN
         ? [{ source: "/offer/:slug(club|screen-off-week)", destination: "/thank-you", permanent: false }]
         : [{ source: "/offer/:path*", destination: "/#plans", permanent: false }]),

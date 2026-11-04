@@ -35,9 +35,10 @@ export const EXPERIMENTS = {
     active: true,
     weights: { a: 50, b: 50 },
   },
+  // Off since 2026-11-04: its "b" was a Reset button, and the Reset is inside the Toolkit now (the heading test can come back with new copy).
   plans: {
     label: "Plans heading and Reset button (/#plans)",
-    active: true,
+    active: false,
     weights: { a: 50, b: 50 },
   },
   "checkout-button": {

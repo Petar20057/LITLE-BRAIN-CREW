@@ -48,7 +48,7 @@ describe("abandoned checkout reminder", () => {
   it("skips anyone who paid since, or unsubscribed from anything", async () => {
     fake.seed("checkout_starts", { email: "paid@example.com", order_key: "guide", created_at: hoursAgo(5) });
     fake.seed("orders", { email: "paid@example.com", provider_order_id: "o1", created_at: hoursAgo(4) });
-    fake.seed("checkout_starts", { email: "out@example.com", order_key: "program", created_at: hoursAgo(5) });
+    fake.seed("checkout_starts", { email: "out@example.com", order_key: "guide+bedtime-kit", created_at: hoursAgo(5) });
     fake.seed("signups", { email: "out@example.com", form: "free-screen-list", unsubscribed_at: hoursAgo(100) });
     expect(await sendCheckoutReminders(NOW)).toEqual({ sent: 0, skipped: 2 });
     expect(sendEmail).not.toHaveBeenCalled();
@@ -56,9 +56,9 @@ describe("abandoned checkout reminder", () => {
 
   it("reminds an address once, about its newest checkout", async () => {
     fake.seed("checkout_starts", { email: "mom@example.com", order_key: "guide", created_at: hoursAgo(10) });
-    fake.seed("checkout_starts", { email: "mom@example.com", order_key: "program", created_at: hoursAgo(4) });
+    fake.seed("checkout_starts", { email: "mom@example.com", order_key: "guide+bedtime-kit", created_at: hoursAgo(4) });
     expect(await sendCheckoutReminders(NOW)).toEqual({ sent: 1, skipped: 1 });
-    expect((vi.mocked(sendEmail).mock.calls[0][1] as { text: string }).text).toContain("/checkout/program");
+    expect((vi.mocked(sendEmail).mock.calls[0][1] as { text: string }).text).toContain("/checkout/guide");
   });
 
   it("the reminder's token unsubscribes the address from everything", async () => {

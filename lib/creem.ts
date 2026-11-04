@@ -4,7 +4,7 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 import { ITEMS, type Item } from "./funnel";
 import currentProducts from "./creem-products.json";
 
-// Creem: payments (merchant of record) and the affiliate program. Server only: the API key never reaches the browser.
+// Creem: payments (merchant of record). Server only: the API key never reaches the browser.
 // Every key is EMPTY until Creem is connected, and then nothing here runs (the routes answer 503).
 // Test store by default: the live API is used only when CREEM_LIVE is exactly "true" (money policy: going live is Luka's call).
 
@@ -50,10 +50,15 @@ const LEGACY_PRODUCTS: Record<string, { test: string; live: string }> = {
   "program+cards": { test: "prod_4zjcDzIb3Lf1QqC0EXlQBL", live: "prod_5XFZf5YtSV01F0FVLxfreg" },
   upgrade: { test: "", live: "" },
   "screen-off-week": { test: "", live: "" },
-  "club-monthly": { test: "", live: "" },
-  "club-yearly": { test: "", live: "" },
 };
 const PRODUCTS: Record<string, { test: string; live: string }> = currentProducts;
+// Sold until 2026-11-04 (the Reset and the $20 upgrade are inside the Toolkit now). Not for sale: only the webhook still
+// recognises them, so a checkout that was open at the switch is still recorded and delivered. Luka archives them in Creem.
+const RETIRED_PRODUCTS: Record<string, { test: string; live: string }> = {
+  program: { test: "", live: "prod_3mmyLBzga7NpdbgE3WZmzP" },
+  "program+cards": { test: "", live: "prod_6d142HGVXIBWDbZCmMRYBn" },
+  upgrade: { test: "", live: "prod_PWUqmqrxx9yjrMRWFC6tI" },
+};
 
 const ALL_ITEMS: Item[] = Object.values(ITEMS);
 
@@ -83,8 +88,10 @@ export function discountProducts() {
 export function keyForProduct(productId: string): string | undefined {
   // An empty id must never match a product whose id isn't filled in yet.
   if (!productId) return undefined;
+  const idOf = (m: Record<string, { test: string; live: string }>, k: string) => (CREEM_LIVE ? m[k].live : m[k].test);
   return Object.keys(PRODUCTS).find((k) => productIdFor(k) === productId)
-    ?? Object.keys(LEGACY_PRODUCTS).find((k) => (CREEM_LIVE ? LEGACY_PRODUCTS[k].live : LEGACY_PRODUCTS[k].test) === productId);
+    ?? Object.keys(RETIRED_PRODUCTS).find((k) => idOf(RETIRED_PRODUCTS, k) === productId)
+    ?? Object.keys(LEGACY_PRODUCTS).find((k) => idOf(LEGACY_PRODUCTS, k) === productId);
 }
 
 export async function createCheckout(input: {

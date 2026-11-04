@@ -52,6 +52,42 @@
     },
     {
       "product": "guide",
+      "label": "The 30-day plan",
+      "files": [
+        {
+          "id": "reset-pdf",
+          "path": "v2/30-Day-Reset/The-30-Day-Reset.pdf",
+          "name": "The 30-Day Reset (start with Day 0)",
+          "kind": "pdf"
+        },
+        {
+          "id": "reset-tracker-pdf",
+          "path": "v2/30-Day-Reset/The-30-Day-Reset-Fridge-Tracker.pdf",
+          "name": "The 30-day fridge tracker (print it)",
+          "kind": "pdf"
+        }
+      ]
+    },
+    {
+      "product": "guide",
+      "label": "The science and the whole crew",
+      "files": [
+        {
+          "id": "science-edition-pdf",
+          "path": "v2/30-Day-Reset/The-Kid-Brain-Toolkit-Science-Edition.pdf",
+          "name": "The Science Edition: the research behind every habit",
+          "kind": "pdf"
+        },
+        {
+          "id": "crew-guide-pdf",
+          "path": "v2/Complete-Crew-Guide/The-Complete-Crew-Guide.pdf",
+          "name": "The Complete Crew Guide: all 214 crew members",
+          "kind": "pdf"
+        }
+      ]
+    },
+    {
+      "product": "guide",
       "label": "Bonuses to print",
       "files": [
         {
@@ -80,7 +116,7 @@
       "files": [
         {
           "id": "toolkit-zip",
-          "path": "v2/Kid-Brain-Toolkit.zip",
+          "path": "v2/Kid-Brain-Toolkit-Complete.zip",
           "name": "Get everything in one download",
           "kind": "zip"
         }
@@ -191,7 +227,7 @@
         {
           "id": "cartoon-mela-mp4",
           "path": "Kid-Brain-Toolkit/Bonuses/Crew-Cartoons/Melas-Soft-Light-Night.mp4",
-          "name": "Mela\u2019s Soft-Light Night",
+          "name": "Mela’s Soft-Light Night",
           "kind": "video"
         },
         {

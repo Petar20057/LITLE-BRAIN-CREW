@@ -12,7 +12,7 @@ import { recordCheckoutStart } from "@/lib/checkout-reminders";
 // The browser only names item ids; prices and the Creem product come from the server. Access is granted later
 // by the webhook (app/api/creem/webhook), never by the redirect back.
 type Body = {
-  items?: unknown; email?: unknown; next?: unknown; consent?: unknown; crew?: unknown; quiz?: unknown; moment?: unknown;
+  items?: unknown; email?: unknown; next?: unknown; crew?: unknown; quiz?: unknown; moment?: unknown;
   visitor?: unknown; session?: unknown;
 };
 
@@ -40,34 +40,26 @@ export async function POST(request: NextRequest) {
   // The Personal plan starts with its form (app/api/personal-plan): the answers must exist before the payment does.
   if (ids.includes(ITEMS.personalPlan.id)) return NextResponse.json({ error: "Please start your Personal plan at littlebraincrew.com/personal-plan: the form comes first." }, { status: 403 });
 
-  const recurring = items.some((i) => i.every);
-  if (recurring) return NextResponse.json({ error: "The Crew Club is opening soon. Join the waitlist on the plans page." }, { status: 404 });
-  // Auto-renewal laws: the membership needs the "I understand it renews" tick, stored with the subscription.
-  if (recurring && body.consent !== true) {
-    return NextResponse.json({ error: "Please tick the box to confirm how the membership renews." }, { status: 400 });
-  }
-
   const key = orderKey(ids);
   const productId = productIdFor(key);
   if (!productId) return NextResponse.json({ error: "This isn’t on sale yet." }, { status: 404 });
 
   const metadata: Record<string, string> = { order: key, catalog_version: String(CURRENT_CATALOG_VERSION) };
-  if (recurring) metadata.renewal_consent_at = new Date().toISOString();
   if (typeof body.crew === "string" && body.crew in CREW_NAMES) metadata.crew = body.crew;
   // The webhook marks the /code quiz visit as bought (quiz_sessions.purchased_at).
   if (isSessionId(body.quiz)) metadata.quiz_session = body.quiz;
   // The visit that bought (components/Track.tsx): the webhook writes it on the purchase event for /admin.
   if (isSessionId(body.visitor)) metadata.visitor = body.visitor;
   if (isSessionId(body.session)) metadata.session = body.session;
-  // A one-time order gets the buyer's download token. Creem sends it back in the webhook (only its hash is stored),
-  // and the browser keeps it for the thank-you page. Club subscriptions have no downloads.
-  const delivery = recurring ? null : newDeliveryToken();
-  if (delivery) metadata.delivery = delivery;
+  // Every order gets the buyer's download token. Creem sends it back in the webhook (only its hash is stored), and
+  // the browser keeps it for the thank-you page.
+  const delivery = newDeliveryToken();
+  metadata.delivery = delivery;
 
   try {
     const url = await createCheckout({ productId, email, successUrl: `${SITE_URL}${next}`, metadata });
     // For the one abandoned-checkout reminder (lib/checkout-reminders.ts); never blocks the payment.
-    if (!recurring) await recordCheckoutStart({ email, orderKey: key, crew: metadata.crew, moment: typeof body.moment === "string" ? body.moment : undefined });
+    await recordCheckoutStart({ email, orderKey: key, crew: metadata.crew, moment: typeof body.moment === "string" ? body.moment : undefined });
     return NextResponse.json({ url, delivery });
   } catch (err) {
     console.error(err);

@@ -86,7 +86,7 @@ describe("what each email is for", () => {
     expect(get("order-receipt").subject).toBe("The Kid Brain Toolkit: your download links");
     const day5 = get("challenge-day-5");
     expect(day5.text).toContain("/checkout/guide?crew=dopa&moment=screen-off&utm_source=email&utm_medium=lifecycle&utm_campaign=challenge-day-5");
-    expect(day5.text).toContain("Start the 30-Day Reset");
+    expect(day5.text).not.toContain("30-Day Reset");
   });
 
   it("the reminder subject doesn't say 'Your The …' and keeps its own utm_source", () => {

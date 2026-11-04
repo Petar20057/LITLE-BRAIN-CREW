@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { ITEMS, usd, type Item } from "@/lib/funnel";
 import { downloadPath, sectionsForPurchases } from "@/lib/delivery-files";
-import { useOrder, useQueryParam } from "@/lib/order";
+import { useOrder } from "@/lib/order";
 import { trackEvent } from "@/lib/track-event";
 import CrewArt from "./CrewArt";
 import Steps from "./Steps";
@@ -11,21 +11,21 @@ import { usePaidPurchases } from "./usePaidPurchases";
 import PersonalHelp from "./PersonalHelp";
 import PersonalPlanLink from "./PersonalPlanLink";
 
+// After paying: the files (one link each, from the server-confirmed order), the next three steps and the Bedtime Kit if it
+// wasn't taken. The Toolkit is everything (Reset, Science Edition, Complete Crew Guide, bonuses) since 2026-11-04.
 export default function ThankYou() {
   const order = useOrder();
-  const waitForUpgrade = useQueryParam("upgrade") === "1";
-  const paid = usePaidPurchases(order.deliveries, waitForUpgrade);
+  const paid = usePaidPurchases(order.deliveries);
   const [copied, setCopied] = useState(false);
   const [skipBedtime, setSkipBedtime] = useState(false);
   const purchases = Object.values(paid.byToken).flat();
   const ids = purchases.flatMap((p) => p.items);
-  const program = ids.includes("program") || ids.includes("upgrade");
   const toolkit = ids.includes("guide");
   const bedtime = ids.includes("bedtime-kit");
   const downloads = Object.entries(paid.byToken).flatMap(([token, owned]) =>
     sectionsForPurchases(owned).map((section) => ({ token, section })),
   );
-  const first = (program ? downloads.find((d) => d.section.product === "program") : undefined) ?? downloads[0];
+  const first = downloads[0];
   const items: Item[] = Object.values(ITEMS);
   const names = (itemIds: string[]) => itemIds.map((id) => items.find((item) => item.id === id)?.name ?? id).join(" + ");
   const shareSite = () => {
@@ -39,9 +39,9 @@ export default function ThankYou() {
         <div className="oto">
           <CrewArt k="endo" mood="happy" className="art" />
           <h1>Thank you. Welcome to the crew!</h1>
-          {first && <a className="btn btn-main btn-lg" href={downloadPath(first.token, first.section.files[0].id)}>{program ? "Open the Reset now" : toolkit ? "Open the Toolkit now" : "Open your kit"}</a>}
+          {first && <a className="btn btn-main btn-lg" href={downloadPath(first.token, first.section.files[0].id)}>{toolkit ? "Open the Toolkit now" : "Open your kit"}</a>}
           <p className="fx-sub">{order.email ? `Your download links are on their way to ${order.email}.` : "Your download links are on their way to your inbox."}</p>
-          {(paid.pending || (waitForUpgrade && !program)) && <p className="fine" role="status">Confirming your payment… Your files appear here as soon as it is confirmed.</p>}
+          {paid.pending && <p className="fine" role="status">Confirming your payment… Your files appear here as soon as it is confirmed.</p>}
           {paid.error && <p className="fine" role="status">{paid.error}</p>}
         </div>
         {purchases.length > 0 && <>
@@ -64,15 +64,10 @@ export default function ThankYou() {
         <h2>Your next 3 steps</h2>
         <ol className="ty-next">
           <li>Open the email from Little Brain Crew (hello@littlebraincrew.com). Check Promotions or Spam if it hasn’t arrived in 5 minutes.</li>
-          <li>{program ? "Tonight: read Day 1 of the 30-Day Reset and choose your bedtime. About 10 minutes." : bedtime && !toolkit ? "Tonight: try Day 1 of Screen-Off Week, then read The Crew Goes to Sleep together." : "Tonight: find your hardest moment on The code on one page (Toolkit p. 4), then read that moment’s page."}</li>
-          <li>{program ? "Print the fridge tracker and put it where the whole family can see it. The Science Edition explains the habits behind the plan." : "Choose one small habit to try tomorrow."}</li>
+          <li>{toolkit ? "Tonight: open the Toolkit on The code on one page (p. 4), find what’s hardest at home right now and read that moment’s page. Ten minutes." : "Tonight: try Day 1 of Screen-Off Week, then read The Crew Goes to Sleep together."}</li>
+          <li>{toolkit ? "Tomorrow: Day 0 of the 30-Day Reset, 15 minutes. Print the fridge tracker and score your evenings. The Complete Crew Guide is in the same email, for the character behind any moment." : "Choose one small habit to try tomorrow."}</li>
         </ol>
-        {purchases.length > 0 && (program ? <PersonalHelp /> : <PersonalPlanLink place="thank-you" />)}
-        {toolkit && !program && !waitForUpgrade && <div className="fx-card" style={{ marginTop: 24 }}>
-          <h2>Put the Toolkit into practice</h2>
-          <p>Add the 30-Day Reset for $20: the Reset guide, fridge tracker and Science Edition. No discount code needed.</p>
-          <a className="btn btn-main" href="/offer/upgrade" onClick={() => trackEvent("cta_click", "thank-you-reset")}>Add the Reset · $20</a>
-        </div>}
+        {purchases.length > 0 && (toolkit ? <PersonalHelp /> : <PersonalPlanLink place="thank-you" />)}
         {toolkit && !bedtime && !skipBedtime && <div className="fx-card" style={{ marginTop: 24 }}>
           <h2>Make the hardest hour easier</h2>
           <p>The Bedtime &amp; Screen-Off Kit: seven evenings of habits, the exact words for every age, a routine card and a story to read together. One PDF.</p>

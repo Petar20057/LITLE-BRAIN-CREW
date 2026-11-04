@@ -497,20 +497,10 @@ function Result({ data, p, sid, email }: { data: QuizData; p: Progress; sid: str
         <CrewArt k={r.lead.char.key} mood="happy" />
         <div>
           <h2>Want the habits behind it?</h2>
-          <p>The Kid Brain Toolkit: 12 crew members, the 12 hardest moments decoded with the exact words, 6 villains, and what’s normal at every age. Includes printable bonuses.</p>
+          <p>The Kid Brain Toolkit: the 12 hardest moments decoded with the exact words, the 30-day plan with the fridge tracker, the Science Edition and all 214 crew members in the Complete Crew Guide. Everything, one download.</p>
           {page && <p className="q-page">“{page.title}”: the plan is on page {page.page} ({page.plan}).</p>}
           <a className="btn btn-main" href={links.guide} onClick={click("guide")}>Get the Toolkit · ${ITEMS.guide.price}</a>
           <p className="fine">Instant download. Educational only, not medical advice.</p>
-        </div>
-      </div>
-
-      <div className="q-offer q-offer-2">
-        <CrewArt k="endo" mood="happy" />
-        <div>
-          <h2>Want it to stick?</h2>
-          <p>The 30-Day Reset: one 10-minute habit a day for 30 days, one part of the crew each week. Sleep, screens and focus, meltdowns and hunger, moving and connecting. The Reset guide, fridge tracker and Science Edition, with a four-week teen track.</p>
-          <a className="btn" href={links.program} onClick={click("program")}>Start the 30-Day Reset · ${ITEMS.program.price}</a>
-          <p className="fine">Instant download. About ${(ITEMS.program.price / 30).toFixed(2)} a day.</p>
         </div>
       </div>
 

@@ -115,7 +115,7 @@ export const SITE_PAGES: SitePage[] = [
       {
         h2: "Do you sell anything?",
         paras: [
-          "Yes. We sell digital products for parents, like the Kid Brain Toolkit and the 30-Day Reset, and a membership called the Crew Club. That is a commercial interest and we want you to know it. Our learning pages are free to read, carry no ads, and don’t recommend third-party products.",
+          "Yes. We sell digital products for parents, like the Kid Brain Toolkit and the Personal plan. That is a commercial interest and we want you to know it. Our learning pages are free to read, carry no ads, and don’t recommend third-party products.",
         ],
       },
     ],
@@ -126,13 +126,13 @@ export const SITE_PAGES: SitePage[] = [
     metaTitle: "Privacy Policy | Little Brain Crew",
     description: "What Little Brain Crew collects, what stays in your browser, how forms and payments work, and why we never ask for kids’ names.",
     dek: "Plain words about what this site collects and what it doesn’t.",
-    updated: "2026-11-03",
+    updated: "2026-11-04",
     sections: [
       {
         h2: "The short version",
         paras: [
           "Little Brain Crew is for parents and other adults. We don’t collect children’s names, photos or other personal details. We use no advertising trackers. We keep our own simple count of page visits, without cookies, and use Microsoft Clarity to see how pages are used (both described below), and the parent quiz at /code counts which screens were seen and answered. We collect an email address and a few details only when you fill in a form or buy something, and we use them for the reason you gave us.",
-          "A few parts of this page describe features that are not live yet, such as Crew Club accounts and gifts. We mark those as planned, and we will update this page when they go live.",
+          "A few parts of this page describe features that are not live yet, such as accounts for buyers and gifts. We mark those as planned, and we will update this page when they go live.",
         ],
       },
       {
@@ -183,9 +183,9 @@ export const SITE_PAGES: SitePage[] = [
         ],
       },
       {
-        h2: "Crew Club accounts (planned)",
+        h2: "Accounts (planned)",
         paras: [
-          "Crew Club members will get an account. The Crew Club hasn’t opened yet. When it does, checking out creates an account with your email address. The account may also hold a display name you choose, the age groups of your children (such as 3 to 5 or 13 to 17, never names or birthdays), your plan and its payment status, and, if you cancel, the reason you pick, so we can learn what to improve.",
+          "Parents who buy from us will get an account that shows what they bought. Accounts haven’t opened yet. When they do, checking out creates an account with your email address. The account may also hold a display name you choose, the age groups of your children (such as 3 to 5 or 13 to 17, never names or birthdays), and what you bought.",
           "Accounts will be stored with Supabase, the database and sign-in service we use. Signing in sets a cookie that keeps you signed in. That cookie is needed for the account to work, and it is not used for advertising.",
         ],
       },
@@ -205,7 +205,7 @@ export const SITE_PAGES: SitePage[] = [
       {
         h2: "Cookies, ads and tracking",
         paras: [
-          "To see where pages confuse parents, we use Microsoft Clarity: it records how you scroll, click and move on our pages and turns that into heatmaps and replays of visits. It hides what you type into forms, so we never see your email or answers in it. Clarity sets its own cookies (“_clck” for up to a year and “_clsk” for a day) so the pages of one visit can be grouped, and Microsoft processes this data under its own privacy statement. It never runs on our team pages. Two more cookies may be set. The sign-in cookie for Crew Club accounts (planned) is described above. When you open a Crew Club member’s share link, Creem, our payment partner, sets a referral cookie for 60 days, so that if you buy, that member gets their share. It is used only for that, never for advertising. Like any website, our hosting provider, Vercel, keeps standard server logs, such as IP address and pages requested, to keep the site running and secure. If we add other analytics later, we will describe them here first.",
+          "To see where pages confuse parents, we use Microsoft Clarity: it records how you scroll, click and move on our pages and turns that into heatmaps and replays of visits. It hides what you type into forms, so we never see your email or answers in it. Clarity sets its own cookies (“_clck” for up to a year and “_clsk” for a day) so the pages of one visit can be grouped, and Microsoft processes this data under its own privacy statement. It never runs on our team pages. Two more cookies may be set. The sign-in cookie for accounts (planned) is described above. Like any website, our hosting provider, Vercel, keeps standard server logs, such as IP address and pages requested, to keep the site running and secure. If we add other analytics later, we will describe them here first.",
           "When enabled, Meta and TikTok advertising pixels load only after you choose Allow ad cookies. They measure visits, checkout starts and confirmed purchases, including product identifiers, the amount paid and currency, to help us understand and improve our ads. We do not send your email address, your child’s details, quiz answers or download tokens as event parameters. These services may use advertising cookies and receive browser and device information. You can decline or withdraw permission through Ad cookie choices on our public pages. The pixels stay off on preview deployments, team pages, account pages and confirmation or unsubscribe links.",
           "We don’t sell your personal information.",
         ],
@@ -219,7 +219,7 @@ export const SITE_PAGES: SitePage[] = [
           "Vercel hosts the website. It handles every page request, which includes your IP address, and tells us the country it comes from.",
           "Meta and TikTok receive advertising measurement events when their pixels are enabled and you allow ad cookies. Their own privacy policies describe how they process those events.",
           "Microsoft Clarity records how visitors use our pages (scrolls, clicks, page changes, device type and approximate location) for heatmaps and visit replays, with form entries hidden.",
-          "Supabase stores our database: form entries, Personal plan answers, quiz answers, visit counts and, later, Crew Club accounts.",
+          "Supabase stores our database: form entries, Personal plan answers, quiz answers, visit counts and, later, accounts.",
           "Amazon Web Services (Amazon SES) sends our emails, such as quiz results and confirmation links. It receives your email address and the email we send you.",
           "Hostinger runs our hello@littlebraincrew.com inbox, so it holds any email you write to us.",
           "Creem handles payments (see Payments).",
@@ -249,9 +249,9 @@ export const SITE_PAGES: SitePage[] = [
     slug: "terms",
     h1: "Terms of use and sale",
     metaTitle: "Terms of Use and Sale | Little Brain Crew",
-    description: "The rules for using Little Brain Crew and buying our digital products: educational use only, all sales final, Crew Club membership and US audience.",
+    description: "The rules for using Little Brain Crew and buying our digital products: educational use only, all sales final and US audience.",
     dek: "What you can expect from us and what we ask of you.",
-    updated: "2026-11-03",
+    updated: "2026-11-04",
     sections: [
       {
         h2: "Using this site",
@@ -269,8 +269,8 @@ export const SITE_PAGES: SitePage[] = [
       {
         h2: "Digital products",
         paras: [
-          "We sell digital products, such as the Kid Brain Toolkit and the 30-Day Reset, and may sell more over time. You get a link or files by email after you pay. A purchase gives you a personal, non-transferable license to use the content with your own family. Please don’t resell, share, copy or post it. Classroom, school and business use needs a separate license.",
-          "Prices and what is included are shown at checkout. The 30-Day Reset costs $39 as a one-time purchase.",
+          "We sell digital products, such as the Kid Brain Toolkit (which includes the 30-Day Reset, the Science Edition and the Complete Crew Guide) and the Bedtime & Screen-Off Kit, and may sell more over time. You get a link or files by email after you pay. A purchase gives you a personal, non-transferable license to use the content with your own family. Please don’t resell, share, copy or post it. Classroom, school and business use needs a separate license.",
+          "Prices and what is included are shown at checkout. The Kid Brain Toolkit costs $19 as a one-time purchase.",
           "The Personal plan ($199) is a written plan for your family, prepared by hand from the answers you give in our form and sent by email within three working days of payment. It is educational guidance about everyday habits and the words to use; it is not medical advice, therapy or a diagnosis, and we do not promise a particular outcome. Because work on it starts when you pay, all sales are final.",
         ],
       },
@@ -278,22 +278,7 @@ export const SITE_PAGES: SitePage[] = [
         h2: "All sales are final",
         paras: [
           "Because you get instant access to digital content, all sales are final. We do not offer refunds or money-back terms, and we do not guarantee results. If a link or a file doesn’t work, contact us and we will fix it or resend it.",
-          "Personal help by email is included with the 30-Day Reset. Try it for seven evenings. If it’s not working, email your hardest moment to hello@littlebraincrew.com and we will send you a short personal plan. This is a promise of support; it does not change our final-sales policy or guarantee a particular outcome. The Kid Brain Toolkit and the Bedtime & Screen-Off Kit do not include it; the Personal plan is sold separately (see Digital products).",
-        ],
-      },
-      {
-        h2: "Crew Club membership",
-        paras: [
-          "The Crew Club is a membership that renews on a monthly or yearly basis, at the price shown at checkout, until you cancel. We will email you before every yearly renewal.",
-          "You can pause or cancel any time in your account, in two clicks. Cancelling stops future charges. Charges already made are not refunded, in line with our final-sales policy.",
-        ],
-      },
-      {
-        h2: "Affiliate program for Crew Club members",
-        paras: [
-          "Our affiliate program is run on Creem, our payment partner and the merchant of record, and is open by invitation to Crew Club members only. Members who join earn 20% of every payment made by people who buy through their link, figured after the 2% fee Creem keeps on affiliate sales. The link is remembered for 60 days. A member who later cancels their Club stays in the program.",
-          "Commissions wait 7 to 12 days, then Creem pays them on the 1st and 15th of the month once the balance reaches $50, by bank transfer or USDC, after an identity check. Creem charges its own payout fee. Members must say they earn a commission wherever they share the link, share only their own honest experience, make no medical claims or promises, and must not buy through their own link, use coupon sites, run ads on our name, send spam or aim posts at children. Creem’s affiliate terms also apply. Nothing is paid out before the program opens.",
-          "The affiliate program opens together with the Crew Club.",
+          "Personal help by email is included with the Kid Brain Toolkit. Try its 30-day plan for seven evenings. If it’s not working, email your hardest moment to hello@littlebraincrew.com and we will send you a short personal plan. This is a promise of support; it does not change our final-sales policy or guarantee a particular outcome. The Bedtime & Screen-Off Kit on its own does not include it; the Personal plan is sold separately (see Digital products).",
         ],
       },
       {

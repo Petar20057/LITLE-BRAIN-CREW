@@ -22,12 +22,10 @@ export const REMIND_UNTIL_MS = 48 * 60 * 60 * 1000;
 /** At most one reminder per address in this window, however many checkouts it starts. */
 const ONE_PER_MS = 7 * 24 * 60 * 60 * 1000;
 
-// Where "Finish my order" goes for each order key. Offers after a payment (upgrade, Screen-Off Week) get no reminder.
+// Where "Finish my order" goes for each order key. Offers after a payment (the Bedtime Kit offer, Screen-Off Week) get no reminder.
 const CHECKOUT_FOR: Record<string, string> = {
   guide: "guide",
   "guide+bedtime-kit": "guide",
-  program: "program",
-  "program+cards": "program",
   "bedtime-kit": "bedtime",
 };
 

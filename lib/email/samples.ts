@@ -1,6 +1,6 @@
 import { ITEMS, MOMENTS } from "@/lib/funnel";
 import type { Email } from "./layout";
-import { challengeDay, checkoutReminder, clubWelcome, confirmSignup, freeScreenList, freeStickerPack, orderReceipt, planConfirmation, planTeamNotification, quizResultEmail, renewalReminder } from "./templates";
+import { challengeDay, checkoutReminder, confirmSignup, freeScreenList, freeStickerPack, orderReceipt, planConfirmation, planTeamNotification, quizResultEmail } from "./templates";
 import { quizData } from "@/lib/quiz";
 import { quizResult } from "@/lib/quiz-plan";
 
@@ -9,8 +9,6 @@ const SAMPLE_CONFIRM = "/confirm?t=00000000-0000-4000-8000-000000000000";
 const SAMPLE_UNSUBSCRIBE = "/unsubscribe?t=00000000-0000-4000-8000-000000000000";
 
 export const SAMPLES: Record<string, () => Email> = {
-  "club-welcome": () => clubWelcome("monthly"),
-  "club-welcome-yearly": () => clubWelcome("yearly"),
   "order-receipt": () =>
     orderReceipt(
       [ITEMS.guide, ITEMS.bedtimeKit],
@@ -19,7 +17,6 @@ export const SAMPLES: Record<string, () => Email> = {
         { label: "For tonight: a calmer bedtime and screen-off", files: [{ name: "Seven evenings, the screen-off scripts and a bedtime story", url: "https://www.littlebraincrew.com/api/download" }] },
       ],
     ),
-  "renewal-reminder": () => renewalReminder("November 26, 2026"),
   "plan-confirmation": () => planConfirmation("Ana"),
   "plan-team": () =>
     planTeamNotification({

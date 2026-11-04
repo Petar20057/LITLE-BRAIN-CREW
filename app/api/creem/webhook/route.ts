@@ -1,44 +1,21 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { ITEMS } from "@/lib/funnel";
 import { keyForProduct, verifyWebhook, webhookConfigured } from "@/lib/creem";
-import { sendEmail } from "@/lib/email/send";
-import { clubWelcome } from "@/lib/email/templates";
 import { recordPaidOrder } from "@/lib/delivery";
 import { recordPlanPurchase } from "@/lib/personal-plan";
 import { catalogVersion } from "@/lib/delivery-files";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { isSessionId } from "@/lib/quiz-track";
-import type { Database } from "@/lib/supabase/database.types";
 
 // Creem → us. Set this URL as the webhook in the Creem dashboard: <site>/api/creem/webhook.
-// Mirrors Crew Club subscriptions into Supabase (the source of truth stays Creem), so pages can check access with
-// has_club_access(), and sends the Crew Club welcome email the first time a subscription shows up. One-time products
-// (Toolkit, Bedtime Kit) are saved to `orders` once, with their purchase event and receipt email (lib/delivery.ts); a paid
-// Personal plan marks its form row paid and emails the team instead (lib/personal-plan.ts).
-// Any failure answers 500 so Creem retries; writes are idempotent (one row per Creem subscription id).
-// Creem doesn't promise delivery order, so each row remembers the time of the newest event applied
-// (provider_event_at) and an older event arriving late is skipped instead of overwriting a newer status.
-
-type Status = Database["public"]["Enums"]["subscription_status"];
-type Plan = Database["public"]["Enums"]["club_plan"];
-
-const STATUSES: Status[] = ["trialing", "active", "past_due", "unpaid", "paused", "scheduled_cancel", "expired", "canceled"];
-const PLANS: Record<string, { plan: Plan; cents: number; interval: "month" | "year" }> = {
-  "club-monthly": { plan: "club_monthly", cents: ITEMS.clubMonthly.price * 100, interval: "month" },
-  "club-yearly": { plan: "club_yearly", cents: ITEMS.clubYearly.price * 100, interval: "year" },
-};
+// One-time products (Toolkit, Bedtime Kit, Reset, the upgrade) are saved to `orders` once, with their purchase event and
+// receipt email (lib/delivery.ts); a paid Personal plan marks its form row paid and emails the team instead
+// (lib/personal-plan.ts). Nothing we sell renews: the Crew Club membership was removed on 2026-11-04, so subscription
+// events (and a checkout that carries a subscription) are logged and ignored. The `subscriptions` table it used to
+// mirror stays in the database, unused.
+// Any failure answers 500 so Creem retries; writes are idempotent (one row per Creem order).
 
 type Ref = string | { id?: string; email?: string } | null | undefined;
-type CreemSubscription = {
-  id?: string;
-  status?: string;
-  product?: Ref;
-  customer?: Ref;
-  current_period_start_date?: string | null;
-  current_period_end_date?: string | null;
-  canceled_at?: string | null;
-  metadata?: Record<string, unknown> | null;
-};
 type CreemEvent = { id?: string; eventType?: string; created_at?: number; object?: Record<string, unknown> };
 
 const idOf = (r: Ref) => (typeof r === "string" ? r : r?.id);
@@ -59,18 +36,12 @@ export async function POST(request: NextRequest) {
   }
   const type = event.eventType ?? "";
   const obj = event.object ?? {};
-  // created_at is epoch milliseconds in Creem's examples; without it the event is applied as before.
-  const eventAt = typeof event.created_at === "number" && Number.isFinite(event.created_at) ? new Date(event.created_at).toISOString() : null;
 
   try {
-    if (type.startsWith("subscription.")) {
-      await syncSubscription(obj as CreemSubscription, eventAt);
-    } else if (type === "checkout.completed") {
+    if (type === "checkout.completed") {
       await markQuizPurchase(obj.metadata as Record<string, unknown> | null | undefined);
-      const sub = obj.subscription as CreemSubscription | undefined;
-      if (sub?.id) {
-        // The checkout carries the product, customer and metadata; its subscription only has id and status.
-        await syncSubscription({ ...sub, product: obj.product as Ref, customer: obj.customer as Ref, metadata: obj.metadata as CreemSubscription["metadata"] }, eventAt);
+      if ((obj.subscription as { id?: string } | undefined)?.id) {
+        console.info("[creem] subscription checkout ignored: nothing we sell renews", { event: event.id });
       } else {
         await oneTimeOrder(obj, event.id ?? "");
       }
@@ -115,92 +86,6 @@ async function oneTimeOrder(obj: Record<string, unknown>, eventId: string) {
     parentOrderId: typeof metadata.parent_order_id === "string" ? metadata.parent_order_id : undefined,
   });
   if (!recorded) console.info("[creem] one-time order not recognised", { event: eventId, orderKey });
-}
-
-async function syncSubscription(sub: CreemSubscription, eventAt: string | null) {
-  const key = keyForProduct(idOf(sub.product) ?? "");
-  const plan = key ? PLANS[key] : undefined;
-  const status = STATUSES.find((s) => s === sub.status);
-  if (!sub.id || !plan || !status) {
-    console.info("[creem] subscription skipped", { id: sub.id, product: idOf(sub.product), status: sub.status });
-    return;
-  }
-
-  const admin = createAdminClient();
-  const fields = {
-    plan: plan.plan,
-    status,
-    price_cents: plan.cents,
-    billing_interval: plan.interval,
-    // checkout.completed carries a subscription with only id and status: missing dates must not blank stored ones.
-    ...(sub.current_period_start_date !== undefined ? { current_period_start: sub.current_period_start_date } : {}),
-    ...(sub.current_period_end_date !== undefined ? { current_period_end: sub.current_period_end_date } : {}),
-    ...(sub.canceled_at !== undefined ? { canceled_at: sub.canceled_at } : {}),
-    cancel_at_period_end: status === "scheduled_cancel",
-    ...(eventAt ? { provider_event_at: eventAt } : {}),
-  };
-
-  const { data: existing, error: findError } = await admin
-    .from("subscriptions")
-    .select("id")
-    .eq("provider", "creem")
-    .eq("provider_subscription_id", sub.id)
-    .maybeSingle();
-  if (findError) throw findError;
-
-  if (existing) {
-    let update = admin.from("subscriptions").update(fields).eq("id", existing.id);
-    if (eventAt) update = update.or(`provider_event_at.is.null,provider_event_at.lte."${eventAt}"`);
-    const { data: applied, error } = await update.select("id");
-    if (error) throw error;
-    if (!applied?.length) console.info("[creem] older event skipped", { id: sub.id, status, eventAt });
-    return;
-  }
-
-  // First time we see this subscription: it needs the parent and the renewal consent from checkout metadata.
-  const consent = sub.metadata?.renewal_consent_at;
-  const email = typeof sub.customer === "object" ? sub.customer?.email : undefined;
-  if (typeof consent !== "string" || !email) {
-    console.info("[creem] new subscription without consent or email, waiting for checkout.completed", { id: sub.id });
-    return;
-  }
-  const memberId = await memberFor(admin, email, idOf(sub.customer));
-  const { error } = await admin.from("subscriptions").insert({
-    ...fields,
-    member_id: memberId,
-    provider: "creem",
-    provider_subscription_id: sub.id,
-    renewal_consent_at: consent,
-  });
-  if (error) throw error;
-
-  // The row exists now, so a retried webhook takes the update path above and never sends this twice. A failed
-  // email is only logged: it must not make Creem retry a webhook whose work is already done.
-  try {
-    await sendEmail(email, clubWelcome(plan.interval === "year" ? "yearly" : "monthly"), { tag: "club-welcome" });
-  } catch (err) {
-    console.error("[email] club welcome failed", { subscription: sub.id }, err);
-  }
-}
-
-// The parent's member row, by email. A first-time buyer gets a Supabase user (the members row follows from the
-// on_auth_user_created trigger); they sign in later with that email.
-async function memberFor(admin: ReturnType<typeof createAdminClient>, email: string, creemCustomerId?: string) {
-  const address = email.trim().toLowerCase();
-  const { data: found, error } = await admin.from("members").select("id, creem_customer_id").eq("email", address).maybeSingle();
-  if (error) throw error;
-
-  let id = found?.id;
-  if (!id) {
-    const { data, error: createError } = await admin.auth.admin.createUser({ email: address, email_confirm: true });
-    if (createError || !data.user) throw createError ?? new Error("createUser returned no user");
-    id = data.user.id;
-  }
-  if (creemCustomerId && !found?.creem_customer_id) {
-    const { error: linkError } = await admin.from("members").update({ creem_customer_id: creemCustomerId }).eq("id", id);
-    if (linkError) throw linkError;
-  }
-  return id;
 }
 
 /** An order that started on the /code quiz (metadata.quiz_session from /api/checkout): count it on /stats/quiz. */

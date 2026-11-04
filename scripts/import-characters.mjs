@@ -18,7 +18,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-const { LOCKED_CONTENT_FIELDS, PUBLIC_CONTENT_FIELDS, packsOf, slugify, validate, warnings } = await import("../lib/character-rules.ts");
+const { LOCKED_CONTENT_FIELDS, PUBLIC_CONTENT_FIELDS, isUnlocked, slugify, validate } = await import("../lib/character-rules.ts");
 
 const web = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = path.join(web, "content", "characters.json");
@@ -231,7 +231,7 @@ export function report(chars, { unknown, missingArt, problems, warn = [], conten
     `${chars.length} characters: ${free.length} free, ${chars.length - free.length} locked, ${chars.filter((c) => c.published).length} published, ${chars.filter((c) => c.inGlossary).length} in the glossary`,
     `samples: ${free.filter((c) => c.sample).length}`,
   ];
-  for (const p of packsOf(chars)) lines.push(`  pack ${p.name}: ${p.ready}/${p.total} ready${p.onSale ? " (on sale)" : ""}, sample: ${p.samples.join(", ") || "none"}`);
+  lines.push(`open on the site: ${chars.filter(isUnlocked).length} (free or published), silhouettes in the Complete Crew Guide: ${chars.filter((c) => !isUnlocked(c)).length}`);
   if (unknown.length) lines.push(`columns not used: ${unknown.join(", ")}`);
   if (missingArt.length) {
     const freeMissing = missingArt.filter((c) => c.access === "free");
@@ -267,7 +267,7 @@ function main() {
   const content = readContentFiles(chars);
   const problems = [...content.problems, ...validate(chars, siteBacked)];
   const missingArt = attachArt(chars, { write: !dry && problems.length === 0 });
-  console.log(report(chars, { unknown, missingArt, problems, warn: warnings(chars), contentFiles: content.used }));
+  console.log(report(chars, { unknown, missingArt, problems, contentFiles: content.used }));
   if (problems.length) {
     console.error(`\nnot written: fix the ${problems.length} problem(s) in the CSV first`);
     process.exit(1);

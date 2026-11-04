@@ -8,20 +8,18 @@ import { PREVIEW, type CrewKey, type Item } from "./funnel";
 // sends the parent back to `next`. Access is granted from the Creem webhook, never from that redirect.
 // Creem's docs show no one-click upsell with a saved card and no order bump, so each "yes" on an offer page
 // opens a new prefilled Creem checkout, and a bump is a combined Creem product (lib/creem.ts).
-// Affiliate attribution is Creem's own (its referral link sets the cookie, its checkout reads it): nothing to pass here.
 // Our own visit ids (components/Track.tsx) go along, so the purchase event can be traced back to the visit and its source.
 
 type Options = {
   /** Where Creem sends the parent after paying. */
   next: string;
-  consent?: boolean;
   crew?: CrewKey;
   /** Quiz session id from /code, passed to Creem as metadata. */
   quiz?: string;
   /** The home page decoder moment the parent came from, for the abandoned-checkout reminder. */
   moment?: string;
   /** Saves what was bought for the next pages. Runs before we leave for Creem, or right away in preview.
-   *  Gets the buyer's download token for a one-time order (none for a membership or in preview). */
+   *  Gets the buyer's download token for a one-time order (none in preview). */
   commit: (delivery?: string) => void;
 };
 
@@ -34,7 +32,7 @@ function visitIds(): { visitor?: string; session?: string } {
   }
 }
 
-export async function charge(items: Item[], email: string, { next, consent, crew, quiz, moment, commit }: Options): Promise<void> {
+export async function charge(items: Item[], email: string, { next, crew, quiz, moment, commit }: Options): Promise<void> {
   if (PREVIEW) {
     console.info("[preview] would open a Creem checkout", { email, items, next });
     await new Promise((r) => setTimeout(r, 350));
@@ -44,7 +42,7 @@ export async function charge(items: Item[], email: string, { next, consent, crew
   const res = await fetch("/api/checkout", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ items: items.map((i) => i.id), email, next, consent, crew, quiz, moment, ...visitIds() }),
+    body: JSON.stringify({ items: items.map((i) => i.id), email, next, crew, quiz, moment, ...visitIds() }),
   });
   const data = (await res.json().catch(() => ({}))) as { url?: string; delivery?: string; error?: string };
   if (!res.ok || !data.url) throw new Error(data.error || "Payment couldn’t start. Please try again.");

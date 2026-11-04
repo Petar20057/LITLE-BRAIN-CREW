@@ -7,9 +7,10 @@ const ids = (items: string[], version: 1 | 2) => sectionsFor(items, version).fla
 const kinds = (items: string[], version: 1 | 2) => sectionsFor(items, version).flatMap((s) => s.files.map((f) => f.kind));
 
 describe("delivery catalogue", () => {
-  it("a new Toolkit buyer gets the guide, the three printable bonuses and the zip, and no videos", () => {
+  it("a new Toolkit buyer gets everything: the guide, the Reset and tracker, the Science Edition, the Crew Guide, the bonuses and the zip, and no videos", () => {
     const files = ids(["guide"], 2);
-    expect(files).toEqual(expect.arrayContaining(["toolkit-pdf", "script-cards-pdf", "meltdown-plan-pdf", "poster-pdf", "toolkit-zip"]));
+    expect(files).toEqual(expect.arrayContaining(["toolkit-pdf", "reset-pdf", "reset-tracker-pdf", "science-edition-pdf", "crew-guide-pdf", "script-cards-pdf", "meltdown-plan-pdf", "poster-pdf", "toolkit-zip"]));
+    expect(new Set(files).size).toBe(files.length);
     expect(kinds(["guide"], 2)).not.toContain("video");
     expect(files.some((id) => id.startsWith("cartoon-"))).toBe(false);
   });

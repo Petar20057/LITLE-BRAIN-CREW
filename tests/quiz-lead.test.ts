@@ -83,13 +83,13 @@ describe("/code email gate", () => {
     expect(await confirmToken(row.token)).toBe("unknown");
   });
 
-  it("the email offers the Toolkit on the first moment and the Reset, both carrying the quiz visit", async () => {
+  it("the email offers the Toolkit on the first moment, carrying the quiz visit", async () => {
     await lead({ sid: SID_A, email: "parent@example.com" });
     const { html, text } = sent()[0][1];
     // ANSWERS starts with "screens": Dopa, and the decoder's "screen-off" page in the Toolkit.
     expect(text).toContain(`/checkout/guide?crew=dopa&moment=screen-off&qs=${SID_A}`);
-    expect(text).toContain(`/checkout/program?crew=dopa&qs=${SID_A}`);
-    expect(html).toContain("Start the 30-Day Reset");
+    expect(text).not.toContain("/checkout/program");
+    expect(html).not.toContain("30-Day Reset");
     expect(text).toContain("#free");
     expect(text).toContain("15 ways to end screen time");
   });

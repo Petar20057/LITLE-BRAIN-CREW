@@ -1,37 +1,37 @@
 // The box at the end of each learn article (components/learn/ToolkitCta.tsx), by the article's group. Groups, slugs and
 // headings come from the Toolkit conversion plan, section 4. The texts describe the 43-page Toolkit (2026-11-02 edition;
-// moment pages as in MOMENTS, lib/funnel.ts) and the 67-page Science Edition included in the Reset (its chapter pages).
+// moment pages as in MOMENTS, lib/funnel.ts) and the 67-page Science Edition included in the Toolkit (its chapter pages).
 
 export type BoxGroup = "A" | "B" | "C" | "D" | "E" | "F" | "G";
 
 export const BOX_GROUPS: Record<BoxGroup, { heading: string; text: string }> = {
   A: {
     heading: "The screen-time fight, decoded.",
-    text: "Moment 1 of The Kid Brain Toolkit (p. 19) is the screen-off: what’s going on, the 4-step move for tonight and the exact words. Chapter 6 of the Science Edition, included in the 30-Day Reset, is the science of screens and the reward system (p. 32): what is actually measured, where screens belong at home, with a version for every age.",
+    text: "Moment 1 of The Kid Brain Toolkit (p. 19) is the screen-off: what’s going on, the 4-step move for tonight and the exact words. Chapter 6 of the Science Edition, included in the Toolkit, is the science of screens and the reward system (p. 32): what is actually measured, where screens belong at home, with a version for every age.",
   },
   B: {
     heading: "Bedtime, decoded.",
-    text: "Moments 6 and 7 of the Toolkit (p. 24 and 25) are bedtime: wired at night and grumpy at breakfast, and can’t fall asleep, each with the move for tonight and the exact words. The Science Edition, included in the 30-Day Reset, has the chapters on light and the body clock (p. 11) and sleep (p. 16), with how many hours each age needs. At checkout you can add the Bedtime & Screen-Off Kit: seven evenings of screen-off habits, timer scripts and a story to read together.",
+    text: "Moments 6 and 7 of the Toolkit (p. 24 and 25) are bedtime: wired at night and grumpy at breakfast, and can’t fall asleep, each with the move for tonight and the exact words. The Science Edition, included in the Toolkit, has the chapters on light and the body clock (p. 11) and sleep (p. 16), with how many hours each age needs. At checkout you can add the Bedtime & Screen-Off Kit: seven evenings of screen-off habits, timer scripts and a story to read together.",
   },
   C: {
     heading: "For the next meltdown.",
-    text: "Moments 3 and 5 of the Toolkit (p. 21 and 23) are the blow-up and the after-school meltdown: calm first, talk later, with the exact words. The Science Edition, included in the 30-Day Reset, has the chapter on stress and calm (p. 43), on why a calm adult close by is the most powerful calming tool, and calm meals (p. 27). Plus the 60-Second Meltdown Plan for your fridge, included.",
+    text: "Moments 3 and 5 of the Toolkit (p. 21 and 23) are the blow-up and the after-school meltdown: calm first, talk later, with the exact words. The Science Edition, included in the Toolkit, has the chapter on stress and calm (p. 43), on why a calm adult close by is the most powerful calming tool, and calm meals (p. 27). Plus the 60-Second Meltdown Plan for your fridge, included.",
   },
   D: {
     heading: "Get through to them without yelling.",
-    text: "Moments 2, 4 and 9 of the Toolkit (p. 20, 22 and 27) are homework that won’t start, can’t wait, and doesn’t listen until you yell, each with the move for tonight and the exact words. The Science Edition, included in the 30-Day Reset, has the chapters on focus and motivation (p. 38), on how praise and rewards change how hard kids try, and on movement (p. 22). Plus 24 script cards with the exact words.",
+    text: "Moments 2, 4 and 9 of the Toolkit (p. 20, 22 and 27) are homework that won’t start, can’t wait, and doesn’t listen until you yell, each with the move for tonight and the exact words. The Science Edition, included in the Toolkit, has the chapters on focus and motivation (p. 38), on how praise and rewards change how hard kids try, and on movement (p. 22). Plus 24 script cards with the exact words.",
   },
   E: {
     heading: "Fewer fights at home.",
-    text: "Moments 9 and 10 of the Toolkit (p. 27 and 28) are listening and sibling fights: connection before the instruction, and ten minutes of special time for each kid, with the exact words. Chapter 9 of the Science Edition, included in the 30-Day Reset, is about connection (p. 49): why warmth is one of the most consistent things linked to how kids do. Plus 24 script cards.",
+    text: "Moments 9 and 10 of the Toolkit (p. 27 and 28) are listening and sibling fights: connection before the instruction, and ten minutes of special time for each kid, with the exact words. Chapter 9 of the Science Edition, included in the Toolkit, is about connection (p. 49): why warmth is one of the most consistent things linked to how kids do. Plus 24 script cards.",
   },
   F: {
     heading: "For the teen who stopped talking.",
-    text: "Moment 12 of the Toolkit (p. 30) is the teen with no energy and no confidence, and Part 4 has Sprouti (12–14) and Seki (14–17). Chapter 10 of the Science Edition, included in the 30-Day Reset, is the teen years (p. 54): puberty, the later body clock, and how the same daily habits work for a teen. Plus when to talk to your pediatrician, all the signs in one place (Toolkit p. 42).",
+    text: "Moment 12 of the Toolkit (p. 30) is the teen with no energy and no confidence, and Part 4 has Sprouti (12–14) and Seki (14–17). Chapter 10 of the Science Edition, included in the Toolkit, is the teen years (p. 54): puberty, the later body clock, and how the same daily habits work for a teen. Plus when to talk to your pediatrician, all the signs in one place (Toolkit p. 42).",
   },
   G: {
     heading: "What’s normal at every age.",
-    text: "Part 4 of the Toolkit (p. 35) is what’s normal at every age, from Whyzi (3–6) to Seki (14–17). The Science Edition, included in the 30-Day Reset, starts with a map of the growing brain (p. 6), and every chapter has a version of each habit for ages 3–7, 8–12 and 13–17. Plus when to talk to your pediatrician, all the signs in one place (Toolkit p. 42).",
+    text: "Part 4 of the Toolkit (p. 35) is what’s normal at every age, from Whyzi (3–6) to Seki (14–17). The Science Edition, included in the Toolkit, starts with a map of the growing brain (p. 6), and every chapter has a version of each habit for ages 3–7, 8–12 and 13–17. Plus when to talk to your pediatrician, all the signs in one place (Toolkit p. 42).",
   },
 };
 

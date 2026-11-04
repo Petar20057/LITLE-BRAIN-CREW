@@ -5,8 +5,8 @@ import { sendEmail } from "@/lib/email/send";
 
 // Development only (404 in production): look at every email, and send yourself a test through SES.
 //   GET  /dev/emails                         list
-//   GET  /dev/emails/club-welcome            HTML, as the inbox shows it (?format=text for the text part)
-//   POST /dev/emails/club-welcome?to=me@x    sends it for real (needs the SES keys in .env.local)
+//   GET  /dev/emails/order-receipt           HTML, as the inbox shows it (?format=text for the text part)
+//   POST /dev/emails/order-receipt?to=me@x   sends it for real (needs the SES keys in .env.local)
 
 const off = () => process.env.NODE_ENV === "production";
 

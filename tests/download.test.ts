@@ -38,11 +38,13 @@ describe("download route", () => {
     expect((await get("t=good-token&f=toolkit-zip")).headers.get("location")).toContain("/signed/Kid-Brain-Toolkit.zip?");
   });
 
-  it("a new Toolkit buyer gets the v2 file and cannot download Science or the Reset", async () => {
+  it("a new Toolkit buyer gets the v2 file, the Reset, the Science Edition and the Complete Crew Guide", async () => {
     fake.table("orders")[0].catalog_version = 2;
     expect((await get("t=good-token&f=toolkit-pdf")).headers.get("location")).toContain("/signed/v2/Kid-Brain-Toolkit/");
-    expect((await get("t=good-token&f=science-edition-pdf")).status).toBe(403);
-    expect((await get("t=good-token&f=reset-pdf")).status).toBe(403);
+    expect((await get("t=good-token&f=science-edition-pdf")).status).toBe(302);
+    expect((await get("t=good-token&f=reset-pdf")).status).toBe(302);
+    expect((await get("t=good-token&f=crew-guide-pdf")).headers.get("location")).toContain("/signed/v2/Complete-Crew-Guide/The-Complete-Crew-Guide.pdf");
+    expect((await get("t=good-token&f=toolkit-zip")).headers.get("location")).toContain("/signed/v2/Kid-Brain-Toolkit-Complete.zip");
   });
 
   it("a new Toolkit buyer cannot open the cartoons, a legacy buyer still can", async () => {

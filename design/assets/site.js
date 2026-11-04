@@ -204,15 +204,6 @@ const PRODUCTS = { guide: { name: 'The Kid Brain Toolkit', price: 19 }, program:
 // <button data-buy="guide"> anywhere opens /checkout/guide.
 document.addEventListener('click', e => { const b = e.target.closest('[data-buy]'); if (b) { e.preventDefault(); location.href = '/checkout/' + b.dataset.buy; } });
 
-/* ---------- Crew Club billing ---------- */
-$$('[data-bill]').forEach(b => b.addEventListener('click', () => {
-  $$('[data-bill]').forEach(x => x.setAttribute('aria-pressed', x === b));
-  const y = b.dataset.bill === 'y';
-  gi('club-price').innerHTML = y ? '$80<small>/year</small>' : '$8<small>/month</small>';
-  gi('club-save').textContent = y ? 'about $6.67 a month · two months free · save $16 a year' : 'about $0.27 a day';
-  if (gi('club-cta')) gi('club-cta').href = '/checkout/club?plan=' + (y ? 'yearly' : 'monthly');
-}));
-
 /* ---------- shop: magnets on the fridge door ---------- */
 if (gi('door')) gi('door').innerHTML = ORDER.map((k, i) => `<div class="mag" style="--c:${CREW[k].color};--rot:${[-6, 4, -3, 5, -4, 3][i]}deg">${svg(k)}</div>`).join('')
   + '<div class="hboard"><b>This week</b><span>Mon ⭐</span><span>Tue ⭐</span><span>Wed ⭐</span><span>Thu ☐</span><span>Fri ☐</span></div>';

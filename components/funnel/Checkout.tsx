@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState, type FormEvent } from "react";
-import { CREW_NAMES, ITEMS, MOMENTS, PRODUCTS, per, total, usd, type CrewKey, type Item, type Product } from "@/lib/funnel";
+import { CREW_NAMES, ITEMS, MOMENTS, PRODUCTS, total, usd, type CrewKey, type Item, type Product } from "@/lib/funnel";
 import { saveOrder, useOrder, useQueryParam, useStored } from "@/lib/order";
 import { charge } from "@/lib/payments";
 import { trackEvent } from "@/lib/track-event";
@@ -39,26 +39,17 @@ export default function Checkout({ slug }: { slug: Product["slug"] }) {
   const isGift = GIFTS_OPEN && giftParam === "1";
   const giftRaw = useStored("vlc-gift");
   const gift = isGift ? parseGift(giftRaw) : undefined;
-  const planParam = useQueryParam("plan");
-  const [planPick, setPlan] = useState<"monthly" | "yearly" | null>(null);
-  const plan = planPick ?? (planParam === "yearly" ? "yearly" : "monthly");
-  const yearlySave = ITEMS.clubMonthly.price * 12 - ITEMS.clubYearly.price;
-
   const [bump, setBump] = useState(false);
   const [email, setEmail] = useState("");
-  const [consent, setConsent] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
-  const main: Item =
-    slug === "club" ? (plan === "yearly" ? ITEMS.clubYearly : ITEMS.clubMonthly) : slug === "guide" ? ITEMS.guide : slug === "bedtime" ? ITEMS.bedtimeKit : ITEMS.program;
+  const main: Item = slug === "bedtime" ? ITEMS.bedtimeKit : ITEMS.guide;
   const items = [main, ...(bump && p.bump ? [p.bump.item] : [])];
-  const recurring = items.some((i) => i.every);
 
   async function pay(e: FormEvent) {
     e.preventDefault();
     if (!/^\S+@\S+\.\S+$/.test(email)) return setError("Please enter the email where we should send your link.");
-    if (recurring && !consent) return setError("Please tick the box to confirm how the membership renews.");
     setError("");
     setBusy(true);
     trackEvent("checkout_submit", items.map((i) => i.id).join("+"));
@@ -69,7 +60,6 @@ export default function Checkout({ slug }: { slug: Product["slug"] }) {
       const prior = slug === "bedtime" ? order : undefined;
       await charge(items, email, {
         next,
-        consent: recurring ? consent : undefined,
         crew,
         quiz,
         moment: moment ? momentParam ?? undefined : undefined,
@@ -106,18 +96,11 @@ export default function Checkout({ slug }: { slug: Product["slug"] }) {
             </div>
           </div>
 
-          {slug === "club" && (
-            <div className="bill" role="group" aria-label="Billing" style={{ marginBottom: 12 }}>
-              <button type="button" aria-pressed={plan === "monthly"} onClick={() => setPlan("monthly")}>Monthly · {usd(ITEMS.clubMonthly.price)}</button>
-              <button type="button" aria-pressed={plan === "yearly"} onClick={() => setPlan("yearly")}>Yearly · {usd(ITEMS.clubYearly.price)} (save {usd(yearlySave)})</button>
-            </div>
-          )}
-
           {/* One item is already named above and priced in the total; the lines only show once the bump adds a second. */}
-          {(items.length > 1 || recurring) && (
+          {items.length > 1 && (
             <div style={{ marginTop: 16 }}>
               {items.map((i) => (
-                <div className="line-item" key={i.id}><span>{i.name}</span><span>{per(i)}</span></div>
+                <div className="line-item" key={i.id}><span>{i.name}</span><span>{usd(i.price)}</span></div>
               ))}
             </div>
           )}
@@ -144,25 +127,18 @@ export default function Checkout({ slug }: { slug: Product["slug"] }) {
             <small>Your link goes here. No spam, ever.</small>
           </label>
 
-          {recurring && (
-            <label className="bump" style={{ background: "#fff" }}>
-              <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} />
-              <span>I understand the Crew Club renews at {per(main)} until I cancel, and that I can pause or cancel anytime in my account, in 2 clicks.</span>
-            </label>
-          )}
-
           <div className="pay">
             <button className="btn btn-main btn-lg" type="submit" disabled={busy}>{busy ? "One moment…" : <AB test="checkout-button" a={`Continue to payment · ${usd(total(items))}`} b={buttonB?.replace("{price}", usd(total(items)))} />}</button>
           </div>
           {error && <p className="fx-err" role="alert">{error}</p>}
 
           <ul className="fx-trust">
-            <li><AB test="checkout-button" a="Secure checkout by Creem, our payment partner: card, Apple Pay or Google Pay. We never see your card." b={recurring ? undefined : copyB("checkout-button", "trust")} /></li>
-            <li>{recurring ? "Pause or cancel yourself, anytime" : "One payment, yours to keep. Instant access by email."}</li>
+            <li><AB test="checkout-button" a="Secure checkout by Creem, our payment partner: card, Apple Pay or Google Pay. We never see your card." b={copyB("checkout-button", "trust")} /></li>
+            <li>One payment, yours to keep. Instant access by email.</li>
           </ul>
-          {!recurring && <p className="fine">Digital product with instant access, so all sales are final.</p>}
+          <p className="fine">Digital product with instant access, so all sales are final.</p>
           {/* The seven-evening help comes with the Reset; other orders point at the paid Personal plan. */}
-          {!recurring && (slug === "program" ? <PersonalHelp /> : <PersonalPlanLink place={`checkout-${slug}`} />)}
+          {slug === "guide" ? <PersonalHelp /> : <PersonalPlanLink place={`checkout-${slug}`} />}
 
           {/* What's inside sits below the button, so on a phone the email field and the button are on the first screen. */}
           <details className="fx-inside">
@@ -179,13 +155,13 @@ export default function Checkout({ slug }: { slug: Product["slug"] }) {
             <h3>What happens next</h3>
             <ol>
               <li>Your link lands in your inbox within a minute.</li>
-              <li>{slug === "club" ? "Watch this week’s cartoon tonight." : slug === "program" ? "Tonight: read Day 1 of the Reset and choose your bedtime. 10 minutes." : slug === "bedtime" ? "Tonight: try Day 1 of Screen-Off Week, then read The Crew Goes to Sleep together." : "Tonight: read the moment that’s hardest at home right now. 5 minutes."}</li>
+              <li>{slug === "bedtime" ? "Tonight: try Day 1 of Screen-Off Week, then read The Crew Goes to Sleep together." : "Tonight: open the Toolkit on page 4, find the moment that’s hardest at home and read its page. Ten minutes. Tomorrow: Day 0 of the 30-day plan."}</li>
               <li>Try one small habit. That’s it.</li>
             </ol>
           </div>
           <div className="fx-card fx-note">
-            <h3>{recurring ? "No traps" : "Instant access"}</h3>
-            <p>{recurring ? "Cancel or pause yourself, in your account, in 2 clicks. We email you before every yearly renewal." : "Your files land in your inbox within a minute. If a link or file won’t open, email us and we’ll fix it fast."}</p>
+            <h3>Instant access</h3>
+            <p>Your files land in your inbox within a minute. If a link or file won’t open, email us and we’ll fix it fast.</p>
           </div>
           <p className="fine">Educational only, not medical advice. If you are worried about your child, talk to your pediatrician.</p>
         </aside>

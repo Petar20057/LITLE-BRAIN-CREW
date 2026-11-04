@@ -107,7 +107,7 @@ const EXTRA_REFS: Record<string, { title: string; blurb: string }> = {
   "/about": { title: "About Little Brain Crew", blurb: "Who we are and what we teach." },
   "/editorial-policy": { title: "How we write", blurb: "Sources, checks and what we never claim." },
   "/sources": { title: "Sources", blurb: "Every source our pages cite." },
-  "/pricing": { title: "The 30-Day Reset", blurb: "One 10-minute habit a day, for 30 days." },
+  "/pricing": { title: "The plans", blurb: "The Toolkit and the Personal plan, side by side." },
   "/faq": { title: "Parent FAQ", blurb: "Short answers about screens, sleep and mood." },
   "/#free": { title: "15 ways to end screen time", blurb: "The free printable list." },
   "/ask": { title: "Ask the crew", blurb: "Ask a question and get a crew answer." },
