@@ -576,9 +576,9 @@ footer.site-foot nav a:hover{text-decoration:underline}
 .min-foot a{color:#fff}
 
 /* ---------- sticky bar (phone) ---------- */
-.sticky{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:60;display:none;transform:translateY(160%);transition:transform .3s var(--ease)}
+.sticky{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:60;display:none;transform:translateY(calc(100% + 24px + env(safe-area-inset-bottom)));visibility:hidden;transition:transform .3s var(--ease),visibility 0s .3s}
 .sticky a,.sticky button{display:flex;width:100%;align-items:center;justify-content:center;gap:10px;min-height:58px;border:0;border-radius:var(--r-pill);background:var(--cta);color:var(--ink);font:800 18px var(--body);text-decoration:none;box-shadow:0 4px 0 var(--cta-edge),0 14px 30px -10px rgba(0,0,0,.4);cursor:pointer}
-.sticky.show{transform:none}
+.sticky.show{transform:none;visibility:visible;transition:transform .3s var(--ease),visibility 0s}
 @media(max-width:760px){.sticky{display:block}body.has-sticky{padding-bottom:calc(84px + env(safe-area-inset-bottom))}}
 
 /* ---------- checkout modal (opens only on click, never on entry/exit) ---------- */
