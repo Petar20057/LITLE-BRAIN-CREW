@@ -29,6 +29,11 @@
 <section class="sec s-plain offer-hero hero-fold" data-c="var(--dopa)">
   <div class="wrap">
     <div class="center-head">
+      <!-- The crew disarms first (no guilt, no blame), then the offer. Kept small so the button stays in the first screen. -->
+      <div class="hero-crew">
+        <div class="hc-faces" aria-hidden="true"><div data-char="migo" data-mood="tired"></div><div data-char="dopa" data-mood="tired"></div><div data-char="mela" data-mood="tired"></div><div data-char="duo" data-mood="happy"></div></div>
+        <p class="hc-say">It’s not you. It’s not your kid.<br>It’s a code.</p>
+      </div>
       <span class="kick">the kid brain toolkit · $19, once</span>
       <h1 class="serif-h">Know exactly what to say to your kid. Tonight.</h1>
       <p class="lede">What’s really going on in their brain, the 12 hardest moments with the exact words, the 30-day plan and all 214 crew members. One download, for kids 4–17.</p>
@@ -48,9 +53,19 @@
   <div class="wrap" style="max-width:820px">
     <div class="center-head"><span class="kick">sound familiar?</span><h2>You’ve tried the timer. The warning. The calm voice.<br>Then the not-so-calm voice.</h2>
       <p class="lede">And then it’s 9:30 p.m., the house is finally quiet, and you’re scrolling for the one parenting tip that fits <em>your</em> kid. Tomorrow it starts again: the tablet, the homework, the 5 p.m. explosion, the bedtime that takes an hour.</p></div>
+    <ul class="day-strip" data-reveal>
+      <li style="--c:#C9E66E"><div data-char="greli" data-mood="tired"></div><b>5:00 p.m.</b><span>The after-school explosion. Greli rang the hunger bell, and Corti held it in all day.</span></li>
+      <li style="--c:var(--dopa)"><div data-char="dopa" data-mood="tired"></div><b>7:30 p.m.</b><span>The tablet goes off, and the tears start. Dopa just lost its easy rewards.</span></li>
+      <li style="--c:#8C9EEB"><div data-char="mela" data-mood="tired"></div><b>8:45 p.m.</b><span>The bedtime that takes an hour. Mela showed up late again.</span></li>
+      <li style="--c:#FFD8BE"><div data-char="duo" data-mood="tired"></div><b>9:30 p.m.</b><span>You, finally sitting down, scrolling for the tip that fits your kid.</span></li>
+    </ul>
     <div class="verdict">
       <span class="word">It’s a code.</span>
       <p>Not a bad kid. Not bad parenting. The same few messengers, hormones and brain parts drive almost every hard moment at home, and a few habits get in their way. Once you can see who’s talking, you know what to try tonight, and what to say while it’s happening. That’s what the Toolkit gives you: the whole code, in one place, written for a tired parent, not for a lecture hall.</p>
+    </div>
+    <div class="crew-note" style="--c:#FFD8BE">
+      <div data-char="duo" data-mood="happy"></div>
+      <p><b>A word from Duo, the crew member who is you.</b> Kids borrow your calm before they can make their own. You can’t lend calm you don’t have, so this isn’t about trying harder. It’s about having the words ready before the hard moment comes. You’re doing better than you think.</p>
     </div>
   </div>
 </section>
@@ -226,6 +241,7 @@
 <section class="sec s-white" data-c="var(--dopa)">
   <div class="wrap">
     <div class="cta-box surface">
+      <div class="cta-crew" data-char="duo" data-mood="happy"></div>
       <h3>You don’t have to figure out everything tonight.</h3>
       <p>Start with one hard moment. Page 4 is waiting, and the next 30 days are planned.</p>
       <a class="btn btn-main btn-lg" href="/checkout/guide" data-track="buy_click" data-place="toolkit-close" data-ab="buy-button" data-v="a">Get the Toolkit · $19</a>

@@ -1,4 +1,5 @@
 import PersonalPlanForm from "@/components/funnel/PersonalPlanForm";
+import CharArt from "@/components/learn/CharArt";
 import JsonLd from "@/components/learn/JsonLd";
 import LearnShell from "@/components/learn/LearnShell";
 import { creemConfigured, productIdFor } from "@/lib/creem";
@@ -34,6 +35,15 @@ export default function Page() {
       <section className="sec s-plain offer-hero hero-fold" data-c="var(--toci)">
         <div className="wrap">
           <div className="center-head">
+            {/* The crew disarms first; kept small so the button stays in the first screen. */}
+            <div className="hero-crew">
+              <div className="hc-faces" aria-hidden="true">
+                <div><CharArt char="migo" mood="tired" /></div>
+                <div><CharArt char="toci" mood="tired" /></div>
+                <div><CharArt char="duo" mood="happy" /></div>
+              </div>
+              <p className="hc-say">You don’t have to figure<br />this out alone.</p>
+            </div>
             <span className="kick">the personal plan · {PRICE}, once</span>
             <h1 className="serif-h">Tell us the one moment. We write the plan for your house.</h1>
             <p className="lede">Stop guessing what to try next. Within {DAYS} a person writes what’s going on, one small move for each evening and the exact words for your kid’s age.</p>
@@ -63,6 +73,10 @@ export default function Page() {
             <li><b>What to expect, week by week</b><span>Which small changes come first, what a bad night means, and when to adjust. So one bad Thursday doesn’t end the plan.</span></li>
             <li><b>A reply when you’re stuck</b><span>Once you have the plan, reply to the email with what happened and a person answers. So you’re not alone with it.</span></li>
           </ul>
+          <div className="crew-note" style={{ "--c": "#FFD8BE" } as React.CSSProperties}>
+            <CharArt char="duo" mood="happy" />
+            <p><b>A word from Duo, the crew member who is you.</b> Kids borrow your calm before they can make their own. You can’t lend calm you don’t have, and nobody has much left at 9:30 p.m. That’s what the plan is for: the thinking is done before the hard moment comes.</p>
+          </div>
           <p style={{ textAlign: "center", marginTop: "var(--s4)" }}><a className="btn btn-main btn-lg" href="#plan-form">Start with the form ↓</a></p>
         </div>
       </section>
@@ -74,6 +88,11 @@ export default function Page() {
             <p className="lede">An example, for a 7-year-old whose screen time ends in tears most school nights. Yours is written from your answers: your routine, your week, your kid’s age.</p></div>
           <div className="surface pp-example">
             <p className="meta">Example plan · a 7-year-old · tears when the tablet goes off · school nights</p>
+            <ul className="pp-crew" aria-label="The crew in this plan">
+              <li><CharArt char="dopa" mood="tired" /><span>Dopa<small>wants the next reward</small></span></li>
+              <li><CharArt char="fronti" /><span>Fronti<small>the brakes, still being built</small></span></li>
+              <li><CharArt char="lupi" /><span>Lupi<small>the villain: no ending</small></span></li>
+            </ul>
             <h3>What’s going on</h3>
             <p>Games and videos hand out surprises every few seconds, and Dopa (dopamine, the wanting-and-learning helper) responds most to better-than-expected rewards. When the screen goes off, that stream stops all at once. To a 7-year-old whose brakes (Fronti) are still being built, it feels like a real loss. The tears are a normal reaction to a hard stop, not a sign that something is wrong with him. The villain here is Lupi: autoplay and a session with no ending.</p>
             <h3>Tonight: the move</h3>
@@ -165,6 +184,10 @@ export default function Page() {
       {/* 8 · The form */}
       <section className="sec s-white" id="plan-form-section" data-c="var(--toci)">
         <div className="wrap fx-narrow" style={{ margin: "0 auto" }}>
+          <div className="crew-note" style={{ "--c": "var(--toci)", margin: "0 auto var(--s3)" } as React.CSSProperties}>
+            <CharArt char="toci" mood="happy" />
+            <p><b>Toci says: no wrong answers here.</b> Write it the way you’d tell a friend over coffee. The messy details are the useful ones, and nobody is grading you.</p>
+          </div>
           <PersonalPlanForm open={open} />
         </div>
       </section>
