@@ -30,23 +30,23 @@ export default function Page() {
       <JsonLd data={[webPageLd({ path: "/personal-plan", name: "The Personal plan", description: DESCRIPTION }), breadcrumbLd([{ name: "Home", path: "/" }, { name: "The Personal plan", path: "/personal-plan" }])]} />
 
       {/* 1 · The offer */}
-      <section className="sec s-plain offer-hero" data-c="var(--toci)">
+      {/* .hero-fold: the button is in the first screen on a phone (375×667) and a laptop (1280×720). */}
+      <section className="sec s-plain offer-hero hero-fold" data-c="var(--toci)">
         <div className="wrap">
           <div className="center-head">
-            <span className="kick">the personal plan · written for one family · {PRICE}, once</span>
-            <h1 className="serif-h">Stop guessing what to try next.<br />Tell us the one moment, and we write the plan for your house.</h1>
-            <p className="lede">Not a book for every family. A plan for yours: your kid’s age, your routine, your week. Within {DAYS} a person on our team writes what’s going on, one small move for each evening, and the exact words to say, from the same science as the Toolkit. Then you reply with what happened, and we answer.</p>
+            <span className="kick">the personal plan · {PRICE}, once</span>
+            <h1 className="serif-h">Tell us the one moment. We write the plan for your house.</h1>
+            <p className="lede">Stop guessing what to try next. Within {DAYS} a person writes what’s going on, one small move for each evening and the exact words for your kid’s age.</p>
             <div className="offer-buy">
-              <span className="big">{PRICE}</span>
-              <span className="per">one payment · ten minutes of answers from you · your plan by email within {DAYS}</span>
-              <a className="btn btn-main btn-lg" href="#plan-form">Start with the form ↓</a>
-              <span className="fine">You pay after the form, on Creem’s secure checkout. No subscription. Not medical advice.</span>
+              <a className="btn btn-main btn-lg" href="#plan-form">Start my plan · {PRICE}</a>
+              <span className="per">Ten minutes of answers first, then Creem’s secure checkout · no subscription</span>
             </div>
             <div className="trust-row" style={{ justifyContent: "center" }}>
               <span><svg aria-hidden="true"><use href="#i-check" /></svg>Written by a person, not generated</span>
               <span><svg aria-hidden="true"><use href="#i-check" /></svg>Ages 4–17</span>
               <span><svg aria-hidden="true"><use href="#i-check" /></svg>A reply when you’re stuck</span>
             </div>
+            <p className="hero-more">Not a book for every family. A plan for yours: your kid’s age, your routine, your week, from the same science as the Toolkit. Then you reply with what happened, and we answer. Not medical advice.</p>
           </div>
         </div>
       </section>

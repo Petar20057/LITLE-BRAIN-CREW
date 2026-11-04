@@ -783,3 +783,22 @@ html.dad .top .logo .on-dark,html.dad .ad-top .logo .on-dark{display:block}
 @media(max-width:1000px){.pages.four{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:760px){.pages.four{grid-template-columns:1fr}}
 
+/* ---------- .hero-fold (/toolkit, /personal-plan): the buy button in the first screen, phone and laptop ---------- */
+.hero-fold{padding-top:var(--s5);padding-bottom:var(--s5)}
+.hero-fold .center-head{margin-bottom:0}
+.hero-fold h1{font-size:clamp(34px,4.6vw,60px);line-height:1.08;margin:6px 0 var(--s2)}
+.hero-fold .center-head .lede{margin-top:0}
+.hero-fold .offer-buy{margin-top:var(--s3);gap:8px}
+.hero-fold .offer-buy .per{font-size:15px}
+.hero-fold .trust-row{margin-top:var(--s2)}
+.hero-fold .hero-more{max-width:60ch;margin:var(--s3) auto 0;color:var(--ink-soft)}
+@media(max-width:760px){
+  .hero-fold{padding-top:var(--s2);padding-bottom:var(--s4)}
+  .hero-fold .kick{font-size:20px;margin-bottom:0}
+  .hero-fold h1{margin:4px 0 10px}
+  .hero-fold .center-head .lede{font-size:17px;line-height:1.5}
+  .hero-fold .offer-buy{margin-top:var(--s2)}
+  .hero-fold .offer-buy .btn{width:100%}
+  .hero-fold .trust-row{gap:6px 14px;font-size:14px}
+}
+
