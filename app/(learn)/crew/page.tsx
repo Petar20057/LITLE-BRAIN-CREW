@@ -12,8 +12,8 @@ import { simpleMetadata } from "@/lib/seo";
 export const instant = false;
 
 // Every crew member, grouped the way the CSV groups them. An open character (free, or with a finished page) is a card
-// with its name and one sentence; a locked one is a grey silhouette with a padlock and no name, and its click goes to
-// the Toolkit checkout: the Complete Crew Guide (all 214, one card each) arrives in the same email as the Toolkit.
+// with its name and one sentence; a locked one is the same card with its art in black and white and a padlock where the
+// name and sentence would be, and its click goes to the Toolkit checkout: the Complete Crew Guide (all 214, one card each) arrives in the same email as the Toolkit.
 const n = PUBLIC_CHARACTERS.length;
 const counts = countsOf(PUBLIC_CHARACTERS);
 const TITLE = `Meet the crew: ${n} characters inside your kid’s brain`;
@@ -30,7 +30,7 @@ function UnlockBox({ place }: { place: string }) {
       <div>
         <span className="kick">unlock all {n}</span>
         <h2 id={`unlock-${place}`}>The Complete Crew Guide comes with the Toolkit.</h2>
-        <p>Every grey silhouette below is a crew member in the guide: one card each, what it does, what helps it, what throws it off, and what to say to your kid. 74 pages, and it arrives in the same email as your Toolkit.</p>
+        <p>Every padlocked card below is a crew member in the guide: one card each, what it does, what helps it, what throws it off, and what to say to your kid. 74 pages, and it arrives in the same email as your Toolkit.</p>
         <a className="btn btn-main" href={`/checkout/guide?utm_source=crew-${place}`}>Get the Toolkit · {usd(ITEMS.guide.price)}</a>
         <p className="fine">One download, one payment: the Toolkit, the 30-Day Reset, the Science Edition, the Complete Crew Guide and the printable bonuses.</p>
       </div>
@@ -79,7 +79,7 @@ export default function Page() {
                   <p className="pack-meta">{g.open.length} open · {g.locked.length} in the guide</p>
                 </div>
                 {g.open.length ? <ul className="hub-grid crew-grid">{g.open.map((c) => <CrewCard key={c.slug} c={c} />)}</ul> : null}
-                {g.locked.length ? <ul className="locked-grid" aria-label={`${g.locked.length} locked crew members in ${g.title}`}>{g.locked.map((c) => <LockedCard key={c.slug} c={c} />)}</ul> : null}
+                {g.locked.length ? <ul className="hub-grid crew-grid locked-cards" aria-label={`${g.locked.length} locked crew members in ${g.title}`}>{g.locked.map((c) => <LockedCard key={c.slug} c={c} />)}</ul> : null}
               </div>
             ))}
           </div>

@@ -704,9 +704,7 @@ html.dad .top .logo .on-dark,html.dad .ad-top .logo .on-dark{display:block}
 .pack-meta{font:700 15px/1.5 var(--body);color:var(--ink-soft)}
 .crew-face{display:block;width:72px;height:72px}
 .crew-face img,.crew-face svg{width:72px;height:72px;display:block}
-.crew-face.is-silhouette img,.crew-face.is-silhouette svg{filter:brightness(0) saturate(0);opacity:.3}
 .crew-blank{display:grid;place-items:center;width:72px;height:72px;border-radius:50%;background:var(--paper);font:800 28px var(--head);color:var(--ink-soft)}
-.hub-grid li.is-locked>a{background:var(--paper)}
 .lock-tag{display:inline-block;width:fit-content;margin-top:6px;font:800 11px/1.7 var(--body);letter-spacing:.06em;text-transform:uppercase;padding:0 9px;border-radius:var(--r-pill);background:#fff;box-shadow:0 0 0 1.5px var(--ink) inset;font-style:normal;color:var(--ink)}
 .hub-grid em.lock-tag{display:block}
 .lock-tag.free{background:var(--endo-t,#e6f7ee)}
@@ -760,37 +758,28 @@ html.dad .top .logo .on-dark,html.dad .ad-top .logo .on-dark{display:block}
 .pp-say li{background:var(--paper);border-radius:var(--r-m);padding:12px 16px;font:700 20px/1.3 var(--hand)}
 @media(max-width:760px){.pp-example{padding:20px}}
 
-/* ---------- /crew: locked crew members are grey silhouettes with a padlock (the Complete Crew Guide comes with the Toolkit) ---------- */
-.locked-grid{list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(68px,1fr));gap:10px;margin:12px 0 0;padding:0}
-.locked-grid li a{position:relative;display:grid;place-items:center;aspect-ratio:1;background:var(--paper);border-radius:var(--r-m);text-decoration:none;transition:background .15s,box-shadow .15s}
-.locked-grid .crew-face,.locked-grid .crew-face img,.locked-grid .crew-face svg{width:48px;height:48px}
-.locked-grid li a:hover,.locked-grid li a:focus-visible{background:#fff;box-shadow:0 0 0 2px var(--ink)}
-.lock-badge{position:absolute;right:5px;bottom:5px;width:22px;height:22px;border-radius:50%;background:#fff;display:grid;place-items:center;box-shadow:var(--sh-1)}
-.lock-badge svg{width:13px;height:13px;color:var(--ink)}
+/* ---------- /crew: a locked crew member is the same card as an open one, in black and white, with a padlock where the
+   name and the sentence would be (the Complete Crew Guide comes with the Toolkit) ---------- */
+.locked-cards{margin-top:12px}
+.hub-grid li.is-locked>a{border-left-color:#a3a3a3}
+.crew-face.is-locked-art img,.crew-face.is-locked-art svg{filter:grayscale(1)}
+.crew-face.is-locked-art .crew-blank.generic{opacity:.22}
+.lock-slot{display:grid;place-items:center;align-self:stretch}
+.hub-grid .lock-slot svg{width:30px;height:30px;color:var(--ink)}
+/* phones: two locked cards a row (they carry no text), so 152 padlocks don't stretch the page by a full row each */
+@media(max-width:560px){
+  .crew-grid.locked-cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .locked-cards li>a{grid-template-columns:60px 1fr;gap:6px;padding:10px 10px 10px 8px}
+  .locked-cards .crew-face,.locked-cards .crew-face img,.locked-cards .crew-face svg{width:60px;height:60px}
+  .hub-grid.locked-cards .lock-slot svg{width:26px;height:26px}
+}
 .crew-blank.generic{width:72px;height:72px;display:block}
 .unlock-box{display:grid;grid-template-columns:200px 1fr;gap:var(--s3);align-items:center;background:#fff;border:2px dashed var(--ink);border-radius:var(--r-l);padding:var(--s3);margin:var(--s3) 0 var(--s4)}
 .unlock-box img{width:100%;height:auto;border-radius:var(--r-s);border:1px solid var(--hair);display:block}
 .unlock-box h2{font-size:26px;margin:4px 0 8px}
 .unlock-box p{margin:0 0 6px}
 .unlock-box .btn{margin-top:8px}
-@media(max-width:760px){.unlock-box{grid-template-columns:1fr}.unlock-box img{max-width:220px}.locked-grid{grid-template-columns:repeat(auto-fill,minmax(56px,1fr))}}
-
-/* ---------- home: the padlocked crew under the roster (same silhouettes as /crew) ---------- */
-.home-locked{margin-top:var(--s5);background:#fff;border-radius:var(--r-l);box-shadow:var(--sh-1);padding:var(--s4)}
-.home-locked-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--s2) var(--s4)}
-.home-locked-head>div{flex:1 1 420px;max-width:62ch}
-.home-locked-head h3{font-size:clamp(24px,3.4vw,32px);margin:4px 0 8px}
-.home-locked-head p{margin:0;color:var(--ink-soft)}
-.home-locked .locked-grid{grid-template-columns:repeat(auto-fill,minmax(54px,1fr));gap:8px;margin-top:var(--s3)}
-.home-locked .locked-grid .crew-face,.home-locked .locked-grid .crew-face img,.home-locked .locked-grid .crew-face svg{width:42px;height:42px}
-.home-locked .lock-badge{right:3px;bottom:3px;width:20px;height:20px}
-.home-locked .lock-badge svg{width:12px;height:12px}
-@media(max-width:760px){
-  .home-locked{padding:var(--s3)}
-  /* phones: three rows that swipe sideways, like the roster above */
-  .home-locked .locked-grid{grid-template-columns:none;grid-template-rows:repeat(3,56px);grid-auto-flow:column;grid-auto-columns:56px;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none;margin-inline:calc(var(--s3)*-1);padding:2px var(--s3) 6px}
-  .home-locked .locked-grid::-webkit-scrollbar{display:none}
-}
+@media(max-width:760px){.unlock-box{grid-template-columns:1fr}.unlock-box img{max-width:220px}}
 
 /* ---------- two plan cards (the Toolkit and the Personal plan), the four-page gallery and the price anchor on /toolkit ---------- */
 .plans.two{grid-template-columns:1.12fr 1fr;max-width:900px;margin:0 auto}

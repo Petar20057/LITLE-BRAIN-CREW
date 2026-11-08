@@ -2,8 +2,8 @@ import { PAGES, SITE_URL, type PageName } from "@/lib/design";
 import PageScripts from "./PageScripts";
 
 /** `slots`: ready-made HTML (built on the server, never user input) that replaces the `<div data-slot="name"></div>`
- *  placeholders in a design page (design/<page>.html), for the few parts that come from data (e.g. the padlocked crew on
- *  the home page). It is a string replace, not a React child, so the page's own tags stay balanced inside one element. */
+ *  placeholders in a design page (design/<page>.html), for the few parts that come from data. It is a string replace,
+ *  not a React child, so the page's own tags stay balanced inside one element. */
 export default function DesignPage({ name, slots = {} }: { name: PageName; slots?: Record<string, string> }) {
   const p = PAGES[name];
   const html = p.html.replace(/<div data-slot="([\w-]+)"><\/div>/g, (_, slot: string) => slots[slot] ?? "");
